@@ -1,10 +1,40 @@
 *{
-	font-family: Arial;
 	margin: 0;
 	padding: 0;
 }
 
+html, body{
+	height: 100%;
+	font-family: Arial;
+}
+
+canvas{
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
 body{
 	background-color: #dddddd;
+}
+
+#gl{
+	width: 60%;
+	height: 100%;
+	float: left;
+}
+
+#controls{
+	background-color: #ffffff;
+	box-shadow: 0 2px 4px #555555;
+	margin: 1em;
+	margin-left: 60%;
+}
+#inputsection{
+	margin: 0.5em;
+}
+
+h1{
 	text-align: center;
+	font-family: "Oswald", sans-serif;
 }
