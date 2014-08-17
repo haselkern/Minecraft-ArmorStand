@@ -1,2 +1,2 @@
-Minecraft Armor Stand Poser
+Minecraft Armor Stand
 =================
