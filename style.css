@@ -32,6 +32,13 @@ body{
 	margin: 0.5em;
 }
 
+#code{
+	margin: 0.5em;
+	padding: 0.5em;
+	font-style: italic;
+	word-wrap: break-word;
+}
+
 h1{
 	text-align: center;
 	font-family: "Oswald", sans-serif;

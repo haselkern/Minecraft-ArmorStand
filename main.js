@@ -31,12 +31,14 @@ var noBasePlate = false;
 var noGravity = false;
 var showArms = false;
 var small = false;
+//The rotation values are all in degrees.
 var head = new THREE.Vector3(0,0,0);
 var body = new THREE.Vector3(0,0,0);
 var leftLeg = new THREE.Vector3(0,0,0);
 var rightLeg = new THREE.Vector3(0,0,0);
 var leftArm = new THREE.Vector3(0,0,0);
-var rightarm = new THREE.Vector3(0,0,0);
+var rightArm = new THREE.Vector3(0,0,0);
+var rotation = 0;
 
 //Stuff for mouse movements
 var mouseDownX;
@@ -90,21 +92,24 @@ function setup(){
 
 	scene = new THREE.Scene();
 	armorstand = new THREE.Object3D();
-
+	//Add an armorstandWrapper to the scene, so the armorstand can be rotated naturally.
+	armorstandWrapper = new THREE.Object3D();
+	armorstand.position.set(0,-0.5,0);
+	armorstandWrapper.add(armorstand);
 
 
 	//BasePlate
 	mBasePlate = new THREE.Mesh(
 		new THREE.CubeGeometry(12/16, 1/16, 12/16),
 		matStone);
-	mBasePlate.position.y = -1/32;
-	//Add a little dot to the BasePlate, so the user knows which way is forward
-	mmBaseDot = new THREE.Mesh(
-		new THREE.CubeGeometry(4/16, 1/16, 4/16),
+	mBasePlate.position.y = - (1/32 - armorstand.position.y);
+	armorstandWrapper.add(mBasePlate);
+	//Add a little dot, so the user knows which way is forward
+	var mmBaseDot = new THREE.Mesh(
+		new THREE.CubeGeometry(2/16, 1/16, 4/16),
 		matStone);
-	mmBaseDot.position.set(0,0,8/16);
-	mBasePlate.add(mmBaseDot);
-	armorstand.add(mBasePlate);
+	mmBaseDot.position.set(0,mBasePlate.position.y,10/16);
+	armorstandWrapper.add(mmBaseDot);
 
 	// To Generate the other body parts, we will use a mesh to display, 
 	// and add it as a child to the object that serves as a pivot.
@@ -191,10 +196,7 @@ function setup(){
 	mHead.add(mmNeck);
 	armorstand.add(mHead);
 
-	//Add an armorstandwrapper to the scene, so the armorstand can be rotated naturally.
-	armorstandWrapper = new THREE.Object3D();
-	armorstand.position.set(0,-0.5,0);
-	armorstandWrapper.add(armorstand);
+
 	scene.add(armorstandWrapper);
 
 	camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 1000);
@@ -211,18 +213,29 @@ function setup(){
 
 function handleInput(){
 	
-	invisible = getCheckBox("invisible");
-	invulnerable = getCheckBox("invulnerable");
-	noBasePlate = getCheckBox("nobaseplate");
-	noGravity = getCheckBox("nogravity");
-	showArms = getCheckBox("showarms");
-	small = getCheckBox("small");
+	invisible = getCheckBoxInput("invisible");
+	invulnerable = getCheckBoxInput("invulnerable");
+	noBasePlate = getCheckBoxInput("nobaseplate");
+	noGravity = getCheckBoxInput("nogravity");
+	showArms = getCheckBoxInput("showarms");
+	small = getCheckBoxInput("small");
 
+	body.set(getRangeInput("bodyX"), getRangeInput("bodyY"), getRangeInput("bodyZ"));
+	head.set(getRangeInput("headX"), getRangeInput("headY"), getRangeInput("headZ"));
+	leftLeg.set(getRangeInput("leftLegX"), getRangeInput("leftLegY"), getRangeInput("leftLegZ"));
+	rightLeg.set(getRangeInput("rightLegX"), getRangeInput("rightLegY"), getRangeInput("rightLegZ"));
+	leftArm.set(getRangeInput("leftArmX"), getRangeInput("leftArmY"), getRangeInput("leftArmZ"));
+	rightArm.set(getRangeInput("rightArmX"), getRangeInput("rightArmY"), getRangeInput("rightArmZ"));
+
+	rotation = getRangeInput("rotation");
 
 	updateUI();
 }
-function getCheckBox(name){
+function getCheckBoxInput(name){
 	return $("input[name="+name+"]").prop("checked");
+}
+function getRangeInput(name){
+	return $("input[name="+name+"]").val();
 }
 
 /** Changes stuff according to our input values */
@@ -232,6 +245,45 @@ function updateUI(){
 		$("#inputarms").show();
 	else
 		$("#inputarms").hide();
+	$("#code").text(generateCode());
+
+	// Rotate 3D Stuff
+	// y and z rotation needs to be inverted
+	mBody.rotation.set(body.x * DEG2RAD, -body.y * DEG2RAD, -body.z * DEG2RAD);
+	mHead.rotation.set(head.x * DEG2RAD, -head.y * DEG2RAD, -head.z * DEG2RAD);
+	mLegLeft.rotation.set(leftLeg.x * DEG2RAD, -leftLeg.y * DEG2RAD, -leftLeg.z * DEG2RAD);
+	mLegRight.rotation.set(rightLeg.x * DEG2RAD, -rightLeg.y * DEG2RAD, -rightLeg.z * DEG2RAD);
+	mArmLeft.rotation.set(leftArm.x * DEG2RAD, -leftArm.y * DEG2RAD, -leftArm.z * DEG2RAD);
+	mArmRight.rotation.set(rightArm.x * DEG2RAD, -rightArm.y * DEG2RAD, -rightArm.z * DEG2RAD);
+	armorstand.rotation.y = -rotation * DEG2RAD;
+
+	//Set Visibility
+	mArmRight.visible = mArmLeft.visible = showArms;
+	mBasePlate.visible = !noBasePlate;
+}
+
+function generateCode(){
+	var code = "/summon ArmorStand ~ ~ ~ {";
+
+	var tags = [];
+
+	if(invisible)
+		tags.push("Invisible:1b");
+	if(invulnerable)
+		tags.push("Invulnerable:1b");
+	if(noBasePlate)
+		tags.push("NoBasePlate:1b");
+	if(noGravity)
+		tags.push("NoGravity:1b");
+	if(showArms)
+		tags.push("ShowArms:1b");
+	if(small)
+		tags.push("Small:1b");
+
+
+	code += tags.join(",");
+	code += "}";
+	return code;
 }
 
 function getMouseDeltaX(){
