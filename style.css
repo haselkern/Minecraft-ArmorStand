@@ -22,6 +22,7 @@ body{
 	width: 60%;
 	height: 100%;
 	float: left;
+	cursor: move;
 }
 
 #controls{
