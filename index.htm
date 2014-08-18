@@ -17,25 +17,35 @@
 
     	<h1>MINECRAFT ARMOR STAND<br>Please note:</h1>
     	This thing is nowhere near complete, I just wanted to upload it so I don't lose my work if my local copy messes up.
+        <br>
+        Notes to myself:
+        <ul>
+            <li>Y and Z rotation axis are okay, but the value has to be multiplied by -1</li>
+        </ul>
 
     	<div id="inputsection">
 
-            <input type="checkbox" name="small">Invisible<br>
-            <input type="checkbox" name="small">Invulnerable<br>
-            <input type="checkbox" name="small">No Base Plate<br>
-            <input type="checkbox" name="small">No Gravity<br>
-	    	<input type="checkbox" name="arms">Show Arms<br>
+            <input type="checkbox" name="invisible">Invisible<br>
+            <input type="checkbox" name="invulnerable">Invulnerable<br>
+            <input type="checkbox" name="nobaseplate">No Base Plate<br>
+            <input type="checkbox" name="nogravity">No Gravity<br>
+	    	<input type="checkbox" name="showarms">Show Arms<br>
             <input type="checkbox" name="small">Small<br>
-	    	Rotation: <input type="range" name="points" min="0" max="360" value="0"><br>
-            Head: <input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><br>
-            Body: <input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><br>
 
-            Left Leg: <input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><br>
-            Right Leg: <input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><br>
+	    	Rotation: <input type="range" name="rotation" min="0" max="360" value="0"><br>
 
-            <div id="inputArms">
-                Left Arm: <input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><br>
-                Right Arm: <input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><input type="range" name="points" min="0" max="360" value="0"><br>
+            Head: <input type="range" name="headX" min="0" max="360" value="0"><input type="range" name="headY" min="0" max="360" value="0"><input type="range" name="headZ" min="0" max="360" value="0"><br>
+
+            Body: <input type="range" name="bodyX" min="0" max="360" value="0"><input type="range" name="bodyY" min="0" max="360" value="0"><input type="range" name="bodyZ" min="0" max="360" value="0"><br>
+
+            Left Leg: <input type="range" name="leftLegX" min="0" max="360" value="0"><input type="range" name="leftLegY" min="0" max="360" value="0"><input type="range" name="leftLegZ" min="0" max="360" value="0"><br>
+
+            Right Leg: <input type="range" name="rightLegX" min="0" max="360" value="0"><input type="range" name="rightLegY" min="0" max="360" value="0"><input type="range" name="rightLegZ" min="0" max="360" value="0"><br>
+
+            <div id="inputarms">
+                Left Arm: <input type="range" name="leftArmX" min="0" max="360" value="0"><input type="range" name="leftArmY" min="0" max="360" value="0"><input type="range" name="leftArmZ" min="0" max="360" value="0"><br>
+
+                Right Arm: <input type="range" name="rightArmX" min="0" max="360" value="0"><input type="range" name="rightArmY" min="0" max="360" value="0"><input type="range" name="rightArmZ" min="0" max="360" value="0"><br>
             </div>
 
     	</div>
