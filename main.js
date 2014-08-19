@@ -39,6 +39,7 @@ var rightLeg = new THREE.Vector3(0,0,0);
 var leftArm = new THREE.Vector3(0,0,0);
 var rightArm = new THREE.Vector3(0,0,0);
 var rotation = 0;
+var vec0 = new THREE.Vector3(0,0,0); // We use this to determine if we want a pose in the command.
 
 //Stuff for mouse movements
 var mouseDownX;
@@ -53,10 +54,12 @@ Point = {
 };
 
 $(document).ready(function(){
+	//Init
 	setup();
 	updateUI();
 	render();
 
+	//Stuff to handle input
 	$("input").on("input", function(){
 		handleInput();
 	});
@@ -64,6 +67,7 @@ $(document).ready(function(){
     	handleInput();
 	}); 
 
+	//Handle rotating with mouse
 	$("#gl")
 	.mousedown(function(event){
 		mouseDownX = event.pageX;
@@ -79,6 +83,9 @@ $(document).ready(function(){
 		mouseDownX = null;
 		mouseDownY = null;
 	});
+
+	//Tips and tricks
+	$("#tipsntricks").hide();
 });
 
 function setup(){
@@ -246,6 +253,9 @@ function updateUI(){
 	else
 		$("#inputarms").hide();
 	$("#code").text(generateCode());
+	if(generateCode().length > 100){
+		$("#codeinfo").html("<b>Please note:</b> This command is too long to be executed from chat. You need to place it inside a command block. (See tips and tricks below.)");
+	}
 
 	// Rotate 3D Stuff
 	// y and z rotation needs to be inverted
@@ -267,6 +277,7 @@ function generateCode(){
 
 	var tags = [];
 
+	//CheckBoxes
 	if(invisible)
 		tags.push("Invisible:1b");
 	if(invulnerable)
@@ -280,10 +291,41 @@ function generateCode(){
 	if(small)
 		tags.push("Small:1b");
 
+	//Sliders
+	if(rotation != 0)
+		tags.push("Rotation:["+rotation+"f]");
+
+	//Now the pose
+	var pose = [];
+	if(!isZero(body))
+		pose.push("Body:"+getJSONArray(body));
+	if(!isZero(head))
+		pose.push("Head:"+getJSONArray(head));
+	if(!isZero(leftLeg))
+		pose.push("LeftLeg:"+getJSONArray(leftLeg));
+	if(!isZero(rightLeg))
+		pose.push("RightLeg:"+getJSONArray(rightLeg));
+	if(showArms){
+		if(!isZero(leftArm))
+			pose.push("LeftArm:"+getJSONArray(leftArm));
+		if(!isZero(rightArm))
+			pose.push("LeftArm:"+getJSONArray(rightArm));
+	}
+
+
+	if(pose.length > 0)
+		tags.push("Pose:{"+pose.join(",")+"}");
 
 	code += tags.join(",");
 	code += "}";
 	return code;
+}
+
+function isZero(vector){
+	return vector.x == 0 && vector.y == 0 && vector.z == 0;
+}
+function getJSONArray(vector){
+	return "["+vector.x+"f,"+vector.y+"f,"+vector.z+"f]";
 }
 
 function getMouseDeltaX(){

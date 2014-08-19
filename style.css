@@ -15,6 +15,21 @@ body{
 	background-color: #dddddd;
 }
 
+div{
+	padding: 0;
+	margin: 0;
+}
+
+h1{
+	text-align: center;
+	font-family: "Oswald", sans-serif;
+	margin: 0;
+}
+
+a{
+	color: #000000;
+}
+
 #gl{
 	width: 60%;
 	height: 100%;
@@ -22,24 +37,21 @@ body{
 	cursor: move;
 }
 
-#controls{
+#card{
 	background-color: #ffffff;
 	box-shadow: 0 2px 4px #555555;
-	margin: 1em;
+	margin: 0.5em;
 	margin-left: 60%;
 }
-#inputsection{
-	margin: 0.5em;
-}
 
-#code{
-	margin: 0.5em;
+.padding{
 	padding: 0.5em;
-	font-style: italic;
-	word-wrap: break-word;
 }
 
-h1{
-	text-align: center;
-	font-family: "Oswald", sans-serif;
+.code{
+	word-wrap: break-word;
+	padding: 1em;
+	font-family: monospace;
+	background-color: #37474f;
+	color: #ffffff;
 }
