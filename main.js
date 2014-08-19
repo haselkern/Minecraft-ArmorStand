@@ -309,7 +309,7 @@ function generateCode(){
 		if(!isZero(leftArm))
 			pose.push("LeftArm:"+getJSONArray(leftArm));
 		if(!isZero(rightArm))
-			pose.push("LeftArm:"+getJSONArray(rightArm));
+			pose.push("RightArm:"+getJSONArray(rightArm));
 	}
 
 
