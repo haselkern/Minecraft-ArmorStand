@@ -31,6 +31,15 @@ var noBasePlate = false;
 var noGravity = false;
 var showArms = false;
 var small = false;
+
+var useCustomEquipment;
+var equipSword;
+var equipShoes;
+var equipLeggings;
+var equipChestplate;
+var equipHelmet;
+var equipCustomHead;
+
 //The rotation values are all in degrees.
 var head = new THREE.Vector3(0,0,0);
 var body = new THREE.Vector3(0,0,0);
@@ -39,7 +48,6 @@ var rightLeg = new THREE.Vector3(0,0,0);
 var leftArm = new THREE.Vector3(0,0,0);
 var rightArm = new THREE.Vector3(0,0,0);
 var rotation = 0;
-var vec0 = new THREE.Vector3(0,0,0); // We use this to determine if we want a pose in the command.
 
 //Stuff for mouse movements
 var mouseDownX;
@@ -227,6 +235,15 @@ function handleInput(){
 	showArms = getCheckBoxInput("showarms");
 	small = getCheckBoxInput("small");
 
+	useCustomEquipment = getCheckBoxInput("usecustomequipment");
+	equipSword = getInput("equipSword");
+	equipShoes = getInput("equipShoes");
+	equipLeggings = getInput("equipLeggings");
+	equipChestplate = getInput("equipChestplate");
+	equipHelmet = getInput("equipHelmet");
+	equipCustomHead = getCheckBoxInput("equipCustomHead");
+
+
 	body.set(getRangeInput("bodyX"), getRangeInput("bodyY"), getRangeInput("bodyZ"));
 	head.set(getRangeInput("headX"), getRangeInput("headY"), getRangeInput("headZ"));
 	leftLeg.set(getRangeInput("leftLegX"), getRangeInput("leftLegY"), getRangeInput("leftLegZ"));
@@ -244,18 +261,26 @@ function getCheckBoxInput(name){
 function getRangeInput(name){
 	return $("input[name="+name+"]").val();
 }
+function getInput(name){
+	return $("input[name="+name+"]").val();
+}
 
 /** Changes stuff according to our input values */
 function updateUI(){
-	//Hide/Show the arm section
+	//Hide/Show different inputs
 	if(showArms)
 		$("#inputarms").show();
 	else
 		$("#inputarms").hide();
+	if(useCustomEquipment)
+		$("#customequipment").show();
+	else
+		$("#customequipment").hide();
 	$("#code").text(generateCode());
 	if(generateCode().length > 100){
 		$("#codeinfo").html("<b>Please note:</b> This command is too long to be executed from chat. You need to place it inside a command block. (See tips and tricks below.)");
 	}
+
 
 	// Rotate 3D Stuff
 	// y and z rotation needs to be inverted
@@ -294,6 +319,44 @@ function generateCode(){
 	//Sliders
 	if(rotation != 0)
 		tags.push("Rotation:["+rotation+"f]");
+
+	//Equipment
+	if(useCustomEquipment){
+		var equip = [];
+
+		if(equipSword != "")
+			equip.push("{id:\""+equipSword+"\",Count:1b}");
+		else
+			equip.push("{}");
+
+		if(equipShoes != "")
+			equip.push("{id:\""+equipShoes+"\",Count:1b}");
+		else
+			equip.push("{}");
+
+		if(equipLeggings != "")
+			equip.push("{id:\""+equipLeggings+"\",Count:1b}");
+		else
+			equip.push("{}");
+
+		if(equipChestplate != "")
+			equip.push("{id:\""+equipChestplate+"\",Count:1b}");
+		else
+			equip.push("{}");
+
+		if(equipHelmet != ""){
+			if(equipCustomHead){
+				equip.push("{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}");
+			}
+			else{
+				equip.push("{id:\""+equipHelmet+"\",Count:1b}");
+			}
+		}
+		else
+			equip.push("{}");
+
+		tags.push("Equipment:["+equip.join(",")+"]");
+	}
 
 	//Now the pose
 	var pose = [];

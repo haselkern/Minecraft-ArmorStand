@@ -1,6 +1,6 @@
 html, body{
 	height: 100%;
-	font-family: Arial;
+	font-family: Arial, sans-serif;
 	margin: 0;
 	padding: 0;
 }
@@ -30,6 +30,13 @@ a{
 	color: #000000;
 }
 
+/* We cheat a bit here to fit all the controls in one row.
+	I will add a proper workaround later.
+ */
+.evenly *{
+	width: 24%;
+}
+
 #gl{
 	width: 60%;
 	height: 100%;
@@ -54,4 +61,8 @@ a{
 	font-family: monospace;
 	background-color: #37474f;
 	color: #ffffff;
+}
+
+#customequipment input[type=text]{
+	width: 100%;
 }

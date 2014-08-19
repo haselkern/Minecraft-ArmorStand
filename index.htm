@@ -36,20 +36,46 @@
 	    	<input type="checkbox" name="showarms">Show Arms<br>
             <input type="checkbox" name="small">Small<br>
 
-	    	Rotation: <input type="range" name="rotation" min="0" max="360" value="0"><br>
+	    	Rotation: <input type="range" name="rotation" min="0" max="360" value="0">
 
-            Head: <input type="range" name="headX" min="0" max="360" value="0"><input type="range" name="headY" min="0" max="360" value="0"><input type="range" name="headZ" min="0" max="360" value="0"><br>
+            <div class="evenly">
+                <span>Head:</span><input type="range" name="headX" min="0" max="360" value="0"><input type="range" name="headY" min="0" max="360" value="0"><input type="range" name="headZ" min="0" max="360" value="0">
+            </div>
 
-            Body: <input type="range" name="bodyX" min="0" max="360" value="0"><input type="range" name="bodyY" min="0" max="360" value="0"><input type="range" name="bodyZ" min="0" max="360" value="0"><br>
+            <div class="evenly">
+                <span>Body:</span><input type="range" name="bodyX" min="0" max="360" value="0"><input type="range" name="bodyY" min="0" max="360" value="0"><input type="range" name="bodyZ" min="0" max="360" value="0">
+            </div>
 
-            Left Leg: <input type="range" name="leftLegX" min="0" max="360" value="0"><input type="range" name="leftLegY" min="0" max="360" value="0"><input type="range" name="leftLegZ" min="0" max="360" value="0"><br>
+            <div class="evenly">
+                <span>Left Leg:</span><input type="range" name="leftLegX" min="0" max="360" value="0"><input type="range" name="leftLegY" min="0" max="360" value="0"><input type="range" name="leftLegZ" min="0" max="360" value="0">
+            </div>
 
-            Right Leg: <input type="range" name="rightLegX" min="0" max="360" value="0"><input type="range" name="rightLegY" min="0" max="360" value="0"><input type="range" name="rightLegZ" min="0" max="360" value="0"><br>
+            <div class="evenly">
+                <span>Right Leg:</span><input type="range" name="rightLegX" min="0" max="360" value="0"><input type="range" name="rightLegY" min="0" max="360" value="0"><input type="range" name="rightLegZ" min="0" max="360" value="0">
+            </div>
 
             <div id="inputarms">
-                Left Arm: <input type="range" name="leftArmX" min="0" max="360" value="0"><input type="range" name="leftArmY" min="0" max="360" value="0"><input type="range" name="leftArmZ" min="0" max="360" value="0"><br>
+                <div class="evenly">
+                    <span>Left Arm:</span><input type="range" name="leftArmX" min="0" max="360" value="0"><input type="range" name="leftArmY" min="0" max="360" value="0"><input type="range" name="leftArmZ" min="0" max="360" value="0">
+                </div>
 
-                Right Arm: <input type="range" name="rightArmX" min="0" max="360" value="0"><input type="range" name="rightArmY" min="0" max="360" value="0"><input type="range" name="rightArmZ" min="0" max="360" value="0"><br>
+                <div class="evenly">
+                    <span>Right Arm:</span><input type="range" name="rightArmX" min="0" max="360" value="0"><input type="range" name="rightArmY" min="0" max="360" value="0"><input type="range" name="rightArmZ" min="0" max="360" value="0">
+                </div>
+            </div>
+            <br>
+
+            <input type="checkbox" name="usecustomequipment">Use Custom Equipment
+            <div id="customequipment">
+                <div class="padding">
+                    Enter the text id of an item (for example <i>stone</i> or <i>iron_sword</i>) into the appropriate slots. You can enter an arbitrary item for the head or hand, but the other slots must contain an appropriate item.
+                    <input type="text" name="equipSword" placeholder="Item in hand">
+                    <input type="text" name="equipShoes" placeholder="Shoes">
+                    <input type="text" name="equipLeggings" placeholder="Leggings">
+                    <input type="text" name="equipChestplate" placeholder="Chestplate">
+                    <input type="text" name="equipHelmet" placeholder="Helmet">
+                    <input type="checkbox" name="equipCustomHead">Use Helmet as player name for custom head
+                </div>
             </div>
 
     	</div>
@@ -73,6 +99,9 @@
                 /give @p command_block
             </div>
 
+
+            <!-- We automated this.
+
             <div class="padding">
                 <br>
                 You can give the armor stand a <b>custom player head</b>! Just replace <i>Notch</i> with an username of your choice.
@@ -89,6 +118,8 @@
             <div class="code">
                 /entitydata @e[r=2,ArmorStand] {Equipment:[{id:"iron_sword",Count:1b},{id:"iron_boots",Count:1b},{id:"iron_leggings",Count:1b},{id:"iron_chestplate",Count:1b},{id:"iron_helmet",Count:1b}]}
             </div>
+            
+            -->
 
             <div class="padding">
                 <br>
