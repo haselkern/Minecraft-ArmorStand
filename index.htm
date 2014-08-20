@@ -17,7 +17,7 @@
 
     <div id="card">
 
-    	<h1>MINECRAFT ARMOR STAND</h1>
+        <h1>MINECRAFT ARMOR STAND</h1>
         <div class="padding">
             <center>
                 <a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank"><img src="ic/github.png" alt="GitHub" title="GitHub" /></a>
@@ -33,16 +33,16 @@
                 </div>
         </div>
 
-    	<div id="inputsection" class="padding">
+        <div id="inputsection" class="padding">
 
             <label><input type="checkbox" name="invisible">Invisible</label><br>
             <label><input type="checkbox" name="invulnerable">Invulnerable</label><br>
             <label><input type="checkbox" name="nobaseplate">No Base Plate</label><br>
             <label><input type="checkbox" name="nogravity">No Gravity</label><br>
-	    	<label><input type="checkbox" name="showarms">Show Arms</label><br>
+            <label><input type="checkbox" name="showarms">Show Arms</label><br>
             <label><input type="checkbox" name="small">Small</label><br>
 
-	    	Rotation: <input type="range" name="rotation" min="0" max="360" value="0">
+            Rotation: <input type="range" name="rotation" min="0" max="360" value="0">
 
             <div class="evenly">
                 <span>Head:</span><input type="range" name="headX" min="0" max="360" value="0"><input type="range" name="headY" min="0" max="360" value="0"><input type="range" name="headZ" min="0" max="360" value="0">
@@ -83,8 +83,47 @@
                     <label><input type="checkbox" name="equipCustomHead">Use Helmet as player name for custom head</label>
                 </div>
             </div>
+            <br>
 
-    	</div>
+            <!-- THANK YOU to reddit user Oozebull for this part. -->
+            <label><input type="checkbox" name="usedisabledslots">Lock Slot Interaction</label>
+            <div id="disabledslots" class="padding">
+                <div>
+                    <span class="first">&nbsp;</span>
+                    <span class="sprite" style="background-position: 0px   0px"></span>
+                    <span class="sprite" style="background-position: 0px -16px"></span>
+                    <span class="sprite" style="background-position: 0px -32px"></span>
+                    <span class="sprite" style="background-position: 0px -48px"></span>
+                    <span class="sprite" style="background-position: 0px -64px"></span>
+                </div>
+
+                <div>
+                    <span class="first">Remove</span>
+                    <span><input id="dH" type="checkbox"></input></span>
+                    <span><input id="dC" type="checkbox"></input></span>
+                    <span><input id="dL" type="checkbox"></input></span>
+                    <span><input id="dB" type="checkbox"></input></span>
+                    <span><input id="dW" type="checkbox"></input></span>
+                </div>
+                <div>
+                    <span class="first">Replace</span>
+                    <span><input id="rH" type="checkbox"></input></span>
+                    <span><input id="rC" type="checkbox"></input></span>
+                    <span><input id="rL" type="checkbox"></input></span>
+                    <span><input id="rB" type="checkbox"></input></span>
+                    <span><input id="rW" type="checkbox"></input></span>
+                </div>
+                <div>
+                    <span class="first">Place</span>
+                    <span><input id="pH" type="checkbox"></input></span>
+                    <span><input id="pC" type="checkbox"></input></span>
+                    <span><input id="pL" type="checkbox"></input></span>
+                    <span><input id="pB" type="checkbox"></input></span>
+                    <span><input id="pW" type="checkbox"></input></span>
+                </div>
+            </div>
+
+        </div>
 
         <div id="code" class="code"></div>
         <div id="codeinfo" class="padding"></div>
@@ -92,33 +131,16 @@
     </div>
 
     <div id="card">
-        <span class="padding" style="cursor: pointer;" onclick="javascript:$('#tipsntricks').slideToggle();">
-            + Tips and Tricks for your Armor Stand
+        <span class="padding" style="cursor: pointer;" onclick="javascript:$('#getcommandblock').slideToggle();">
+            + Obtain a command block
         </span>
         <br>
-        <div id="tipsntricks">
-
+        <div id="getcommandblock">
             <div class="padding">
                 If your command is longer than 100 characters, it needs to be executed with a <b>command block</b>. Obtain one by typing:
             </div>
             <div class="code">
                 /give @p command_block
-            </div>
-
-            <div class="padding">
-                <br>
-                If you are a mapmaker you might not want players to take items out of the armor stand. If you want to lock all slots, replace n with 1 (or 0 if you want to unlock it).<br>
-                If you want to <b>disable specific slots</b>, you have to add the numbers in following table up, and replace n with your result.
-                <table>
-                    <tr><td>Boots</td>       <td>2</td></tr>
-                    <tr><td>Leggings</td>    <td>4</td></tr>
-                    <tr><td>Chestplate</td>  <td>8</td></tr>
-                    <tr><td>Helmet/Block</td><td>16</td></tr>
-                    <tr><td>Sword/Block</td> <td>Not working :(</td></tr>
-                </table>
-            </div>
-            <div class="code">
-                /entitydata @e[r=2,ArmorStand] {DisabledSlots:n}
             </div>
         </div>
     </div>

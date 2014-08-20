@@ -66,3 +66,27 @@ a{
 #customequipment input[type=text]{
 	width: 100%;
 }
+
+#disabledslots{
+	display: block;
+}
+
+#disabledslots .first{
+	width: 60px;
+	display: inline-block;
+	clear: left;
+}
+
+#disabledslots span{
+	width: 16px;
+	height: 16px;
+    display: inline-block;
+}
+
+#disabledslots .sprite{
+    background-repeat: no-repeat;
+    background-image: url("ic/slots.png");
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}

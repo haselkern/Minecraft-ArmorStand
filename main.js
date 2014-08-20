@@ -40,6 +40,8 @@ var equipChestplate;
 var equipHelmet;
 var equipCustomHead;
 
+var useDisabledSlots;
+
 //The rotation values are all in degrees.
 var head = new THREE.Vector3(0,0,0);
 var body = new THREE.Vector3(0,0,0);
@@ -93,8 +95,12 @@ $(document).ready(function(){
 	});
 
 	//Hide elements
-	$("#tipsntricks").hide();
+	$("#getcommandblock").hide();
 	$("#troubleshooting").hide();
+	$("#inputarms").hide();
+	$("#customequipment").hide();
+	$("#disabledslots").hide();
+
 });
 
 function setup(){
@@ -244,6 +250,8 @@ function handleInput(){
 	equipHelmet = getInput("equipHelmet");
 	equipCustomHead = getCheckBoxInput("equipCustomHead");
 
+	useDisabledSlots = getCheckBoxInput("usedisabledslots");
+
 
 	body.set(getRangeInput("bodyX"), getRangeInput("bodyY"), getRangeInput("bodyZ"));
 	head.set(getRangeInput("headX"), getRangeInput("headY"), getRangeInput("headZ"));
@@ -270,16 +278,21 @@ function getInput(name){
 function updateUI(){
 	//Hide/Show different inputs
 	if(showArms)
-		$("#inputarms").show();
+		$("#inputarms").slideDown();
 	else
-		$("#inputarms").hide();
+		$("#inputarms").slideUp();
 	if(useCustomEquipment)
-		$("#customequipment").show();
+		$("#customequipment").slideDown();
 	else
-		$("#customequipment").hide();
+		$("#customequipment").slideUp();
+	if(useDisabledSlots)
+		$("#disabledslots").slideDown();
+	else
+		$("#disabledslots").slideUp();
+
 	$("#code").text(generateCode());
 	if(generateCode().length > 100){
-		$("#codeinfo").html("<b>Please note:</b> This command is too long to be executed from chat. You need to place it inside a command block. (See tips and tricks below.)");
+		$("#codeinfo").html("<b>Please note:</b> This command is too long to be executed from chat. You need to place it inside a command block. (see below)");
 	}
 
 
@@ -359,6 +372,11 @@ function generateCode(){
 		tags.push("Equipment:["+equip.join(",")+"]");
 	}
 
+	//DisabledSlots
+	if(useDisabledSlots){
+		tags.push("DisabledSlots:"+calculateDisabledSlotsFlag());
+	}
+
 	//Now the pose
 	var pose = [];
 	if(!isZero(body))
@@ -383,6 +401,32 @@ function generateCode(){
 	code += tags.join(",");
 	code += "}";
 	return code;
+}
+
+function calculateDisabledSlotsFlag() {
+    var dH = $("#dH").is(":checked") ? 1 << (4) : 0;
+    var dC = $("#dC").is(":checked") ? 1 << (3) : 0;
+    var dL = $("#dL").is(":checked") ? 1 << (2) : 0;
+    var dB = $("#dB").is(":checked") ? 1 << (1) : 0;
+    var dW = $("#dW").is(":checked") ? 1 << (0) : 0;
+    var dR = dH + dC + dL + dB + dW;
+
+    var rH = $("#rH").is(":checked") ? 1 << (4 + 8) : 0;
+    var rC = $("#rC").is(":checked") ? 1 << (3 + 8) : 0;
+    var rL = $("#rL").is(":checked") ? 1 << (2 + 8) : 0;
+    var rB = $("#rB").is(":checked") ? 1 << (1 + 8) : 0;
+    var rW = $("#rW").is(":checked") ? 1 << (0 + 8) : 0;
+    var rR = rH + rC + rL + rB + rW;
+
+    var pH = $("#pH").is(":checked") ? 1 << (4 + 16) : 0;
+    var pC = $("#pC").is(":checked") ? 1 << (3 + 16) : 0;
+    var pL = $("#pL").is(":checked") ? 1 << (2 + 16) : 0;
+    var pB = $("#pB").is(":checked") ? 1 << (1 + 16) : 0;
+    var pW = $("#pW").is(":checked") ? 1 << (0 + 16) : 0;
+    var pR = pH + pC + pL + pB + pW;
+
+    var result = dR + rR + pR;
+    return result;
 }
 
 function isZero(vector){
