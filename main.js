@@ -92,8 +92,9 @@ $(document).ready(function(){
 		mouseDownY = null;
 	});
 
-	//Tips and tricks
+	//Hide elements
 	$("#tipsntricks").hide();
+	$("#troubleshooting").hide();
 });
 
 function setup(){
