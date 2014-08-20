@@ -35,12 +35,12 @@
 
     	<div id="inputsection" class="padding">
 
-            <input type="checkbox" name="invisible">Invisible<br>
-            <input type="checkbox" name="invulnerable">Invulnerable<br>
-            <input type="checkbox" name="nobaseplate">No Base Plate<br>
-            <input type="checkbox" name="nogravity">No Gravity<br>
-	    	<input type="checkbox" name="showarms">Show Arms<br>
-            <input type="checkbox" name="small">Small<br>
+            <label><input type="checkbox" name="invisible">Invisible</label><br>
+            <label><input type="checkbox" name="invulnerable">Invulnerable</label><br>
+            <label><input type="checkbox" name="nobaseplate">No Base Plate</label><br>
+            <label><input type="checkbox" name="nogravity">No Gravity</label><br>
+	    	<label><input type="checkbox" name="showarms">Show Arms</label><br>
+            <label><input type="checkbox" name="small">Small</label><br>
 
 	    	Rotation: <input type="range" name="rotation" min="0" max="360" value="0">
 
@@ -71,7 +71,7 @@
             </div>
             <br>
 
-            <input type="checkbox" name="usecustomequipment">Use Custom Equipment
+            <label><input type="checkbox" name="usecustomequipment">Use Custom Equipment</label>
             <div id="customequipment">
                 <div class="padding">
                     Enter the text id of an item (for example <i>stone</i> or <i>iron_sword</i>) into the appropriate slots. You can enter an arbitrary item for the head or hand, but the other slots must contain an appropriate item.
@@ -80,7 +80,7 @@
                     <input type="text" name="equipLeggings" placeholder="Leggings">
                     <input type="text" name="equipChestplate" placeholder="Chestplate">
                     <input type="text" name="equipHelmet" placeholder="Helmet">
-                    <input type="checkbox" name="equipCustomHead">Use Helmet as player name for custom head
+                    <label><input type="checkbox" name="equipCustomHead">Use Helmet as player name for custom head</label>
                 </div>
             </div>
 
@@ -104,28 +104,6 @@
             <div class="code">
                 /give @p command_block
             </div>
-
-
-            <!-- We automated this.
-
-            <div class="padding">
-                <br>
-                You can give the armor stand a <b>custom player head</b>! Just replace <i>Notch</i> with an username of your choice.
-            </div>
-            <div class="code">
-                /give @p skull 1 3 {SkullOwner:"Notch"}
-            </div>
-
-            <div class="padding">
-                <br>
-                You can use the following command to <b>fully customise the equipment</b> of your armorstand.<br>
-                In order for it to work, you have to put a command block close to the armorstand you want to edit. (Notice the <i>r=2</i>, where the r is radius.)
-            </div>
-            <div class="code">
-                /entitydata @e[r=2,ArmorStand] {Equipment:[{id:"iron_sword",Count:1b},{id:"iron_boots",Count:1b},{id:"iron_leggings",Count:1b},{id:"iron_chestplate",Count:1b},{id:"iron_helmet",Count:1b}]}
-            </div>
-            
-            -->
 
             <div class="padding">
                 <br>
