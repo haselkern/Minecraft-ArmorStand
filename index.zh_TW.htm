@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minecraft Armor Stand</title>
+    <title>Minecraft 盔甲架產生器</title>
+    <!-- Pcchou http://about.me/pcchou 翻譯 -->
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="ic/icon.png">
@@ -17,8 +18,8 @@
 
     <div id="card">
 
-        <h1>MINECRAFT ARMOR STAND<br>Oh Snap!</h1>
-        <b>I just noticed that some rotation values are messed up. I am almost done fixing this :)</b><br><a href="index.zh_TW.htm">正體中文版本請點我 Click me for a Traditional Chinese Version</a>
+        <h1>Minecraft 盔甲架產生器<br>挖賽！</h1>
+        <b>作者表示：剛發現一些旋轉值怪怪的，幾乎修好了 :)</b><br><a href="index.htm">Click me for a English Version 英文版本請點我</a>
         <div class="padding">
             <center>
                 <a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank"><img src="ic/github.png" alt="GitHub" title="GitHub" /></a>
@@ -27,67 +28,67 @@
             </center>
                 <br>
                 <span class="padding" style="cursor: pointer;" onclick="javascript:$('#troubleshooting').slideToggle();">
-                + Troubleshooting
+                + 疑難排解
                 </span>
                 <div id="troubleshooting">
-                      <b>This thing uses WebGL!</b> If you don't see anything on the left enable WebGL in your browser or visit the <a href="http://get.webgl.org/">official WebGL website</a> to troubleshoot problems.
+                      <b>這玩意要用到 WebGL ！</b> 如果你在左邊看不到任何東西，請在你的瀏覽器設定裡啟用 WebGL ，或是到<a href="http://get.webgl.org/">WebGL官方網站</a>尋找解決方案。
                 </div>
         </div>
 
         <div id="inputsection" class="padding">
 
-            <label><input type="checkbox" name="invisible">Invisible</label><br>
-            <label><input type="checkbox" name="invulnerable">Invulnerable</label><br>
-            <label><input type="checkbox" name="nobaseplate">No Base Plate</label><br>
-            <label><input type="checkbox" name="nogravity">No Gravity</label><br>
-            <label><input type="checkbox" name="showarms">Show Arms</label><br>
-            <label><input type="checkbox" name="small">Small</label><br>
+            <label><input type="checkbox" name="invisible">隱形</label><br>
+            <label><input type="checkbox" name="invulnerable">無敵</label><br>
+            <label><input type="checkbox" name="nobaseplate">無底板</label><br>
+            <label><input type="checkbox" name="nogravity">無重力</label><br>
+            <label><input type="checkbox" name="showarms">顯示手臂</label><br>
+            <label><input type="checkbox" name="small">小</label><br>
 
-            Rotation: <input type="range" name="rotation" min="0" max="360" value="0">
+            旋轉：<input type="range" name="rotation" min="0" max="360" value="0">
 
             <div class="evenly">
-                <span>Head:</span><input type="range" name="headX" min="0" max="360" value="0"><input type="range" name="headY" min="0" max="360" value="0"><input type="range" name="headZ" min="0" max="360" value="0">
+                <span>頭：</span><input type="range" name="headX" min="0" max="360" value="0"><input type="range" name="headY" min="0" max="360" value="0"><input type="range" name="headZ" min="0" max="360" value="0">
             </div>
 
             <div class="evenly">
-                <span>Body:</span><input type="range" name="bodyX" min="0" max="360" value="0"><input type="range" name="bodyY" min="0" max="360" value="0"><input type="range" name="bodyZ" min="0" max="360" value="0">
+                <span>身體：</span><input type="range" name="bodyX" min="0" max="360" value="0"><input type="range" name="bodyY" min="0" max="360" value="0"><input type="range" name="bodyZ" min="0" max="360" value="0">
             </div>
 
             <div class="evenly">
-                <span>Left Leg:</span><input type="range" name="leftLegX" min="0" max="360" value="0"><input type="range" name="leftLegY" min="0" max="360" value="0"><input type="range" name="leftLegZ" min="0" max="360" value="0">
+                <span>左腳：</span><input type="range" name="leftLegX" min="0" max="360" value="0"><input type="range" name="leftLegY" min="0" max="360" value="0"><input type="range" name="leftLegZ" min="0" max="360" value="0">
             </div>
 
             <div class="evenly">
-                <span>Right Leg:</span><input type="range" name="rightLegX" min="0" max="360" value="0"><input type="range" name="rightLegY" min="0" max="360" value="0"><input type="range" name="rightLegZ" min="0" max="360" value="0">
+                <span>右腳：</span><input type="range" name="rightLegX" min="0" max="360" value="0"><input type="range" name="rightLegY" min="0" max="360" value="0"><input type="range" name="rightLegZ" min="0" max="360" value="0">
             </div>
 
             <div id="inputarms">
                 <div class="evenly">
-                    <span>Left Arm:</span><input type="range" name="leftArmX" min="0" max="360" value="0"><input type="range" name="leftArmY" min="0" max="360" value="0"><input type="range" name="leftArmZ" min="0" max="360" value="0">
+                    <span>左手：</span><input type="range" name="leftArmX" min="0" max="360" value="0"><input type="range" name="leftArmY" min="0" max="360" value="0"><input type="range" name="leftArmZ" min="0" max="360" value="0">
                 </div>
 
                 <div class="evenly">
-                    <span>Right Arm:</span><input type="range" name="rightArmX" min="0" max="360" value="0"><input type="range" name="rightArmY" min="0" max="360" value="0"><input type="range" name="rightArmZ" min="0" max="360" value="0">
+                    <span>右手：</span><input type="range" name="rightArmX" min="0" max="360" value="0"><input type="range" name="rightArmY" min="0" max="360" value="0"><input type="range" name="rightArmZ" min="0" max="360" value="0">
                 </div>
             </div>
             <br>
 
-            <label><input type="checkbox" name="usecustomequipment">Use Custom Equipment</label>
+            <label><input type="checkbox" name="usecustomequipment">自訂裝備</label>
             <div id="customequipment">
                 <div class="padding">
-                    Enter the text id of an item (for example <i>stone</i> or <i>iron_sword</i>) into the appropriate slots. You can enter an arbitrary item for the head or hand, but the other slots must contain an appropriate item.
-                    <input type="text" name="equipSword" placeholder="Item in hand">
-                    <input type="text" name="equipShoes" placeholder="Shoes">
-                    <input type="text" name="equipLeggings" placeholder="Leggings">
-                    <input type="text" name="equipChestplate" placeholder="Chestplate">
-                    <input type="text" name="equipHelmet" placeholder="Helmet">
-                    <label><input type="checkbox" name="equipCustomHead">Use Helmet as player name for custom head</label>
+                    在以下的文字框輸入一個物品的文字ID（例如 <i>stone</i> 或 <i>iron_sword</i>）你可以在頭盔及手持輸入任意物品，但是其餘的只能輸入適當的。
+                    <input type="text" name="equipSword" placeholder="手持物品">
+                    <input type="text" name="equipShoes" placeholder="靴子">
+                    <input type="text" name="equipLeggings" placeholder="護腿">
+                    <input type="text" name="equipChestplate" placeholder="胸甲">
+                    <input type="text" name="equipHelmet" placeholder="頭盔（玩家名稱）">
+                    <label><input type="checkbox" name="equipCustomHead">使用玩家頭顱</label>
                 </div>
             </div>
             <br>
 
             <!-- THANK YOU to reddit user Oozebull for this part. -->
-            <label><input type="checkbox" name="usedisabledslots">Lock Slot Interaction</label>
+            <label><input type="checkbox" name="usedisabledslots">互動鎖定</label>
             <div id="disabledslots" class="padding">
                 <div>
                     <span class="first">&nbsp;</span>
@@ -99,7 +100,7 @@
                 </div>
 
                 <div>
-                    <span class="first">Remove</span>
+                    <span class="first">移除</span>
                     <span><input id="dH" type="checkbox"></input></span>
                     <span><input id="dC" type="checkbox"></input></span>
                     <span><input id="dL" type="checkbox"></input></span>
@@ -107,7 +108,7 @@
                     <span><input id="dW" type="checkbox"></input></span>
                 </div>
                 <div>
-                    <span class="first">Replace</span>
+                    <span class="first">取代</span>
                     <span><input id="rH" type="checkbox"></input></span>
                     <span><input id="rC" type="checkbox"></input></span>
                     <span><input id="rL" type="checkbox"></input></span>
@@ -115,7 +116,7 @@
                     <span><input id="rW" type="checkbox"></input></span>
                 </div>
                 <div>
-                    <span class="first">Place</span>
+                    <span class="first">放置</span>
                     <span><input id="pH" type="checkbox"></input></span>
                     <span><input id="pC" type="checkbox"></input></span>
                     <span><input id="pL" type="checkbox"></input></span>
@@ -133,17 +134,18 @@
 
     <div id="card">
         <span class="padding" style="cursor: pointer;" onclick="javascript:$('#getcommandblock').slideToggle();">
-            + Obtain a command block
+            + 取得指令方塊
         </span>
         <br>
         <div id="getcommandblock">
             <div class="padding">
-                If your command is longer than 100 characters, it needs to be executed with a <b>command block</b>. Obtain one by typing:
+                如果你的指令超過100字元，你會需要使用<b>指令方塊</b>。請輸入以下指令取得。
             </div>
             <div class="code">
                 /give @p command_block
             </div>
         </div>
     </div>
+    <div align="center"><i>由<a href="http://about.me/pcchou">Pc Chou</a>翻譯。</i></div>
 </body>
 </html>
