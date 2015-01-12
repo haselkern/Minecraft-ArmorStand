@@ -27,6 +27,7 @@ var armorstand, armorstandWrapper; //Group all the other elements
 //DATA -> Stuff that we'll use to generate the command. Fetched from the controls.
 var invisible = false;
 var invulnerable = false;
+var persistencerequired = false;
 var noBasePlate = false;
 var noGravity = false;
 var showArms = false;
@@ -237,6 +238,7 @@ function handleInput(){
 	
 	invisible = getCheckBoxInput("invisible");
 	invulnerable = getCheckBoxInput("invulnerable");
+    persistencerequired = getCheckBoxInput("persistencerequired");
 	noBasePlate = getCheckBoxInput("nobaseplate");
 	noGravity = getCheckBoxInput("nogravity");
 	showArms = getCheckBoxInput("showarms");
@@ -321,6 +323,8 @@ function generateCode(){
 		tags.push("Invisible:1b");
 	if(invulnerable)
 		tags.push("Invulnerable:1b");
+    if(persistencerequired)
+        tags.push("PersistenceRequired:1b");
 	if(noBasePlate)
 		tags.push("NoBasePlate:1b");
 	if(noGravity)
