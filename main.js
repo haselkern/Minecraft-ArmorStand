@@ -308,6 +308,12 @@ function updateUI(){
 	mArmRight.rotation.set(rightArm.x * DEG2RAD, -rightArm.y * DEG2RAD, -rightArm.z * DEG2RAD);
 	armorstand.rotation.y = -rotation * DEG2RAD;
 
+    // Scale model, depending on small variable
+    if(small)
+        armorstand.scale.set(0.6, 0.6, 0.6);
+    else
+        armorstand.scale.set(1, 1, 1);
+    
 	//Set Visibility
 	mArmRight.visible = mArmLeft.visible = showArms;
 	mBasePlate.visible = !noBasePlate;
