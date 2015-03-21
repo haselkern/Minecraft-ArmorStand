@@ -39,7 +39,7 @@ var equipShoes;
 var equipLeggings;
 var equipChestplate;
 var equipHelmet;
-var equipCustomHead;
+var equipCustomHeadMode;
 
 var useDisabledSlots;
 
@@ -70,13 +70,14 @@ $(document).ready(function(){
 	updateUI();
 	render();
 
-	//Stuff to handle input
+	//Stuff to handle and update input
 	$("input").on("input", function(){
 		handleInput();
 	});
-	$(':checkbox').change(function() {
+	$(':checkbox, #equipCustomHeadMode').change(function() {
     	handleInput();
 	}); 
+    
 
 	//Handle rotating with mouse
 	$("#gl")
@@ -250,7 +251,7 @@ function handleInput(){
 	equipLeggings = getInput("equipLeggings");
 	equipChestplate = getInput("equipChestplate");
 	equipHelmet = getInput("equipHelmet");
-	equipCustomHead = getCheckBoxInput("equipCustomHead");
+	equipCustomHeadMode = $("#equipCustomHeadMode").val();
 
 	useDisabledSlots = getCheckBoxInput("usedisabledslots");
 
@@ -369,12 +370,26 @@ function generateCode(){
 			equip.push("{}");
 
 		if(equipHelmet != ""){
-			if(equipCustomHead){
-				equip.push("{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}");
-			}
-			else{
+            
+            // Use input as item
+            if(equipCustomHeadMode == "item"){
 				equip.push("{id:\""+equipHelmet+"\",Count:1b}");
 			}
+            
+            // Use input as player name
+			else if(equipCustomHeadMode == "player"){
+				equip.push("{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}");
+			}
+            
+            // Use input as url
+            // Best reference: http://redd.it/24quwx
+            else if(equipCustomHeadMode == "url"){
+                var uuid = generateUUID();
+                var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
+                
+				equip.push('{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}');
+			}
+			
 		}
 		else
 			equip.push("{}");
@@ -470,4 +485,20 @@ function render(){
 	armorstandWrapper.rotation.x = rotX + getMouseDeltaY();
 
 	requestAnimationFrame(render);
+}
+
+
+
+
+// ---- Additional functions
+
+// From here: http://stackoverflow.com/a/8809472/1456971
+function generateUUID(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
 }
