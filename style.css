@@ -85,7 +85,7 @@ a{
 
 #disabledslots .sprite{
     background-repeat: no-repeat;
-    background-image: url("ic/slots.png");
+    background-image: url("images/slots.png");
     width: 16px;
     height: 16px;
     display: inline-block;

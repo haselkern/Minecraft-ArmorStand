@@ -124,13 +124,13 @@ function setup(){
 
 	//BasePlate
 	mBasePlate = new THREE.Mesh(
-		new THREE.CubeGeometry(12/16, 1/16, 12/16),
+		new THREE.BoxGeometry(12/16, 1/16, 12/16),
 		matStone);
 	mBasePlate.position.y = - (1/32 - armorstand.position.y);
 	armorstandWrapper.add(mBasePlate);
 	//Add a little dot, so the user knows which way is forward
 	var mmBaseDot = new THREE.Mesh(
-		new THREE.CubeGeometry(2/16, 1/16, 4/16),
+		new THREE.BoxGeometry(2/16, 1/16, 4/16),
 		matStone);
 	mmBaseDot.position.set(0,mBasePlate.position.y,10/16);
 	armorstandWrapper.add(mmBaseDot);
@@ -140,7 +140,7 @@ function setup(){
 
 	//Left Leg
 	var mmLegLeft = new THREE.Mesh(
-		new THREE.CubeGeometry(2/16, 11/16, 2/16),
+		new THREE.BoxGeometry(2/16, 11/16, 2/16),
 		matWood);
 	mmLegLeft.position.set(0,-5.5/16,0);
 	mLegLeft = new THREE.Object3D();
@@ -150,7 +150,7 @@ function setup(){
 
 	//Right Leg
 	var mmLegRight = new THREE.Mesh(
-		new THREE.CubeGeometry(2/16, 11/16, 2/16),
+		new THREE.BoxGeometry(2/16, 11/16, 2/16),
 		matWood);
 	mmLegRight.position.set(0,-5.5/16,0);
 	mLegRight = new THREE.Object3D();
@@ -160,7 +160,7 @@ function setup(){
 
 	//Left Arm
 	var mmArmLeft = new THREE.Mesh(
-		new THREE.CubeGeometry(2/16, 12/16, 2/16),
+		new THREE.BoxGeometry(2/16, 12/16, 2/16),
 		matWood);
 	mmArmLeft.position.set(0,-4/16,0);
 	mArmLeft = new THREE.Object3D();
@@ -170,7 +170,7 @@ function setup(){
 
 	//Right Arm
 	var mmArmRight = new THREE.Mesh(
-		new THREE.CubeGeometry(2/16, 12/16, 2/16),
+		new THREE.BoxGeometry(2/16, 12/16, 2/16),
 		matWood);
 	mmArmRight.position.set(0,-4/16,0);
 	mArmRight = new THREE.Object3D();
@@ -180,19 +180,19 @@ function setup(){
 
 	//Body (consists of four parts)
 	var mmHip = new THREE.Mesh(
-		new THREE.CubeGeometry(8/16, 2/16, 2/16),
+		new THREE.BoxGeometry(8/16, 2/16, 2/16),
 		matWood);
 	mmHip.position.set(0,-11/16,0);
 	var mmBodyLeft = new THREE.Mesh(
-		new THREE.CubeGeometry(2/16, 7/16, 2/16),
+		new THREE.BoxGeometry(2/16, 7/16, 2/16),
 		matWood);
 	mmBodyLeft.position.set(2/16,-6.5/16,0);
 	var mmBodyRight = new THREE.Mesh(
-		new THREE.CubeGeometry(2/16, 7/16, 2/16),
+		new THREE.BoxGeometry(2/16, 7/16, 2/16),
 		matWood);
 	mmBodyRight.position.set(-2/16,-6.5/16,0);
 	var mmShoulders = new THREE.Mesh(
-		new THREE.CubeGeometry(12/16, 3/16, 3/16),
+		new THREE.BoxGeometry(12/16, 3/16, 3/16),
 		matWood);
 	mmShoulders.position.set(0,-1.5/16,0);
 	mBody = new THREE.Object3D();
@@ -205,14 +205,14 @@ function setup(){
 
 	//Head (neck and skull)
 	var mmNeck = new THREE.Mesh(
-		new THREE.CubeGeometry(2/16, 7/16, 2/16),
+		new THREE.BoxGeometry(2/16, 7/16, 2/16),
 		matWood);
 	mmNeck.position.set(0,3.5/16,0);
 	/*
 	We do not want the head, as it obstructs a whole lot of the view. We can implement this,
 	once we've got an editor option to toggle it on and off.
 	var mmSkull = new THREE.Mesh(
-		new THREE.CubeGeometry(10/16, 10/16, 10/16),
+		new THREE.BoxGeometry(10/16, 10/16, 10/16),
 		matWood);
 	mmSkull.position.set(0,5/16,0);*/
 	mHead = new THREE.Object3D();
