@@ -40,6 +40,10 @@ var equipLeggings;
 var equipChestplate;
 var equipHelmet;
 var equipCustomHeadMode;
+var equipColorShoes;
+var equipColorLeggings;
+var equipColorChestplate;
+var equipColorHelmet;
 
 var useDisabledSlots;
 
@@ -102,6 +106,18 @@ $(document).ready(function(){
 	$("#inputarms").hide();
 	$("#customequipment").hide();
 	$("#disabledslots").hide();
+    
+    //Initialize colorpickers
+    $('.colorfield').colpick({
+        colorScheme:'light',
+        layout:'hex',
+        color:'ff8800',
+        onSubmit:function(hsb,hex,rgb,el) {
+            $(el).css('background-color', '#'+hex);
+            $(el).colpickHide();
+            handleInput();
+        }
+    });
 
 });
 
@@ -235,6 +251,7 @@ function setup(){
 	scene.add(pointLight);
 }
 
+// Write stuff from input into variables
 function handleInput(){
 	
 	invisible = getCheckBoxInput("invisible");
@@ -252,6 +269,11 @@ function handleInput(){
 	equipChestplate = getInput("equipChestplate");
 	equipHelmet = getInput("equipHelmet");
 	equipCustomHeadMode = $("#equipCustomHeadMode").val();
+    
+    equipColorShoes = $("#shoecolor").css("background-color");
+    equipColorLeggings = $("#leggingscolor").css("background-color");
+    equipColorChestplate = $("#chestplatecolor").css("background-color");
+    equipColorHelmet = $("#helmetcolor").css("background-color");
 
 	useDisabledSlots = getCheckBoxInput("usedisabledslots");
 
@@ -279,20 +301,43 @@ function getInput(name){
 
 /** Changes stuff according to our input values */
 function updateUI(){
+    
 	//Hide/Show different inputs
+    
 	if(showArms)
 		$("#inputarms").slideDown();
 	else
 		$("#inputarms").slideUp();
+    
 	if(useCustomEquipment)
 		$("#customequipment").slideDown();
 	else
 		$("#customequipment").slideUp();
+    
+    //Different colorinputs for armorparts
+    if(isLeatherArmor(equipShoes))
+        $("#shoecolor").slideDown();
+    else
+        $("#shoecolor").slideUp();
+    if(isLeatherArmor(equipLeggings))
+        $("#leggingscolor").slideDown();
+    else
+        $("#leggingscolor").slideUp();
+    if(isLeatherArmor(equipChestplate))
+        $("#chestplatecolor").slideDown();
+    else
+        $("#chestplatecolor").slideUp();
+    if(isLeatherArmor(equipHelmet))
+        $("#helmetcolor").slideDown();
+    else
+        $("#helmetcolor").slideUp();
+    
+    
 	if(useDisabledSlots)
 		$("#disabledslots").slideDown();
 	else
 		$("#disabledslots").slideUp();
-
+    
 	$("#code").text(generateCode());
 	if(generateCode().length > 100){
 		$("#codeinfo").html("<b>Please note:</b> This command is too long to be executed from chat. You need to place it inside a command block. (see below)");
@@ -355,17 +400,23 @@ function generateCode(){
 			equip.push("{}");
 
 		if(equipShoes != "")
-			equip.push("{id:\""+equipShoes+"\",Count:1b}");
+			equip.push("{id:\""+equipShoes+"\",Count:1b"
+                +getLeatherColorString($("#shoecolor"), isLeatherArmor(equipShoes))
+                       +"}");
 		else
 			equip.push("{}");
 
 		if(equipLeggings != "")
-			equip.push("{id:\""+equipLeggings+"\",Count:1b}");
+			equip.push("{id:\""+equipLeggings+"\",Count:1b"
+                +getLeatherColorString($("#leggingscolor"), isLeatherArmor(equipShoes))
+                       +"}");
 		else
 			equip.push("{}");
 
 		if(equipChestplate != "")
-			equip.push("{id:\""+equipChestplate+"\",Count:1b}");
+			equip.push("{id:\""+equipChestplate+"\",Count:1b"
+                +getLeatherColorString($("#chestplatecolor"), isLeatherArmor(equipShoes))
+                       +"}");
 		else
 			equip.push("{}");
 
@@ -373,7 +424,9 @@ function generateCode(){
             
             // Use input as item
             if(equipCustomHeadMode == "item"){
-				equip.push("{id:\""+equipHelmet+"\",Count:1b}");
+				equip.push("{id:\""+equipHelmet+"\",Count:1b"
+                    +getLeatherColorString($("#helmetcolor"), isLeatherArmor(equipShoes))
+                       +"}");
 			}
             
             // Use input as player name
@@ -501,4 +554,33 @@ function generateUUID(){
         return (c=='x' ? r : (r&0x3|0x8)).toString(16);
     });
     return uuid;
+}
+
+function getDecimalRGB(rgb){
+    //The string has the format 'rgb(r, g, b)'
+    
+    //Remove whitespaces. Now formatted: 'rgb(r,g,b)'
+    rgb = rgb.replace(/ /g,"");
+    
+    var r = rgb.substring(4,rgb.indexOf(","));
+    var g = rgb.substring(rgb.indexOf(",")+1,rgb.lastIndexOf(","));
+    var b = rgb.substring(rgb.lastIndexOf(",")+1, rgb.length-1);
+    
+    
+    return (r << 16) | (g << 8) | b;
+}
+
+function isLeatherArmor(item){
+    if(item == null)
+        return false;
+    return item.indexOf("leather") == 0;
+}
+
+// Pass the colorpicker element as element. If condition is true, it will return a proper datatag for use in items, otherwise it will return an empty string.
+function getLeatherColorString(element, condition){
+    if(condition){
+        var rgb = getDecimalRGB(element.css("background-color"));
+        return ",tag:{display:{color:"+rgb+"}}";
+    }
+    return "";
 }

@@ -4,6 +4,7 @@
     <title>Minecraft Armor Stand</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="js/colpick.css">
     <link rel="icon" type="image/png" href="images/icon.png">
     <link href='http://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:700' rel='stylesheet' type='text/css'>
@@ -11,6 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
+    <script src="js/colpick.js"></script>
     <script src="js/main.js"></script>
 
     <div id="gl"></div>
@@ -77,12 +79,22 @@
             <div id="customequipment">
                 <div class="padding">
                     Enter the text id of an item (for example <i>stone</i> or <i>iron_sword</i>) into the appropriate slots. You can enter an arbitrary item for the head or hand, but the other slots must contain an appropriate item.
-                    <input type="text" name="equipSword" placeholder="Item in hand">
-                    <input type="text" name="equipShoes" placeholder="Shoes">
-                    <input type="text" name="equipLeggings" placeholder="Leggings">
-                    <input type="text" name="equipChestplate" placeholder="Chestplate">
-                    <input type="text" name="equipHelmet" placeholder="Helmet">
-                    Helmet specifies 
+                    
+                    <input type="text" class="equipment" name="equipSword" placeholder="Item in hand">
+                    
+                    <input type="text" class="equipment" name="equipShoes" placeholder="Shoes">
+                    <div class="colorfield" id="shoecolor"></div>
+                    
+                    <input type="text" class="equipment" name="equipLeggings" placeholder="Leggings">
+                    <div class="colorfield" id="leggingscolor"></div>
+                    
+                    <input type="text" class="equipment" name="equipChestplate" placeholder="Chestplate">
+                    <div class="colorfield" id="chestplatecolor"></div>
+                    
+                    <input type="text" class="equipment" name="equipHelmet" placeholder="Helmet">
+                    <div class="colorfield" id="helmetcolor"></div>
+                    
+                    <br>Helmet specifies 
                     <select id="equipCustomHeadMode">
                         <option value="item">Item Name</option>
                         <option value="player">Player Name</option>

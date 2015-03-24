@@ -63,10 +63,6 @@ a{
 	color: #ffffff;
 }
 
-#customequipment input[type=text]{
-	width: 100%;
-}
-
 #disabledslots{
 	display: block;
 }
@@ -89,4 +85,18 @@ a{
     width: 16px;
     height: 16px;
     display: inline-block;
+}
+
+/* Things needed for colorpicker */
+.colorfield{
+    display: inline-block;
+    width: 15%;
+    vertical-align: middle;
+    height: 1em;
+    background-color: #ff8800;
+    border: 1px solid #777;
+}
+
+.equipment{
+    width: 80%;   
 }
