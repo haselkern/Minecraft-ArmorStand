@@ -46,34 +46,52 @@
             <label><input type="checkbox" name="showarms">Show Arms</label><br>
             <label><input type="checkbox" name="small">Small</label><br>
 
-            Rotation: <input type="range" name="rotation" min="0" max="360" value="0">
-
-            <div class="evenly">
-                <span>Head:</span><input type="range" name="headX" min="0" max="360" value="0"><input type="range" name="headY" min="0" max="360" value="0"><input type="range" name="headZ" min="0" max="360" value="0">
-            </div>
-
-            <div class="evenly">
-                <span>Body:</span><input type="range" name="bodyX" min="0" max="360" value="0"><input type="range" name="bodyY" min="0" max="360" value="0"><input type="range" name="bodyZ" min="0" max="360" value="0">
-            </div>
-
-            <div class="evenly">
-                <span>Left Leg:</span><input type="range" name="leftLegX" min="0" max="360" value="0"><input type="range" name="leftLegY" min="0" max="360" value="0"><input type="range" name="leftLegZ" min="0" max="360" value="0">
-            </div>
-
-            <div class="evenly">
-                <span>Right Leg:</span><input type="range" name="rightLegX" min="0" max="360" value="0"><input type="range" name="rightLegY" min="0" max="360" value="0"><input type="range" name="rightLegZ" min="0" max="360" value="0">
-            </div>
-
+            <table class="rotations">
+                <tr>
+                    <td>Rotation:</td>
+                    <td colspan="3"><input type="range" name="rotation" min="0" max="360" value="0"></td>
+                </tr>
+                <tr>
+                    <td>Head:</td>
+                    <td><input type="range" name="headX" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="headY" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="headZ" min="0" max="360" value="0"></td>
+                </tr>
+                <tr>
+                    <td>Body:</td>
+                    <td><input type="range" name="bodyX" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="bodyY" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="bodyZ" min="0" max="360" value="0"></td>
+                </tr>
+                <tr>
+                    <td>Left Leg:</td>
+                    <td><input type="range" name="leftLegX" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="leftLegY" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="leftLegZ" min="0" max="360" value="0"></td>
+                </tr>
+                <tr>
+                    <td>Right Leg:</td>
+                    <td><input type="range" name="rightLegX" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="rightLegY" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="rightLegZ" min="0" max="360" value="0"></td>
+                </tr>
+            </table>
             <div id="inputarms">
-                <div class="evenly">
-                    <span>Left Arm:</span><input type="range" name="leftArmX" min="0" max="360" value="0"><input type="range" name="leftArmY" min="0" max="360" value="0"><input type="range" name="leftArmZ" min="0" max="360" value="0">
-                </div>
-
-                <div class="evenly">
-                    <span>Right Arm:</span><input type="range" name="rightArmX" min="0" max="360" value="0"><input type="range" name="rightArmY" min="0" max="360" value="0"><input type="range" name="rightArmZ" min="0" max="360" value="0">
-                </div>
+                <table class="rotations">
+                        <tr>
+                            <td>Left Arm:</td>
+                            <td><input type="range" name="leftArmX" min="0" max="360" value="0"></td>
+                            <td><input type="range" name="leftArmY" min="0" max="360" value="0"></td>
+                            <td><input type="range" name="leftArmZ" min="0" max="360" value="0"></td>
+                        </tr>
+                        <tr>
+                            <td>Right Arm:</td>
+                            <td><input type="range" name="rightArmX" min="0" max="360" value="0"></td>
+                            <td><input type="range" name="rightArmY" min="0" max="360" value="0"></td>
+                            <td><input type="range" name="rightArmZ" min="0" max="360" value="0"></td>
+                        </tr>
+                </table>
             </div>
-            <br>
 
             <label><input type="checkbox" name="usecustomequipment">Use Custom Equipment</label>
             <div id="customequipment">

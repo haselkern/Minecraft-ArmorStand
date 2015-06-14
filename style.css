@@ -71,6 +71,7 @@ a{
 	width: 60px;
 	display: inline-block;
 	clear: left;
+	text-align: right;
 }
 
 #disabledslots span{
@@ -99,4 +100,17 @@ a{
 
 .equipment{
     width: 80%;   
+}
+
+.rotations{
+	width: 100%;
+	text-align: right;
+}
+
+.rotations tr td:nth-child(1){
+	width: 80px;
+}
+
+.rotations input{
+	width: 100%;
 }
