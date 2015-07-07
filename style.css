@@ -30,18 +30,12 @@ a{
 	color: #000000;
 }
 
-/* We cheat a bit here to fit all the controls in one row.
-	I will add a proper workaround later.
- */
-.evenly *{
-	width: 24%;
-}
-
 #gl{
 	width: 60%;
 	height: 100%;
 	float: left;
 	cursor: move;
+	position: fixed;
 }
 
 #card{
@@ -99,7 +93,7 @@ a{
 }
 
 .equipment{
-    width: 80%;   
+    width: 80%;
 }
 
 .rotations{
