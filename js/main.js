@@ -10,6 +10,9 @@ var rotY = 0, rotX = 0;
 var matWood = new THREE.MeshLambertMaterial({ color: 0x826841 });
 //var matWood = new THREE.MeshLambertMaterial({ color: 0x826841, transparent: true, opacity: 0.5 }); //For testing the mesh alignment
 var matStone = new THREE.MeshLambertMaterial({ color: 0xadadad });
+var matTransparentStone = new THREE.MeshLambertMaterial({ color: 0xadadad });
+matTransparentStone.opacity = 0.8;
+matTransparentStone.transparent = true;
 var viewCenter = new THREE.Vector3(0,0,0);
 // Meshes
 // The ones marked with //* are not real meshes, but contain a child (or more) which gets rendered.
@@ -17,6 +20,7 @@ var viewCenter = new THREE.Vector3(0,0,0);
 var mBasePlate;
 var mBody; //*
 var mHead; //*
+var mSkull;
 var mLegLeft; //*
 var mLegRight; //*
 var mArmLeft; //*
@@ -38,7 +42,7 @@ var equipSword;
 var equipShoes;
 var equipLeggings;
 var equipChestplate;
-var equipHelmet;
+var equipHelmet = "";
 var equipCustomHeadMode;
 var equipColorShoes;
 var equipColorLeggings;
@@ -80,8 +84,8 @@ $(document).ready(function(){
 	});
 	$(':checkbox, #equipCustomHeadMode').change(function() {
     	handleInput();
-	}); 
-    
+	});
+
 
 	//Handle rotating with mouse
 	$("#gl")
@@ -106,7 +110,7 @@ $(document).ready(function(){
 	$("#inputarms").hide();
 	$("#customequipment").hide();
 	$("#disabledslots").hide();
-    
+
     //Initialize colorpickers
     $('.colorfield').colpick({
         colorScheme:'light',
@@ -128,7 +132,7 @@ function setup(){
 	renderer = new THREE.WebGLRenderer({ antialias: true, alpha:true });
 	renderer.setSize(width, height);
 	$("#gl").append(renderer.domElement);
-	
+
 
 	scene = new THREE.Scene();
 	armorstand = new THREE.Object3D();
@@ -151,7 +155,7 @@ function setup(){
 	mmBaseDot.position.set(0,mBasePlate.position.y,10/16);
 	armorstandWrapper.add(mmBaseDot);
 
-	// To Generate the other body parts, we will use a mesh to display, 
+	// To Generate the other body parts, we will use a mesh to display,
 	// and add it as a child to the object that serves as a pivot.
 
 	//Left Leg
@@ -226,14 +230,15 @@ function setup(){
 	mmNeck.position.set(0,3.5/16,0);
 	/*
 	We do not want the head, as it obstructs a whole lot of the view. We can implement this,
-	once we've got an editor option to toggle it on and off.
-	var mmSkull = new THREE.Mesh(
+	once we've got an editor option to toggle it on and off.*/
+	mSkull = new THREE.Mesh(
 		new THREE.BoxGeometry(10/16, 10/16, 10/16),
-		matWood);
-	mmSkull.position.set(0,5/16,0);*/
+		matTransparentStone);
+	mSkull.position.set(0,5/16,0);
 	mHead = new THREE.Object3D();
 	mHead.position.set(0,22/16,0); //Pivot Point
 	mHead.add(mmNeck);
+	mHead.add(mSkull);
 	armorstand.add(mHead);
 
 
@@ -247,13 +252,13 @@ function setup(){
 
 	var pointLight = new THREE.PointLight(0xffffff);
 	pointLight.position.set(0, 300, 200);
-	 
+
 	scene.add(pointLight);
 }
 
 // Write stuff from input into variables
 function handleInput(){
-	
+
 	invisible = getCheckBoxInput("invisible");
 	invulnerable = getCheckBoxInput("invulnerable");
     persistencerequired = getCheckBoxInput("persistencerequired");
@@ -269,7 +274,7 @@ function handleInput(){
 	equipChestplate = getInput("equipChestplate");
 	equipHelmet = getInput("equipHelmet");
 	equipCustomHeadMode = $("#equipCustomHeadMode").val();
-    
+
     equipColorShoes = $("#shoecolor").css("background-color");
     equipColorLeggings = $("#leggingscolor").css("background-color");
     equipColorChestplate = $("#chestplatecolor").css("background-color");
@@ -301,19 +306,19 @@ function getInput(name){
 
 /** Changes stuff according to our input values */
 function updateUI(){
-    
+
 	//Hide/Show different inputs
-    
+
 	if(showArms)
 		$("#inputarms").slideDown();
 	else
 		$("#inputarms").slideUp();
-    
+
 	if(useCustomEquipment)
 		$("#customequipment").slideDown();
 	else
 		$("#customequipment").slideUp();
-    
+
     //Different colorinputs for armorparts
     if(isLeatherArmor(equipShoes))
         $("#shoecolor").slideDown();
@@ -331,13 +336,13 @@ function updateUI(){
         $("#helmetcolor").slideDown();
     else
         $("#helmetcolor").slideUp();
-    
-    
+
+
 	if(useDisabledSlots)
 		$("#disabledslots").slideDown();
 	else
 		$("#disabledslots").slideUp();
-    
+
 	$("#code").text(generateCode());
 	if(generateCode().length > 100){
 		$("#codeinfo").html("<b>Please note:</b> This command is too long to be executed from chat. You need to place it inside a command block. (see below)");
@@ -359,10 +364,11 @@ function updateUI(){
         armorstand.scale.set(0.6, 0.6, 0.6);
     else
         armorstand.scale.set(1, 1, 1);
-    
+
 	//Set Visibility
 	mArmRight.visible = mArmLeft.visible = showArms;
 	mBasePlate.visible = !noBasePlate;
+	mSkull.visible = equipHelmet != "";
 }
 
 function generateCode(){
@@ -421,28 +427,28 @@ function generateCode(){
 			equip.push("{}");
 
 		if(equipHelmet != ""){
-            
+
             // Use input as item
             if(equipCustomHeadMode == "item"){
 				equip.push("{id:\""+equipHelmet+"\",Count:1b"
                     +getLeatherColorString($("#helmetcolor"), isLeatherArmor(equipShoes))
                        +"}");
 			}
-            
+
             // Use input as player name
 			else if(equipCustomHeadMode == "player"){
 				equip.push("{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}");
 			}
-            
+
             // Use input as url
             // Best reference: http://redd.it/24quwx
             else if(equipCustomHeadMode == "url"){
                 var uuid = generateUUID();
                 var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
-                
+
 				equip.push('{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}');
 			}
-			
+
 		}
 		else
 			equip.push("{}");
@@ -558,15 +564,15 @@ function generateUUID(){
 
 function getDecimalRGB(rgb){
     //The string has the format 'rgb(r, g, b)'
-    
+
     //Remove whitespaces. Now formatted: 'rgb(r,g,b)'
     rgb = rgb.replace(/ /g,"");
-    
+
     var r = rgb.substring(4,rgb.indexOf(","));
     var g = rgb.substring(rgb.indexOf(",")+1,rgb.lastIndexOf(","));
     var b = rgb.substring(rgb.lastIndexOf(",")+1, rgb.length-1);
-    
-    
+
+
     return (r << 16) | (g << 8) | b;
 }
 
