@@ -228,9 +228,6 @@ function setup(){
 		new THREE.BoxGeometry(2/16, 7/16, 2/16),
 		matWood);
 	mmNeck.position.set(0,3.5/16,0);
-	/*
-	We do not want the head, as it obstructs a whole lot of the view. We can implement this,
-	once we've got an editor option to toggle it on and off.*/
 	mSkull = new THREE.Mesh(
 		new THREE.BoxGeometry(10/16, 10/16, 10/16),
 		matTransparentStone);
