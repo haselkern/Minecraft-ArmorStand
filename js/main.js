@@ -37,8 +37,9 @@ var noGravity = false;
 var showArms = false;
 var small = false;
 
-var useCustomEquipment;
-var equipSword;
+var equipmentMode;
+var equipHandRight;
+var equipHandLeft;
 var equipShoes;
 var equipLeggings;
 var equipChestplate;
@@ -82,7 +83,7 @@ $(document).ready(function(){
 	$("input").on("input", function(){
 		handleInput();
 	});
-	$(':checkbox, #equipCustomHeadMode').change(function() {
+	$(':checkbox, #equipCustomHeadMode, #equipmode').change(function() {
     	handleInput();
 	});
 
@@ -264,8 +265,9 @@ function handleInput(){
 	showArms = getCheckBoxInput("showarms");
 	small = getCheckBoxInput("small");
 
-	useCustomEquipment = getCheckBoxInput("usecustomequipment");
-	equipSword = getInput("equipSword");
+	equipmentMode = $("#equipmode").val(); // use direct jQuery for dropdowns
+	equipHandRight = getInput("equipHandRight");
+	equipHandLeft = getInput("equipHandLeft");
 	equipShoes = getInput("equipShoes");
 	equipLeggings = getInput("equipLeggings");
 	equipChestplate = getInput("equipChestplate");
@@ -311,10 +313,18 @@ function updateUI(){
 	else
 		$("#inputarms").slideUp();
 
-	if(useCustomEquipment)
+	if(equipmentMode != "none"){
 		$("#customequipment").slideDown();
-	else
+		if(equipmentMode == "1.9"){
+			$("#equipHandLeft").show();
+		}
+		else{
+			$("#equipHandLeft").hide();
+		}
+	}
+	else{
 		$("#customequipment").slideUp();
+	}
 
     //Different colorinputs for armorparts
     if(isLeatherArmor(equipShoes))
@@ -393,64 +403,35 @@ function generateCode(){
 	if(rotation != 0)
 		tags.push("Rotation:["+rotation+"f]");
 
-	//Equipment
-	if(useCustomEquipment){
+	//1.8 Equipment
+	if(equipmentMode == "1.8"){
 		var equip = [];
 
-		if(equipSword != "")
-			equip.push("{id:\""+equipSword+"\",Count:1b}");
-		else
-			equip.push("{}");
-
-		if(equipShoes != "")
-			equip.push("{id:\""+equipShoes+"\",Count:1b"
-                +getLeatherColorString($("#shoecolor"), isLeatherArmor(equipShoes))
-                       +"}");
-		else
-			equip.push("{}");
-
-		if(equipLeggings != "")
-			equip.push("{id:\""+equipLeggings+"\",Count:1b"
-                +getLeatherColorString($("#leggingscolor"), isLeatherArmor(equipShoes))
-                       +"}");
-		else
-			equip.push("{}");
-
-		if(equipChestplate != "")
-			equip.push("{id:\""+equipChestplate+"\",Count:1b"
-                +getLeatherColorString($("#chestplatecolor"), isLeatherArmor(equipShoes))
-                       +"}");
-		else
-			equip.push("{}");
-
-		if(equipHelmet != ""){
-
-            // Use input as item
-            if(equipCustomHeadMode == "item"){
-				equip.push("{id:\""+equipHelmet+"\",Count:1b"
-                    +getLeatherColorString($("#helmetcolor"), isLeatherArmor(equipShoes))
-                       +"}");
-			}
-
-            // Use input as player name
-			else if(equipCustomHeadMode == "player"){
-				equip.push("{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}");
-			}
-
-            // Use input as url
-            // Best reference: http://redd.it/24quwx
-            else if(equipCustomHeadMode == "url"){
-                var uuid = generateUUID();
-                var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
-
-				equip.push('{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}');
-			}
-
-		}
-		else
-			equip.push("{}");
+		equip.push(getHandRightItem());
+		equip.push(getShoesItem());
+		equip.push(getLeggingsItem());
+		equip.push(getChestplateItem());
+		equip.push(getHeadItem());
 
 		tags.push("Equipment:["+equip.join(",")+"]");
+	}
+	// 1.9 Equipment
+	else if(equipmentMode == "1.9"){
+		var armor = [];
+
+		armor.push(getShoesItem());
+		armor.push(getLeggingsItem());
+		armor.push(getChestplateItem());
+		armor.push(getHeadItem());
+
+		tags.push("ArmorItems:["+armor.join(",")+"]");
+
+		var hands = [];
+
+		hands.push(getHandRightItem());
+		hands.push(getHandLeftItem());
+
+		tags.push("HandItems:["+hands.join(",")+"]");
 	}
 
 	//DisabledSlots
@@ -482,6 +463,62 @@ function generateCode(){
 	code += tags.join(",");
 	code += "}";
 	return code;
+}
+
+function getHandRightItem(){
+	if(equipHandRight == "") return "{}";
+	return "{id:\""+equipHandRight+"\",Count:1b}";
+}
+
+function getHandLeftItem(){
+	if(equipHandLeft == "") return "{}";
+	return "{id:\""+equipHandLeft+"\",Count:1b}";
+}
+
+function getShoesItem(){
+	if(equipShoes == "") return "{}";
+	return "{id:\""+equipShoes+"\",Count:1b"
+					+getLeatherColorString($("#shoecolor"), isLeatherArmor(equipShoes))
+					+"}";
+}
+
+function getLeggingsItem(){
+	if(equipLeggings == "") return "{}";
+	return "{id:\""+equipLeggings+"\",Count:1b"
+					+getLeatherColorString($("#leggingscolor"), isLeatherArmor(equipShoes))
+					+"}";
+}
+
+function getChestplateItem(){
+	if(equipChestplate == "") return "{}";
+	return "{id:\""+equipChestplate+"\",Count:1b"
+				+getLeatherColorString($("#chestplatecolor"), isLeatherArmor(equipShoes))
+				+"}";
+}
+
+function getHeadItem(){
+	if(equipHelmet == "") return "{}";
+
+	// Use input as item
+	if(equipCustomHeadMode == "item"){
+		return "{id:\""+equipHelmet+"\",Count:1b"
+		+getLeatherColorString($("#helmetcolor"), isLeatherArmor(equipShoes))
+		+"}";
+	}
+
+	// Use input as player name
+	else if(equipCustomHeadMode == "player"){
+		return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
+	}
+
+	// Use input as url
+	// Best reference: http://redd.it/24quwx
+	else if(equipCustomHeadMode == "url"){
+		var uuid = generateUUID();
+		var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
+
+		return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
+	}
 }
 
 function calculateDisabledSlotsFlag() {

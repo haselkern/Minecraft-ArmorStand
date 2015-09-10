@@ -93,12 +93,17 @@
                 </table>
             </div>
 
-            <label><input type="checkbox" name="usecustomequipment">Use Custom Equipment</label>
+            <select id="equipmode">
+                <option value="none">No Equipment</option>
+                <option value="1.8">Minecraft 1.8- Equipment</option>
+                <option value="1.9">Minecraft 1.9+ Equipment</option>
+            </select>
             <div id="customequipment">
                 <div class="padding">
                     Enter the text id of an item (for example <i>stone</i> or <i>iron_sword</i>) into the appropriate slots. You can enter an arbitrary item for the head or hand, but the other slots must contain an appropriate item.
 
-                    <input type="text" class="equipment" name="equipSword" placeholder="Item in hand">
+                    <input type="text" class="equipment" name="equipHandRight" placeholder="Item in right hand">
+                    <input type="text" class="equipment" id="equipHandLeft" name="equipHandLeft" placeholder="Item in left hand">
 
                     <input type="text" class="equipment" name="equipShoes" placeholder="Shoes">
                     <div class="colorfield" id="shoecolor"></div>
