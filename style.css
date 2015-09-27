@@ -90,12 +90,6 @@ a{
     margin: 0;
 }
 
-#disabledslots span{
-	width: 16px;
-	height: 16px;
-    display: inline-block;
-}
-
 #disabledslots .sprite{
     background-repeat: no-repeat;
     background-image: url("images/slots.png");
