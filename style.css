@@ -62,10 +62,32 @@ a{
 }
 
 #disabledslots .first{
-	width: 60px;
-	display: inline-block;
-	clear: left;
-	text-align: right;
+    width: 60px;
+    display: inline-block;
+    clear: left;
+    text-align: right;
+    vertical-align: top;
+}
+
+#disabledslots span{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+#disabledslots div{
+    height: 16px;
+    line-height: 16px;
+}
+
+#disabledslots div + div{
+    margin-top: 4px;
+}
+
+#disabledslots input[type=checkbox]{
+    width: 16px;
+    height: 16px;
+    margin: 0;
 }
 
 #disabledslots span{
