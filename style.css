@@ -30,6 +30,22 @@ a{
 	color: #000000;
 }
 
+#donate{
+	width: 64px;
+	height: 64px;
+	display: inline;
+	position: relative;
+}
+#donate .colorful{
+	opacity: 0;
+	position: absolute;
+	left: 0;
+	transition: 0.5s;
+}
+#donate:hover .colorful{
+	opacity: 1;
+}
+
 #gl{
 	width: 60%;
 	height: 100%;
