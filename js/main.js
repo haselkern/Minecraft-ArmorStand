@@ -358,12 +358,12 @@ function updateUI(){
 
 	// Rotate 3D Stuff
 	// y and z rotation needs to be inverted
-	mBody.rotation.set(body.x * DEG2RAD, -body.y * DEG2RAD, -body.z * DEG2RAD);
-	mHead.rotation.set(head.x * DEG2RAD, -head.y * DEG2RAD, -head.z * DEG2RAD);
-	mLegLeft.rotation.set(leftLeg.x * DEG2RAD, -leftLeg.y * DEG2RAD, -leftLeg.z * DEG2RAD);
-	mLegRight.rotation.set(rightLeg.x * DEG2RAD, -rightLeg.y * DEG2RAD, -rightLeg.z * DEG2RAD);
-	mArmLeft.rotation.set(leftArm.x * DEG2RAD, -leftArm.y * DEG2RAD, -leftArm.z * DEG2RAD);
-	mArmRight.rotation.set(rightArm.x * DEG2RAD, -rightArm.y * DEG2RAD, -rightArm.z * DEG2RAD);
+	setRotation(mBody, body);
+	setRotation(mHead, head);
+	setRotation(mLegLeft, leftLeg);
+	setRotation(mLegRight, rightLeg);
+	setRotation(mArmLeft, leftArm);
+	setRotation(mArmRight, rightArm);
 	armorstand.rotation.y = -rotation * DEG2RAD;
 
     // Scale model, depending on small variable
@@ -623,4 +623,23 @@ function getLeatherColorString(element, condition){
         return ",tag:{display:{color:"+rgb+"}}";
     }
     return "";
+}
+
+// Rotate three.js mesh to fit the minecraft rotation
+function setRotation(mesh, rotation){
+	rotateAroundWorldAxis(mesh, new THREE.Vector3(1,0,0), rotation.x * DEG2RAD, true);
+	rotateAroundWorldAxis(mesh, new THREE.Vector3(0,1,0), -rotation.y * DEG2RAD, false);
+	rotateAroundWorldAxis(mesh, new THREE.Vector3(0,0,1), -rotation.z * DEG2RAD, false);
+}
+
+// From here: http://stackoverflow.com/a/11124197/1456971
+var rotWorldMatrix;
+// Rotate an object around an arbitrary axis in world space
+function rotateAroundWorldAxis(object, axis, radians, reset) {
+    rotWorldMatrix = new THREE.Matrix4();
+    rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+		if(!reset)
+    	rotWorldMatrix.multiply(object.matrix);        // pre-multiply
+    object.matrix = rotWorldMatrix;
+    object.rotation.setFromRotationMatrix(object.matrix);
 }
