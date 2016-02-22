@@ -124,6 +124,29 @@ $(document).ready(function(){
         }
     });
 
+	// Animate donation div
+	var donationheight = $("#donationanim").height() * 1.5;
+	$("#donationanim").css({
+		"transform" : "translateY(-"+donationheight+"px)",
+		"visibility" : "visible"
+	});
+
+	// Slide in
+	setTimeout(function(){
+		$("#donationanim").css({
+			"transform" : "translateY(0px)",
+			"transition" : "400ms",
+		});
+
+		// Slide out
+		setTimeout(function(){
+			$("#donationanim").css({
+				"transform" : "translateY(-"+donationheight+"px)",
+			});
+		}, 4000);
+
+	}, 2000);
+
 });
 
 function setup(){

@@ -30,20 +30,14 @@ a{
 	color: #000000;
 }
 
-#donate{
-	width: 64px;
-	height: 64px;
-	display: inline;
-	position: relative;
-}
-#donate .colorful{
-	opacity: 0;
+#donationanim{
 	position: absolute;
-	left: 0;
-	transition: 0.5s;
-}
-#donate:hover .colorful{
-	opacity: 1;
+	width: 300px;
+	left: 50%;
+	margin-left: -150px;
+	padding: 5px;
+	text-align: center;
+	visibility: hidden;
 }
 
 #gl{
@@ -54,10 +48,14 @@ a{
 	position: fixed;
 }
 
-#card{
+.card{
 	background-color: #ffffff;
 	box-shadow: 0 2px 4px #555555;
 	margin: 0.5em;
+	border-radius: 3px;
+}
+
+.right{
 	margin-left: 60%;
 }
 
@@ -70,6 +68,7 @@ a{
 	padding: 1em;
 	font-family: monospace;
 	background-color: #37474f;
+	border-radius: 3px;
 	color: #ffffff;
 }
 
