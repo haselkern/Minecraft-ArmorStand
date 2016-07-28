@@ -485,14 +485,14 @@ function getShoesItem(){
 function getLeggingsItem(){
 	if(equipLeggings == "") return "{}";
 	return "{id:\""+equipLeggings+"\",Count:1b"
-					+getLeatherColorString($("#leggingscolor"), isLeatherArmor(equipShoes))
+					+getLeatherColorString($("#leggingscolor"), isLeatherArmor(equipLeggings))
 					+"}";
 }
 
 function getChestplateItem(){
 	if(equipChestplate == "") return "{}";
 	return "{id:\""+equipChestplate+"\",Count:1b"
-				+getLeatherColorString($("#chestplatecolor"), isLeatherArmor(equipShoes))
+				+getLeatherColorString($("#chestplatecolor"), isLeatherArmor(equipChestplate))
 				+"}";
 }
 
@@ -502,7 +502,7 @@ function getHeadItem(){
 	// Use input as item
 	if(equipCustomHeadMode == "item"){
 		return "{id:\""+equipHelmet+"\",Count:1b"
-		+getLeatherColorString($("#helmetcolor"), isLeatherArmor(equipShoes))
+		+getLeatherColorString($("#helmetcolor"), isLeatherArmor(equipHelmet))
 		+"}";
 	}
 
