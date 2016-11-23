@@ -37,7 +37,7 @@ var noGravity = false;
 var showArms = false;
 var small = false;
 
-var equipmentMode;
+var useEquipment;
 var equipHandRight;
 var equipHandLeft;
 var equipShoes;
@@ -265,7 +265,7 @@ function handleInput(){
 	showArms = getCheckBoxInput("showarms");
 	small = getCheckBoxInput("small");
 
-	equipmentMode = $("#equipmode").val(); // use direct jQuery for dropdowns
+	useEquipment = getCheckBoxInput("useequipment");
 	equipHandRight = getInput("equipHandRight");
 	equipHandLeft = getInput("equipHandLeft");
 	equipShoes = getInput("equipShoes");
@@ -313,18 +313,10 @@ function updateUI(){
 	else
 		$("#inputarms").slideUp();
 
-	if(equipmentMode != "none"){
+	if(useEquipment)
 		$("#customequipment").slideDown();
-		if(equipmentMode == "1.9"){
-			$("#equipHandLeft").show();
-		}
-		else{
-			$("#equipHandLeft").hide();
-		}
-	}
-	else{
+	else
 		$("#customequipment").slideUp();
-	}
 
     //Different colorinputs for armorparts
     if(isLeatherArmor(equipShoes))
@@ -403,20 +395,8 @@ function generateCode(){
 	if(rotation != 0)
 		tags.push("Rotation:["+rotation+"f]");
 
-	//1.8 Equipment
-	if(equipmentMode == "1.8"){
-		var equip = [];
-
-		equip.push(getHandRightItem());
-		equip.push(getShoesItem());
-		equip.push(getLeggingsItem());
-		equip.push(getChestplateItem());
-		equip.push(getHeadItem());
-
-		tags.push("Equipment:["+equip.join(",")+"]");
-	}
-	// 1.9 Equipment
-	else if(equipmentMode == "1.9"){
+	// Equipment
+	if(useEquipment){
 		var armor = [];
 
 		armor.push(getShoesItem());
