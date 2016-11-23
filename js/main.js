@@ -379,7 +379,7 @@ function updateUI(){
 }
 
 function generateCode(){
-	var code = "/summon ArmorStand ~ ~ ~ {";
+	var code = "/summon armor_stand ~ ~ ~ {";
 
 	var tags = [];
 
