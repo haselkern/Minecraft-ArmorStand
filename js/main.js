@@ -350,7 +350,10 @@ function updateUI(){
 
 	$("#code").text(generateCode());
 	if(generateCode().length > 100){
-		$("#codeinfo").html("<b>Please note:</b> This command is too long to be executed from chat. You need to place it inside a command block. (see below)");
+		$("#codeinfo").slideDown();
+	}
+	else{
+		$("#codeinfo").slideUp();
 	}
 
 

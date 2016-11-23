@@ -43,6 +43,7 @@ a{
 	box-shadow: 0 2px 4px #555555;
 	margin: 0.5em;
 	border-radius: 3px;
+	padding: 1em;
 }
 
 .right{
@@ -50,7 +51,11 @@ a{
 }
 
 .padding{
-	padding: 0.5em;
+	padding: 1em;
+}
+
+.underline{
+	border-bottom: 1px dashed #ddd;
 }
 
 .code{

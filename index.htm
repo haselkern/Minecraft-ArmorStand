@@ -26,24 +26,17 @@
     <div id="gl"></div>
 
     <div class="right card">
-
-        <h1>MINECRAFT ARMORSTAND</h1>
-        <div class="padding">
+        
+        <div class="padding underline">
+            <h1>MINECRAFT ARMORSTAND</h1>
             <center>
                 <a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank"><img src="images/github.png" alt="GitHub" title="GitHub" /></a>
                 <a href="http://www.twitter.com/haselcode" target="_blank"><img src="images/twitter.png" alt="Twitter" title="Twitter" /></a>
+                <a href="http://haselkern.com" target="_blank"><img src="images/haselkern.png" alt="haselkern.com" title="other projects" /></a>
             </center>
-                <br>
-                <span class="padding" style="cursor: pointer;" onclick="javascript:$('#troubleshooting').slideToggle();">
-                + Troubleshooting
-                </span>
-                <div id="troubleshooting">
-                      <b>This thing uses WebGL!</b> If you don't see anything on the left enable WebGL in your browser or visit the <a href="http://get.webgl.org/">official WebGL website</a> to troubleshoot problems.
-                </div>
         </div>
 
-        <div id="inputsection" class="padding">
-
+        <div class="padding underline">
             <label><input type="checkbox" name="invisible">Invisible</label><br>
             <label><input type="checkbox" name="invulnerable">Invulnerable</label><br>
             <label><input type="checkbox" name="persistencerequired">PersistenceRequired</label><br>
@@ -51,7 +44,9 @@
             <label><input type="checkbox" name="nogravity">No Gravity</label><br>
             <label><input type="checkbox" name="showarms">Show Arms</label><br>
             <label><input type="checkbox" name="small">Small</label><br>
+        </div>
 
+        <div class="padding underline">
             <table class="rotations">
                 <tr>
                     <td>Rotation:</td>
@@ -98,45 +93,49 @@
                         </tr>
                 </table>
             </div>
-
-            
+        </div>
+        
+        <div class="padding underline">
             <label><input type="checkbox" name="useequipment">Enable equipment</label><br>
             <div id="customequipment">
-                <div class="padding">
+                <p>
                     Enter the text id of an item (for example <i>stone</i> or <i>iron_sword</i>) into the appropriate slots. You can enter an arbitrary item for the head or hand, but the other slots must contain an appropriate item.
+                </p>
 
-                    <input type="text" class="equipment" name="equipHandRight" placeholder="Item in right hand">
-                    <input type="text" class="equipment" id="equipHandLeft" name="equipHandLeft" placeholder="Item in left hand">
+                <input type="text" class="equipment" name="equipHandRight" placeholder="Item in right hand">
+                <input type="text" class="equipment" id="equipHandLeft" name="equipHandLeft" placeholder="Item in left hand">
 
-                    <input type="text" class="equipment" name="equipShoes" placeholder="Shoes">
-                    <div class="colorfield" id="shoecolor"></div>
+                <input type="text" class="equipment" name="equipShoes" placeholder="Shoes">
+                <div class="colorfield" id="shoecolor"></div>
 
-                    <input type="text" class="equipment" name="equipLeggings" placeholder="Leggings">
-                    <div class="colorfield" id="leggingscolor"></div>
+                <input type="text" class="equipment" name="equipLeggings" placeholder="Leggings">
+                <div class="colorfield" id="leggingscolor"></div>
 
-                    <input type="text" class="equipment" name="equipChestplate" placeholder="Chestplate">
-                    <div class="colorfield" id="chestplatecolor"></div>
+                <input type="text" class="equipment" name="equipChestplate" placeholder="Chestplate">
+                <div class="colorfield" id="chestplatecolor"></div>
 
-                    <input type="text" class="equipment" name="equipHelmet" placeholder="Helmet">
-                    <div class="colorfield" id="helmetcolor"></div>
+                <input type="text" class="equipment" name="equipHelmet" placeholder="Helmet">
+                <div class="colorfield" id="helmetcolor"></div>
 
-                    <br>Helmet specifies
-                    <select id="equipCustomHeadMode">
-                        <option value="item">Item Name</option>
-                        <option value="player">Player Name</option>
-                        <option value="url">Image URL</option>
-                    </select>
-                </div>
+                <br>Helmet specifies
+                <select id="equipCustomHeadMode">
+                    <option value="item">Item Name</option>
+                    <option value="player">Player Name</option>
+                    <option value="url">Image URL</option>
+                </select>
             </div>
-            <br>
+        </div>
 
+        <div class="padding underline">
             <input type="text" name="customname" placeholder="Custom name">
             <label><input type="checkbox" name="showcustomname">Show custom name</label>
             <br>
+        </div>
 
+        <div class="padding">
             <!-- THANK YOU to reddit user Oozebull for this part. -->
             <label><input type="checkbox" name="usedisabledslots">Lock Slot Interaction</label>
-            <div id="disabledslots" class="padding">
+            <div id="disabledslots">
                 <div>
                     <span class="first">&nbsp;</span>
                     <span class="sprite" style="background-position: 0px   0px"></span>
@@ -171,16 +170,19 @@
                     <span><input id="pW" type="checkbox"></input></span>
                 </div>
             </div>
-
         </div>
 
         <div id="code" class="code"></div>
-        <div id="codeinfo" class="padding"></div>
+        <div id="codeinfo" class="padding">
+            <b>Please note:</b>
+            This command is too long to be executed from chat. You need to place it inside a command block. (see below)
+        </div>
 
     </div>
 
+
     <div class="right card">
-        <span class="padding" style="cursor: pointer;" onclick="javascript:$('#getcommandblock').slideToggle();">
+        <span style="cursor: pointer;" onclick="javascript:$('#getcommandblock').slideToggle();">
             + Obtain a command block
         </span>
         <br>
@@ -193,5 +195,20 @@
             </div>
         </div>
     </div>
+
+
+    <div class="right card">
+        <span class="" style="cursor: pointer;" onclick="javascript:$('#troubleshooting').slideToggle();">
+        + Troubleshooting
+        </span>
+        <div id="troubleshooting">
+            <p>
+                <b>This thing uses WebGL!</b>
+                If you don't see anything on the left enable WebGL in your browser or visit the <a href="http://get.webgl.org/">official WebGL website</a> to troubleshoot problems.
+            </p>
+        </div>
+    </div>
+
+
 </body>
 </html>
