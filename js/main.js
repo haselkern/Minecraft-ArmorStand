@@ -50,6 +50,9 @@ var equipColorLeggings;
 var equipColorChestplate;
 var equipColorHelmet;
 
+var customName;
+var showCustomName;
+
 var useDisabledSlots;
 
 //The rotation values are all in degrees.
@@ -279,6 +282,9 @@ function handleInput(){
     equipColorChestplate = $("#chestplatecolor").css("background-color");
     equipColorHelmet = $("#helmetcolor").css("background-color");
 
+	customName = getInput("customname");
+	showCustomName = getCheckBoxInput("showcustomname");
+
 	useDisabledSlots = getCheckBoxInput("usedisabledslots");
 
 
@@ -413,6 +419,12 @@ function generateCode(){
 
 		tags.push("HandItems:["+hands.join(",")+"]");
 	}
+
+	// Custom name
+	if(customName != "" && customName != null)
+		tags.push("CustomName:\""+customName+"\"");
+	if(showCustomName)
+		tags.push("CustomNameVisible:1b");
 
 	//DisabledSlots
 	if(useDisabledSlots){
