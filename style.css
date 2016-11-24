@@ -30,6 +30,18 @@ a{
 	color: #000000;
 }
 
+input[type="text"], select{
+	border: 1px solid #aaa;
+	border-radius: 3px;
+	padding: 0.5em;
+}
+input[type="text"]:not(:last-child){
+	margin-bottom: 0.5em;
+}
+#customname{
+	margin-bottom: 0;
+}
+
 #gl{
 	width: 60%;
 	height: 100%;
