@@ -29,6 +29,9 @@ var armorstand, armorstandWrapper; //Group all the other elements
 
 
 //DATA -> Stuff that we'll use to generate the command. Fetched from the controls.
+
+var mcVersion;
+
 var invisible = false;
 var invulnerable = false;
 var persistencerequired = false;
@@ -86,7 +89,7 @@ $(document).ready(function(){
 	$("input").on("input", function(){
 		handleInput();
 	});
-	$(':checkbox, #equipCustomHeadMode, #equipmode').change(function() {
+	$(':checkbox, #equipCustomHeadMode, #equipmode, #mcversion').change(function() {
     	handleInput();
 	});
 
@@ -260,6 +263,8 @@ function setup(){
 // Write stuff from input into variables
 function handleInput(){
 
+	mcVersion = $("#mcversion").val();
+
 	invisible = getCheckBoxInput("invisible");
 	invulnerable = getCheckBoxInput("invulnerable");
     persistencerequired = getCheckBoxInput("persistencerequired");
@@ -319,8 +324,16 @@ function updateUI(){
 	else
 		$("#inputarms").slideUp();
 
-	if(useEquipment)
+	if(useEquipment){
 		$("#customequipment").slideDown();
+		// Hide left hand item input for minecraft 1.8
+		if(mcVersion == "1.8"){
+			$("#equipHandLeft").hide();
+		}
+		else{
+			$("#equipHandLeft").show();
+		}
+	}
 	else
 		$("#customequipment").slideUp();
 
@@ -382,6 +395,11 @@ function updateUI(){
 function generateCode(){
 	var code = "/summon armor_stand ~ ~ ~ {";
 
+	// Old entity name
+	if(mcVersion == "1.8" || mcVersion == "1.9"){
+		code = "/summon ArmorStand ~ ~ ~ {";
+	}
+
 	var tags = [];
 
 	//CheckBoxes
@@ -406,21 +424,36 @@ function generateCode(){
 
 	// Equipment
 	if(useEquipment){
-		var armor = [];
+		// Old 1.8 Equipment format
+		if(mcVersion == "1.8"){
+			var armor = [];
 
-		armor.push(getShoesItem());
-		armor.push(getLeggingsItem());
-		armor.push(getChestplateItem());
-		armor.push(getHeadItem());
+			armor.push(getHandRightItem());
+			armor.push(getShoesItem());
+			armor.push(getLeggingsItem());
+			armor.push(getChestplateItem());
+			armor.push(getHeadItem());
 
-		tags.push("ArmorItems:["+armor.join(",")+"]");
+			tags.push("Equipment:["+armor.join(",")+"]");
+		}
+		// New 1.9+ Equipment format
+		else{
+			var armor = [];
 
-		var hands = [];
+			armor.push(getShoesItem());
+			armor.push(getLeggingsItem());
+			armor.push(getChestplateItem());
+			armor.push(getHeadItem());
 
-		hands.push(getHandRightItem());
-		hands.push(getHandLeftItem());
+			tags.push("ArmorItems:["+armor.join(",")+"]");
 
-		tags.push("HandItems:["+hands.join(",")+"]");
+			var hands = [];
+
+			hands.push(getHandRightItem());
+			hands.push(getHandLeftItem());
+
+			tags.push("HandItems:["+hands.join(",")+"]");
+		}
 	}
 
 	// Custom name
