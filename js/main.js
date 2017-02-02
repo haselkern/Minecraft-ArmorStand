@@ -39,6 +39,7 @@ var noBasePlate = false;
 var noGravity = false;
 var showArms = false;
 var small = false;
+var marker = false;
 
 var useEquipment;
 var equipHandRight;
@@ -272,6 +273,7 @@ function handleInput(){
 	noGravity = getCheckBoxInput("nogravity");
 	showArms = getCheckBoxInput("showarms");
 	small = getCheckBoxInput("small");
+	marker = getCheckBoxInput("marker");
 
 	useEquipment = getCheckBoxInput("useequipment");
 	equipHandRight = getInput("equipHandRight");
@@ -417,6 +419,8 @@ function generateCode(){
 		tags.push("ShowArms:1b");
 	if(small)
 		tags.push("Small:1b");
+	if(marker)
+		tags.push("Marker:1b");
 
 	//Sliders
 	if(rotation != 0)
