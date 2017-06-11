@@ -85,7 +85,12 @@ $(document).ready(function(){
 	setup();
 	updateUI();
 	render();
-
+	
+	// Confirm exit
+	window.onbeforeunload = function(){
+		return "Changes will NOT be saved. Exit anyways?";
+	};
+	
 	//Stuff to handle and update input
 	$("input").on("input", function(){
 		handleInput();
