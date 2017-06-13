@@ -556,6 +556,30 @@ function getHeadItem(){
 
 		return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
 	}
+
+	// Parse give code
+	else if(equipCustomHeadMode == "givecode"){
+		var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner"));
+		var parsed = "";
+		var bracketCounter = 0;
+		var bracketsStarted = false;
+
+		for(var i = 0; i < skullOwnerRaw.length; i++){
+			var c = skullOwnerRaw[i];
+
+			if(c == "{"){
+				bracketsStarted = true;	
+				bracketCounter++;
+			}
+			if(c == "}") bracketCounter--;
+
+			parsed += c;
+			if(bracketCounter == 0 && bracketsStarted) break;
+		}
+
+		return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
+	}
+
 }
 
 function calculateDisabledSlotsFlag() {
