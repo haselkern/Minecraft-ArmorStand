@@ -80,6 +80,32 @@ Point = {
 	y:null
 };
 
+jQuery.fn.selectAndCopyText = function(){
+    // https://stackoverflow.com/a/9976413/1456971
+    this.find('input').each(function() {
+        if($(this).prev().length == 0 || !$(this).prev().hasClass('p_copy')) {
+            $('<p class="p_copy" style="position: absolute; z-index: -1;"></p>').insertBefore($(this));
+        }
+        $(this).prev().html($(this).val());
+    });
+
+    var doc = document;
+    var element = this[0];
+    if (doc.body.createTextRange) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+	document.execCommand("copy");
+};
+
 $(document).ready(function(){
 	//Init
 	setup();
@@ -90,6 +116,11 @@ $(document).ready(function(){
 	window.onbeforeunload = function(){
 		return "Changes will NOT be saved. Exit anyways?";
 	};
+
+	// Copy code on click
+	$(".code").click(function(){
+		$("#code").selectAndCopyText();
+	});
 	
 	//Stuff to handle and update input
 	$("input").on("input", function(){

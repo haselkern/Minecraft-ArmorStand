@@ -78,6 +78,13 @@ input[type="text"]:not(:last-child){
 	border-radius: 3px;
 	color: #ffffff;
 }
+#code-copy-hint{
+	font-family: sans-serif;
+	font-style: italic;
+	font-size: 0.8em;
+	text-align: right;
+	opacity: 0.6;
+}
 
 #disabledslots{
 	display: block;
