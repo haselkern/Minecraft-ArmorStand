@@ -362,12 +362,21 @@ function updateUI(){
     else
         $("#helmetcolor").slideUp();
 
+	// Link to minecraft-heads.com
+	if(equipCustomHeadMode == "givecode"){
+		$("#minecraft-heads").slideDown();
+	}
+	else{
+		$("#minecraft-heads").slideUp();
+	}
 
+	// Show disabled slots
 	if(useDisabledSlots)
 		$("#disabledslots").slideDown();
 	else
 		$("#disabledslots").slideUp();
 
+	// Generate code
 	$("#code").text(generateCode());
 	if(generateCode().length > 100){
 		$("#codeinfo").slideDown();
@@ -559,25 +568,34 @@ function getHeadItem(){
 
 	// Parse give code
 	else if(equipCustomHeadMode == "givecode"){
-		var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner"));
-		var parsed = "";
-		var bracketCounter = 0;
-		var bracketsStarted = false;
 
-		for(var i = 0; i < skullOwnerRaw.length; i++){
-			var c = skullOwnerRaw[i];
+		// Give Code in this format: /give @p skull 1 3 {display:{Name:"Some Name"},SkullOwner:{Id:"a74719ce...
+		if(equipHelmet.indexOf("SkullOwner:{") >= 0){
+			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner"));
+			var parsed = "";
+			var bracketCounter = 0;
+			var bracketsStarted = false;
 
-			if(c == "{"){
-				bracketsStarted = true;	
-				bracketCounter++;
+			for(var i = 0; i < skullOwnerRaw.length; i++){
+				var c = skullOwnerRaw[i];
+
+				if(c == "{") bracketCounter++;
+				if(c == "}") bracketCounter--;
+
+				parsed += c;
+				if(bracketCounter == 0 && bracketsStarted) break;
+				if(c == ":") bracketsStarted = true;
 			}
-			if(c == "}") bracketCounter--;
 
-			parsed += c;
-			if(bracketCounter == 0 && bracketsStarted) break;
+			return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
+		}
+		// Give Code in this format: /give @p skull 1 3 {SkullOwner:"playername"} (quotes optional)
+		else{
+			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner:"));
+			skullOwnerRaw = skullOwnerRaw.substring(0, skullOwnerRaw.indexOf("}"));
+			return '{id:"skull",Count:1b,Damage:3b,tag:{'+skullOwnerRaw+'}}';
 		}
 
-		return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
 	}
 
 }
