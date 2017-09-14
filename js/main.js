@@ -26,7 +26,9 @@ var mLegRight; //*
 var mArmLeft; //*
 var mArmRight; //*
 var armorstand, armorstandWrapper; //Group all the other elements
-
+var xPos = "~"
+var yPos = "~"
+var zPos = "~"
 
 //DATA -> Stuff that we'll use to generate the command. Fetched from the controls.
 
@@ -337,9 +339,10 @@ function handleInput(){
 	rightLeg.set(getRangeInput("rightLegX"), getRangeInput("rightLegY"), getRangeInput("rightLegZ"));
 	leftArm.set(getRangeInput("leftArmX"), getRangeInput("leftArmY"), getRangeInput("leftArmZ"));
 	rightArm.set(getRangeInput("rightArmX"), getRangeInput("rightArmY"), getRangeInput("rightArmZ"));
-
 	rotation = getRangeInput("rotation");
-
+	xPos = getInput("x-coord");
+	yPos = getInput("y-coord");
+	zPos = getInput("z-coord")
 	updateUI();
 }
 function getCheckBoxInput(name){

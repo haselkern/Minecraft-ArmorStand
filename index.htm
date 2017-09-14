@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minecraft Armorstand</title>
+    <title>MCParks Armor Stand</title>
     <meta charset="utf-8">
     <meta name="description" content="Create poses for Minecraft armorstands in a breeze! Free, fast, open source.">
     <link rel="stylesheet" href="style.css">
@@ -26,13 +26,14 @@
     <div id="gl"></div>
 
     <div class="right card">
-        
-        <div class="padding underline">
-            <h1>MINECRAFT ARMORSTAND</h1>
+        <h1>MCPARKS MINECRAFT ARMORSTAND</h1>
+		<center>
+		<a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank">Original Github Page</a>
+		</center>
+        <div class="padding">
             <center>
-                <a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank"><img src="images/github.png" alt="GitHub" title="GitHub" /></a>
-                <a href="http://www.twitter.com/haselcode" target="_blank"><img src="images/twitter.png" alt="Twitter" title="Twitter" /></a>
-                <a href="http://haselkern.com" target="_blank"><img src="images/haselkern.png" alt="haselkern.com" title="other projects" /></a>
+                <a href="https://github.com/RyanHecht/Minecraft-ArmorStand" target="_blank"><img src="images/github.png" alt="GitHub" title="GitHub" /></a>
+                <a href="http://mcparks.us" target="_blank"><img width="64" height="64" src="images/mcparks.png" alt="MCParks" title="MCParks" /></a>
             </center>
         </div>
 
@@ -57,48 +58,54 @@
 
         <div class="padding underline">
             <table class="rotations">
+              <tr>
+                  <td>Position:</td>
+                  <td>X:<input type="text" name="x-coord" size="5" value="~"></td>
+                  <td>Y:<input type="text" name="y-coord" size="5" value="~"></td>
+                  <td>Z:<input type="text" name="z-coord" size="5" value="~"></td>
+              </tr>
                 <tr>
                     <td>Rotation:</td>
-                    <td colspan="3"><input type="range" name="rotation" min="0" max="360" value="0"></td>
+                    <td colspan="3"><input type="range" name="rotation" min="-360" max="360" value="0"></td>
                 </tr>
                 <tr>
                     <td>Head:</td>
-                    <td><input type="range" name="headX" min="0" max="360" value="0"></td>
-                    <td><input type="range" name="headY" min="0" max="360" value="0"></td>
-                    <td><input type="range" name="headZ" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="headX" min="-360" max="360" value="0"></td>
+                    <td><input type="range" name="headY" min="-360" max="360" value="0"></td>
+                    <td><input type="range" name="headZ" min="-360" max="360" value="0"></td>
                 </tr>
                 <tr>
                     <td>Body:</td>
-                    <td><input type="range" name="bodyX" min="0" max="360" value="0"></td>
-                    <td><input type="range" name="bodyY" min="0" max="360" value="0"></td>
-                    <td><input type="range" name="bodyZ" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="bodyX" min="-360" max="360" value="0"></td>
+                    <td><input type="range" name="bodyY" min="-360" max="360" value="0"></td>
+                    <td><input type="range" name="bodyZ" min="-360" max="360" value="0"></td>
                 </tr>
                 <tr>
                     <td>Left Leg:</td>
-                    <td><input type="range" name="leftLegX" min="0" max="360" value="0"></td>
-                    <td><input type="range" name="leftLegY" min="0" max="360" value="0"></td>
-                    <td><input type="range" name="leftLegZ" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="leftLegX" min="-360" max="360" value="0"></td>
+                    <td><input type="range" name="leftLegY" min="-360" max="360" value="0"></td>
+                    <td><input type="range" name="leftLegZ" min="-360" max="360" value="0"></td>
                 </tr>
                 <tr>
                     <td>Right Leg:</td>
-                    <td><input type="range" name="rightLegX" min="0" max="360" value="0"></td>
-                    <td><input type="range" name="rightLegY" min="0" max="360" value="0"></td>
-                    <td><input type="range" name="rightLegZ" min="0" max="360" value="0"></td>
+                    <td><input type="range" name="rightLegX" min="-360" max="360" value="0"></td>
+                    <td><input type="range" name="rightLegY" min="-360" max="360" value="0"></td>
+                    <td><input type="range" name="rightLegZ" min="-360" max="360" value="0"></td>
                 </tr>
             </table>
             <div id="inputarms">
                 <table class="rotations">
                         <tr>
                             <td>Left Arm:</td>
-                            <td><input type="range" name="leftArmX" min="0" max="360" value="0"></td>
-                            <td><input type="range" name="leftArmY" min="0" max="360" value="0"></td>
-                            <td><input type="range" name="leftArmZ" min="0" max="360" value="0"></td>
+                            <td><input type="range" name="leftArmX" min="-360" max="360" value="0"></td>
+                            <td><input type="range" name="leftArmY" min="-360" max="360" value="0"></td>
+                            <td><input type="range" name="leftArmZ" min="-360" max="360" value="0"></td>
                         </tr>
                         <tr>
                             <td>Right Arm:</td>
-                            <td><input type="range" name="rightArmX" min="0" max="360" value="0"></td>
-                            <td><input type="range" name="rightArmY" min="0" max="360" value="0"></td>
-                            <td><input type="range" name="rightArmZ" min="0" max="360" value="0"></td>
+                            <td><input type="range" name="rightArmX" min="-360" max="360" value="0"></td>
+                            <td><input type="range" name="rightArmY" min="-360" max="360" value="0"></td>
+                            <td><input type="range" name="rightArmZ" min="-360" max="360" value="0"></td>
                         </tr>
                 </table>
             </div>
