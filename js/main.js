@@ -293,7 +293,18 @@ function handleInput(){
 	rotation = getRangeInput("rotation");
 	xPos = getInput("x-coord");
 	yPos = getInput("y-coord");
-	zPos = getInput("z-coord")
+	zPos = getInput("z-coord");
+	console.log(xPos + "." + yPos + "." + zPos);
+	if (xPos == "") {
+		xPos = "~";
+	}
+	if (yPos == "") {
+		yPos = "~";
+	}
+	if (zPos == "") {
+		zPos = "~";
+	}
+	console.log(xPos + "." + yPos + "." + zPos);
 	updateUI();
 }
 function getCheckBoxInput(name){
