@@ -31,6 +31,9 @@ var yPos = "~"
 var zPos = "~"
 
 //DATA -> Stuff that we'll use to generate the command. Fetched from the controls.
+
+var mcVersion;
+
 var invisible = false;
 var invulnerable = false;
 var persistencerequired = false;
@@ -38,8 +41,9 @@ var noBasePlate = false;
 var noGravity = false;
 var showArms = false;
 var small = false;
+var marker = false;
 
-var equipmentMode;
+var useEquipment;
 var equipHandRight;
 var equipHandLeft;
 var equipShoes;
@@ -51,6 +55,9 @@ var equipColorShoes;
 var equipColorLeggings;
 var equipColorChestplate;
 var equipColorHelmet;
+
+var customName;
+var showCustomName;
 
 var useDisabledSlots;
 
@@ -75,17 +82,53 @@ Point = {
 	y:null
 };
 
+jQuery.fn.selectAndCopyText = function(){
+    // https://stackoverflow.com/a/9976413/1456971
+    this.find('input').each(function() {
+        if($(this).prev().length == 0 || !$(this).prev().hasClass('p_copy')) {
+            $('<p class="p_copy" style="position: absolute; z-index: -1;"></p>').insertBefore($(this));
+        }
+        $(this).prev().html($(this).val());
+    });
+
+    var doc = document;
+    var element = this[0];
+    if (doc.body.createTextRange) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+	document.execCommand("copy");
+};
+
 $(document).ready(function(){
 	//Init
 	setup();
 	updateUI();
 	render();
+	
+	// Confirm exit
+	window.onbeforeunload = function(){
+		return "Changes will NOT be saved. Exit anyways?";
+	};
 
+	// Copy code on click
+	$(".code").click(function(){
+		$("#code").selectAndCopyText();
+	});
+	
 	//Stuff to handle and update input
 	$("input").on("input", function(){
 		handleInput();
 	});
-	$(':checkbox, #equipCustomHeadMode, #equipmode').change(function() {
+	$(':checkbox, #equipCustomHeadMode, #equipmode, #mcversion').change(function() {
     	handleInput();
 	});
 
@@ -259,6 +302,8 @@ function setup(){
 // Write stuff from input into variables
 function handleInput(){
 
+	mcVersion = $("#mcversion").val();
+
 	invisible = getCheckBoxInput("invisible");
 	invulnerable = getCheckBoxInput("invulnerable");
     persistencerequired = getCheckBoxInput("persistencerequired");
@@ -266,8 +311,9 @@ function handleInput(){
 	noGravity = getCheckBoxInput("nogravity");
 	showArms = getCheckBoxInput("showarms");
 	small = getCheckBoxInput("small");
+	marker = getCheckBoxInput("marker");
 
-	equipmentMode = $("#equipmode").val(); // use direct jQuery for dropdowns
+	useEquipment = getCheckBoxInput("useequipment");
 	equipHandRight = getInput("equipHandRight");
 	equipHandLeft = getInput("equipHandLeft");
 	equipShoes = getInput("equipShoes");
@@ -280,6 +326,9 @@ function handleInput(){
     equipColorLeggings = $("#leggingscolor").css("background-color");
     equipColorChestplate = $("#chestplatecolor").css("background-color");
     equipColorHelmet = $("#helmetcolor").css("background-color");
+
+	customName = getInput("customname");
+	showCustomName = getCheckBoxInput("showcustomname");
 
 	useDisabledSlots = getCheckBoxInput("usedisabledslots");
 
@@ -316,18 +365,18 @@ function updateUI(){
 	else
 		$("#inputarms").slideUp();
 
-	if(equipmentMode != "none"){
+	if(useEquipment){
 		$("#customequipment").slideDown();
-		if(equipmentMode == "1.9"){
-			$("#equipHandLeft").show();
-		}
-		else{
+		// Hide left hand item input for minecraft 1.8
+		if(mcVersion == "1.8"){
 			$("#equipHandLeft").hide();
 		}
+		else{
+			$("#equipHandLeft").show();
+		}
 	}
-	else{
+	else
 		$("#customequipment").slideUp();
-	}
 
     //Different colorinputs for armorparts
     if(isLeatherArmor(equipShoes))
@@ -347,15 +396,27 @@ function updateUI(){
     else
         $("#helmetcolor").slideUp();
 
+	// Link to minecraft-heads.com
+	if(equipCustomHeadMode == "givecode"){
+		$("#minecraft-heads").slideDown();
+	}
+	else{
+		$("#minecraft-heads").slideUp();
+	}
 
+	// Show disabled slots
 	if(useDisabledSlots)
 		$("#disabledslots").slideDown();
 	else
 		$("#disabledslots").slideUp();
 
+	// Generate code
 	$("#code").text(generateCode());
 	if(generateCode().length > 100){
-		$("#codeinfo").html("<b>Please note:</b> This command is too long to be executed from chat. You need to place it inside a command block. (see below)");
+		$("#codeinfo").slideDown();
+	}
+	else{
+		$("#codeinfo").slideUp();
 	}
 
 
@@ -382,10 +443,12 @@ function updateUI(){
 }
 
 function generateCode(){
-	var code = "/summon ArmorStand ";
-		code += xPos + " " + yPos + " " + zPos + " {";
+	var code = "/summon armor_stand ~ ~ ~ {";
 
-
+	// Old entity name
+	if(mcVersion == "1.8" || mcVersion == "1.9"){
+		code = "/summon ArmorStand ~ ~ ~ {";
+	}
 
 	var tags = [];
 
@@ -404,41 +467,52 @@ function generateCode(){
 		tags.push("ShowArms:1b");
 	if(small)
 		tags.push("Small:1b");
+	if(marker)
+		tags.push("Marker:1b");
 
 	//Sliders
 	if(rotation != 0)
 		tags.push("Rotation:["+rotation+"f]");
 
-	//1.8 Equipment
-	if(equipmentMode == "1.8"){
-		var equip = [];
+	// Equipment
+	if(useEquipment){
+		// Old 1.8 Equipment format
+		if(mcVersion == "1.8"){
+			var armor = [];
 
-		equip.push(getHandRightItem());
-		equip.push(getShoesItem());
-		equip.push(getLeggingsItem());
-		equip.push(getChestplateItem());
-		equip.push(getHeadItem());
+			armor.push(getHandRightItem());
+			armor.push(getShoesItem());
+			armor.push(getLeggingsItem());
+			armor.push(getChestplateItem());
+			armor.push(getHeadItem());
 
-		tags.push("Equipment:["+equip.join(",")+"]");
+			tags.push("Equipment:["+armor.join(",")+"]");
+		}
+		// New 1.9+ Equipment format
+		else{
+			var armor = [];
+
+			armor.push(getShoesItem());
+			armor.push(getLeggingsItem());
+			armor.push(getChestplateItem());
+			armor.push(getHeadItem());
+
+			tags.push("ArmorItems:["+armor.join(",")+"]");
+
+			var hands = [];
+
+			hands.push(getHandRightItem());
+			hands.push(getHandLeftItem());
+
+			tags.push("HandItems:["+hands.join(",")+"]");
+		}
 	}
-	// 1.9 Equipment
-	else if(equipmentMode == "1.9"){
-		var armor = [];
 
-		armor.push(getShoesItem());
-		armor.push(getLeggingsItem());
-		armor.push(getChestplateItem());
-		armor.push(getHeadItem());
-
-		tags.push("ArmorItems:["+armor.join(",")+"]");
-
-		var hands = [];
-
-		hands.push(getHandRightItem());
-		hands.push(getHandLeftItem());
-
-		tags.push("HandItems:["+hands.join(",")+"]");
-	}
+	// Custom name
+	if(customName != "" && customName != null)
+		tags.push("CustomName:\""+customName+"\"");
+	if(showCustomName)
+		tags.push("CustomNameVisible:1b");
 
 	//DisabledSlots
 	if(useDisabledSlots){
@@ -525,6 +599,39 @@ function getHeadItem(){
 
 		return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
 	}
+
+	// Parse give code
+	else if(equipCustomHeadMode == "givecode"){
+
+		// Give Code in this format: /give @p skull 1 3 {display:{Name:"Some Name"},SkullOwner:{Id:"a74719ce...
+		if(equipHelmet.indexOf("SkullOwner:{") >= 0){
+			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner"));
+			var parsed = "";
+			var bracketCounter = 0;
+			var bracketsStarted = false;
+
+			for(var i = 0; i < skullOwnerRaw.length; i++){
+				var c = skullOwnerRaw[i];
+
+				if(c == "{") bracketCounter++;
+				if(c == "}") bracketCounter--;
+
+				parsed += c;
+				if(bracketCounter == 0 && bracketsStarted) break;
+				if(c == ":") bracketsStarted = true;
+			}
+
+			return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
+		}
+		// Give Code in this format: /give @p skull 1 3 {SkullOwner:"playername"} (quotes optional)
+		else{
+			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner:"));
+			skullOwnerRaw = skullOwnerRaw.substring(0, skullOwnerRaw.indexOf("}"));
+			return '{id:"skull",Count:1b,Damage:3b,tag:{'+skullOwnerRaw+'}}';
+		}
+
+	}
+
 }
 
 function calculateDisabledSlotsFlag() {
