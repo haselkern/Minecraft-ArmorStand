@@ -409,7 +409,9 @@ function updateUI(){
 
 	// Generate code
 	$("#code").text(generateCode());
-	if(generateCode().length > 100){
+	// Show hint, when command is too long
+	let characterLimit = (mcVersion == "1.8" || mcVersion == "1.9") ? 100 : 256;
+	if(generateCode().length > characterLimit){
 		$("#codeinfo").slideDown();
 	}
 	else{
