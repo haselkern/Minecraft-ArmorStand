@@ -40,6 +40,7 @@ var noGravity = false;
 var showArms = false;
 var small = false;
 var marker = false;
+var centercorrected = false;
 
 var useEquipment;
 var equipHandRight;
@@ -56,6 +57,11 @@ var equipColorHelmet;
 
 var customName;
 var showCustomName;
+var nameColor;
+var nameBold;
+var nameItalic;
+var nameobfuscated;
+var nameStrikethrough;
 
 var useDisabledSlots;
 
@@ -154,6 +160,11 @@ $(document).ready(function(){
 	$("#inputarms").hide();
 	$("#customequipment").hide();
 	$("#disabledslots").hide();
+	$("#namecustomization").hide();
+	
+	//Show elements
+	$("#namecustomization").show();
+	$("#centercorrected").show();
 
     //Initialize colorpickers
     $('.colorfield').colpick({
@@ -310,6 +321,7 @@ function handleInput(){
 	showArms = getCheckBoxInput("showarms");
 	small = getCheckBoxInput("small");
 	marker = getCheckBoxInput("marker");
+	centercorrected = getCheckBoxInput("center-corrected")
 
 	useEquipment = getCheckBoxInput("useequipment");
 	equipHandRight = getInput("equipHandRight");
@@ -327,6 +339,11 @@ function handleInput(){
 
 	customName = getInput("customname");
 	showCustomName = getCheckBoxInput("showcustomname");
+	nameColor = getInput("namecolor");
+	nameBold = getCheckBoxInput("namebold");
+	nameItalic = getCheckBoxInput("nameitalic");
+	nameObfuscated = getCheckBoxInput("nameobfuscated");
+	nameStrikethrough = getCheckBoxInput("namestrikethrough");
 
 	useDisabledSlots = getCheckBoxInput("usedisabledslots");
 
@@ -406,7 +423,16 @@ function updateUI(){
 		$("#disabledslots").slideDown();
 	else
 		$("#disabledslots").slideUp();
-
+	
+	//Hide 1.13 features for 1.12 and lower.
+	if (mcVersion == "1.13") {
+		$("#namecustomization").show()
+		$("#centercorrected").show()
+	} else {
+		$("#namecustomization").hide()
+		$("#centercorrected").hide()
+	}
+	
 	// Generate code
 	$("#code").text(generateCode());
 	// Show hint, when command is too long
@@ -442,11 +468,15 @@ function updateUI(){
 }
 
 function generateCode(){
-	var code = "/summon armor_stand ~ ~ ~ {";
-
+	var code = "/summon armor_stand ~ ~ ~ {" //in 1.13, positions are no longer center-corrected. Adding .5 makes it centered. However for players it is already center-corrected
+	
 	// Old entity name
 	if(mcVersion == "1.8" || mcVersion == "1.9"){
 		code = "/summon ArmorStand ~ ~ ~ {";
+	} else if (mcVersion == "1.11") {
+		code = "/summon armor_stand ~ ~ ~ {";
+	} else if (mcVersion == "1.13") {
+		centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
 	}
 
 	var tags = [];
@@ -509,7 +539,25 @@ function generateCode(){
 
 	// Custom name
 	if(customName != "" && customName != null)
-		tags.push("CustomName:\""+customName+"\"");
+		//New 1.13 format
+		if (mcVersion == "1.13") {
+			var name = [];
+			
+			name.push(getName());
+			name.push(getNameColor());
+			name.push(getNameBold());
+			name.push(getNameItalic());
+			name.push(getNameObfuscated());
+			name.push(getNameStrikethrough());
+			
+			//tags.push(`CustomName:\"${customName}\"`)
+			tags.push(`CustomName:"{${name.join("")}}"`)
+			//Old format
+		} else {
+			tags.push(`CustomName:\"${customName}\"`)
+		}
+		
+		//mcVersion == "1.13" ? tags.push(`CustomName:"\\"${customName}\\""`) : tags.push("CustomName:\""+customName+"\"")
 	if(showCustomName)
 		tags.push("CustomNameVisible:1b");
 
@@ -587,7 +635,11 @@ function getHeadItem(){
 
 	// Use input as player name
 	else if(equipCustomHeadMode == "player"){
-		return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
+		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+			return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
+		} else if (mcVersion == "1.13") {
+			return "{id:\"player_head\",Count:1b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
+		}
 	}
 
 	// Use input as url
@@ -595,14 +647,19 @@ function getHeadItem(){
 	else if(equipCustomHeadMode == "url"){
 		var uuid = generateUUID();
 		var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
-
-		return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
+		
+		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+			return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
+		} else if (mcVersion == "1.13") {
+			return '{id:"player_head",Count:1b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
+		}
 	}
 
 	// Parse give code
 	else if(equipCustomHeadMode == "givecode"){
-
+		
 		// Give Code in this format: /give @p skull 1 3 {display:{Name:"Some Name"},SkullOwner:{Id:"a74719ce...
+		// Give code in 1.13 has changed to this format: /give @p player_head{display:{Name:"Some Name"},SkullOwner:{Id:"a74719ce...
 		if(equipHelmet.indexOf("SkullOwner:{") >= 0){
 			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner"));
 			var parsed = "";
@@ -619,18 +676,57 @@ function getHeadItem(){
 				if(bracketCounter == 0 && bracketsStarted) break;
 				if(c == ":") bracketsStarted = true;
 			}
-
-			return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
+			
+			if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+				return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
+			} else if (mcVersion == "1.13") {
+				return '{id:"player_head",Count:1b,tag:{'+parsed+'}}';
+			}
 		}
 		// Give Code in this format: /give @p skull 1 3 {SkullOwner:"playername"} (quotes optional)
+		// Give code in 1.13 has changed to this format: /give @p player_head{display:{Name:"Some Name"},SkullOwner:{Id"a74719ce...
 		else{
 			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner:"));
 			skullOwnerRaw = skullOwnerRaw.substring(0, skullOwnerRaw.indexOf("}"));
-			return '{id:"skull",Count:1b,Damage:3b,tag:{'+skullOwnerRaw+'}}';
+			if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+				return '{id:"skull",Count:1b,Damage:3b,tag:{'+skullOwnerRaw+'}}';
+			} else if (mcVersion == "1.13") {
+				return '{id:"player_head",Count:1b,tag:{'+skullOwnerRaw+'}}';
+			}
 		}
 
 	}
 
+}
+
+function getName() {
+	if (!customName) return ""
+	return `\\"text\\":\\"${customName}\\"`
+}
+
+function getNameColor() {
+	if (nameColor == "") return ""
+	return `,\\"color\\":\\"${nameColor}\\"`
+}
+
+function getNameBold() {
+	if (!nameBold) return ""
+	return `,\\"bold\\":\\"true\\"`
+}
+
+function getNameItalic() {
+	if (!nameItalic) return ""
+	return `,\\"italic\\":\\"true\\"`
+}
+
+function getNameStrikethrough() {
+	if (!nameStrikethrough) return ""
+	return `,\\"strikethrough\\":\\"true\\"`
+}
+
+function getNameObfuscated() {
+	if (!nameObfuscated) return ""
+	return `,\\"obfuscated\\":\\"true\\"`
 }
 
 function calculateDisabledSlotsFlag() {

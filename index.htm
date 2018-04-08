@@ -39,7 +39,8 @@
 
         <div class="padding underline">
             <select id="mcversion">
-                <option value="1.11">Minecraft 1.11 and above</option>
+				<option value="1.13">Minecraft 1.13 and above</option>
+                <option value="1.11">Minecraft 1.11 &amp; 1.12</option>
                 <option value="1.9">Minecraft 1.9 &amp; 1.10</option>
                 <option value="1.8">Minecraft 1.8</option>
             </select>
@@ -54,6 +55,9 @@
             <label><input type="checkbox" name="showarms">Show Arms</label><br>
             <label><input type="checkbox" name="small">Small</label><br>
             <label><input type="checkbox" name="marker">Marker</label><br>
+			<div id="centercorrected">
+				<label><input type="checkbox" id="center-corrected" name="center-corrected">Center-corrected</label><br>
+			</div>
         </div>
 
         <div class="padding underline">
@@ -174,8 +178,38 @@
 
         <div class="padding underline">
             <input type="text" name="customname" id="customname" placeholder="Custom name">
-            <label><input type="checkbox" name="showcustomname">Show custom name</label>
-            <br>
+            <label><input type="checkbox" name="showcustomname">Show custom name</label><br>
+			<div id="namecustomization">
+				<p>
+					In 1.13, you can now add formats to the name tags.
+					Enter the color id (for example red, dark_blue) in the name color field to give it a color.
+				</p>
+				<input type="text" name="namecolor" id="namecolor" placeholder="Name color" list="list-colors">
+				<datalist id="list-colors">
+					<option value="aqua">
+					<option value="black">
+					<option value="blue">
+					<option value="dark_aqua">
+					<option value="dark_blue">
+					<option value="dark_gray">
+					<option value="dark_green">
+					<option value="dark_purple">
+					<option value="dark_red">
+					<option value="gold">
+					<option value="gray">
+					<option value="green">
+					<option value="light_purple">
+					<option value="red">
+					<option value="white">
+					<option value="yellow">
+				</datalist>
+				<div>
+					<label><input type="checkbox" id="namebold" name="namebold">Bold</label>
+					<label><input type="checkbox" id="nameitalic" name="nameitalic">Italic</label>
+					<label><input type="checkbox" id="nameobfuscated" name="nameobfuscated">Obfuscated</label>
+					<label><input type="checkbox" id="namestrikethrough" name="namestrikethrough">Strikethrough</label>
+				</div>
+			</div>
         </div>
 
         <div class="padding">
