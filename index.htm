@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="js/colpick.css">
     <link rel="icon" type="image/png" href="images/icon.png">
-    
+
     <link href='https://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -27,7 +27,7 @@
     <div id="gl"></div>
 
     <div class="right card">
-        
+
         <div class="padding underline">
             <h1>MINECRAFT ARMORSTAND</h1>
             <center>
@@ -108,7 +108,7 @@
                 </table>
             </div>
         </div>
-        
+
         <div class="padding underline">
             <label><input type="checkbox" name="useequipment">Enable equipment</label><br>
             <div id="customequipment">
@@ -151,6 +151,7 @@
 
                 <input type="text" class="equipment" name="equipHelmet" placeholder="Helmet" list="list-helmet">
                 <datalist id="list-helmet">
+                    <option value="turtle_helmet">
                     <option value="chainmail_helmet">
                     <option value="diamond_helmet">
                     <option value="golden_helmet">
@@ -267,14 +268,14 @@
     <div class="right card">
         <span style="cursor: pointer;" onclick="javascript:$('#getcommandblock').slideToggle();">
             + Obtain a command block
-        </span>
+        </span>	
         <br>
         <div id="getcommandblock">
             <div class="padding">
                 If your command is longer than 256 characters (100 before Minecraft 1.11), it needs to be executed with a <i>command block</i>. Obtain one by typing:
             </div>
             <div class="code">
-                /give @p command_block
+                /give @p minecraft:command_block
             </div>
         </div>
     </div>
