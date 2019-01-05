@@ -454,6 +454,23 @@ function updateUI(){
 }
 
 function generateCode(){
+	if(equipCustomHeadMode == "url-head"){
+		var code = "/give @p minecraft:head 1 3 {";
+
+		// Old entity name
+		if(mcVersion == "1.8" || mcVersion == "1.9"){
+		code = "/give @p minecraft:head 1 3 {";
+		}
+		
+		var tags = [];
+		
+		tags.push(getHeadItem());
+		
+		code += tags.join(",");
+		code += "}";
+		return code;
+		}
+	else{
 	var code = "/summon armor_stand ~ ~ ~ {";
 
 	// Old entity name
@@ -554,6 +571,7 @@ function generateCode(){
 	code += tags.join(",");
 	code += "}";
 	return code;
+	}
 }
 
 function getHandRightItem(){
@@ -642,6 +660,14 @@ function getHeadItem(){
 		}
 
 	}
+	
+	// use URL to create head
+	// Best reference: http://redd.it/24quwx
+	else if(equipCustomHeadMode == "url-head"){
+		var uuid = generateUUID();
+		var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
+
+		return 'SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}';
 
 }
 
