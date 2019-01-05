@@ -44,7 +44,20 @@
                 <option value="1.8">Minecraft 1.8</option>
             </select>
         </div>
+		<div class="padding underline">
+		<label><input type="checkbox" name="justgivehead">Give Head Only</label><br>
+		</div>
+		<div id="giveSkull">
+			<div class="padding underline">
+				<input type="text" class="equipment" name="skullInput" placeholder="Skin">
 
+				<select id="skullMode">
+					<option value="url-head">URL</option>
+					<option value="player-name">Player Name</option>
+				</select>
+			</div>
+		</div>
+		<div id="summonAS">
         <div class="padding underline">
             <label><input type="checkbox" name="invisible">Invisible</label><br>
             <label><input type="checkbox" name="invulnerable">Invulnerable</label><br>
@@ -223,7 +236,9 @@
                     <span><input id="pW" type="checkbox"></input></span>
                 </div>
             </div>
-        </div>
+        
+		</div>
+		</div>
 
         <div class="code">
             <div id="code-copy-hint">click to copy</div>
