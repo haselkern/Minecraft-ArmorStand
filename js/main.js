@@ -391,6 +391,7 @@ function updateUI(){
 		$("#giveSkull").slideUp();
 	}
 	
+	
 	if(showArms)
 		$("#inputarms").slideDown();
 	else
@@ -737,7 +738,7 @@ function getHeadItem(){
 		var uuid = generateUUID();
 		var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
 		
-		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+		if (mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11") {
 			return 'SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}';
 		} else if (mcVersion == "1.13") {
 			return 'SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}';
@@ -753,7 +754,7 @@ function getSkullItem(){
 		var uuid = generateUUID();
 		var base64Value = btoa('{textures:{SKIN:{url:"'+headType+'"}}}');
 		
-		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+		if (mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11") {
 			return 'SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}';
 		} else if (mcVersion == "1.13") {
 			return 'SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}';
@@ -761,7 +762,7 @@ function getSkullItem(){
 	}
 	
 	else if(skullMode == "player-name"){
-		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+		if (mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11") {
 			return "SkullOwner:\""+headType+"\"";
 		} else if (mcVersion == "1.13") {
 			return "SkullOwner:\""+headType+"\"";
