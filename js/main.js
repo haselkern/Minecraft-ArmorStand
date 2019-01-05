@@ -669,6 +669,7 @@ function getHeadItem(){
 
 		return 'SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}';
 
+	}
 }
 
 function calculateDisabledSlotsFlag() {
