@@ -455,11 +455,11 @@ function updateUI(){
 
 function generateCode(){
 	if(equipCustomHeadMode == "url-head"){
-		var code = "/give @p minecraft:head 1 3 {";
+		var code = "/give @p minecraft:skull 1 3 {";
 
 		// Old entity name
 		if(mcVersion == "1.8" || mcVersion == "1.9"){
-		code = "/give @p minecraft:head 1 3 {";
+		code = "/give @p minecraft:skull 1 3 {";
 		}
 		
 		var tags = [];
