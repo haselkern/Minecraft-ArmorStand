@@ -50,6 +50,10 @@ var small = false;
 var marker = false;
 var centercorrected = false;
 
+var xcoord = "";
+var ycoord = "";
+var zcoord = "";
+
 var useEquipment;
 var equipHandRight;
 var equipHandLeft;
@@ -345,6 +349,10 @@ function handleInput(){
 	equipCustomHeadMode = $("#equipCustomHeadMode").val();
 	skullMode = $("#skullMode").val();
 	
+	//Positioning
+	xcoord = getInput("x-coord");
+	ycoord = getInput("y-coord");
+	zcoord = getInput("z-coord");
 
     equipColorShoes = $("#shoecolor").css("background-color");
     equipColorLeggings = $("#leggingscolor").css("background-color");
@@ -508,17 +516,23 @@ function generateCode(){
 		code += tags.join(",");
 		code += "}";
 		return code;
-		}
-		else{
-	var code = "/summon armor_stand ~ ~ ~ {" //in 1.13, positions are no longer center-corrected. Adding .5 makes it centered. However for players it is already center-corrected
+	}
+	
+		else {
+	// Positions
+	var xpos = getxCoords();
+	var ypos = getyCoords();
+	var zpos = getzCoords();
+	//Spawn Armor Stands
+	var code = "/summon armor_stand "+xpos+" "+ypos+" "+zpos+" {" //in 1.13, positions are no longer center-corrected. Adding .5 makes it centered. However for players it is already center-corrected
 	
 	// Old entity name
 	if(mcVersion == "1.8" || mcVersion == "1.9"){
-		code = "/summon ArmorStand ~ ~ ~ {";
+		code = "/summon ArmorStand "+xpos+" "+ypos+" "+zpos+" {";
 	} else if (mcVersion == "1.11") {
-		code = "/summon armor_stand ~ ~ ~ {";
+		code = "/summon armor_stand "+xpos+" "+ypos+" "+zpos+" {";
 	} else if (mcVersion == "1.13") {
-		centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
+		centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand "+xpos+" "+ypos+" "+zpos+" {"
 	}
 
 	var tags = [];
@@ -782,6 +796,26 @@ function getSelector(){
 	if(selectorInput == "") return "@p";
 	
 	return selectorInput;
+}
+
+//uses X coordinate set to return
+function getxCoords() {
+	if(xcoord == "") return "~";
+	
+	return xcoord;
+}
+//uses Y coordinate set to return
+function getyCoords() {
+	if(ycoord == "") return "~";
+	
+	return ycoord;
+}
+
+//uses Z coordinate set to return
+function getzCoords() {
+	if(zcoord == "") return "~";
+	
+	return zcoord;
 }
 
 function getName() {
