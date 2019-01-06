@@ -35,7 +35,10 @@ var mcVersion;
 var justgivehead = false;
 var skullMode;
 
+var selectorInput = "";
+
 var headType = "";
+
 
 var invisible = false;
 var invulnerable = false;
@@ -338,8 +341,10 @@ function handleInput(){
 	equipChestplate = getInput("equipChestplate");
 	equipHelmet = getInput("equipHelmet");
 	headType = getInput("skullInput");
+	selectorInput = getInput("selectorInput");
 	equipCustomHeadMode = $("#equipCustomHeadMode").val();
 	skullMode = $("#skullMode").val();
+	
 
     equipColorShoes = $("#shoecolor").css("background-color");
     equipColorLeggings = $("#leggingscolor").css("background-color");
@@ -487,14 +492,15 @@ function updateUI(){
 
 function generateCode(){
 	if(justgivehead){
-		var code = "give @p minecraft:skull 1 3 {"
+		var selector = getSelector();
+		var code = "give "+selector+" minecraft:skull 1 3 {"
 		
 	if(mcVersion == "1.8" || mcVersion == "1.9"){
-		code = "/give @p skull 1 3 {";
+		code = "/give "+selector+" skull 1 3 {";
 	} else if (mcVersion == "1.11") {
-		code = "/give @p minecraft:skull 1 3 {";
+		code = "/give "+selector+" minecraft:skull 1 3 {";
 	} else if (mcVersion == "1.13") {
-		centercorrected ? code = "/give @p player_head {" : code = "/give @p player_head {"
+		centercorrected ? code = "/give "+selector+" player_head {" : code = "/give "+selector+" player_head {"
 	}
 		var tags = [];
 		tags.push(getSkullItem());
@@ -770,6 +776,12 @@ function getSkullItem(){
 	}
 	
 	
+}
+
+function getSelector(){
+	if(selectorInput == "") return "@p";
+	
+	return selectorInput;
 }
 
 function getName() {
