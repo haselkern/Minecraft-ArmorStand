@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minecraft Armorstand</title>
+    <title>Minecraft Armor stand</title>
     <meta charset="utf-8">
-    <meta name="description" content="Create poses for Minecraft armorstands in a breeze! Free, fast, open source.">
+    <meta name="description" content="Create poses for Minecraft armor stands in a breeze! Free, fast, open source.">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="js/colpick.css">
     <link rel="icon" type="image/png" href="images/icon.png">
@@ -29,7 +29,7 @@
     <div class="right card">
 
         <div class="padding underline">
-            <h1>MINECRAFT ARMORSTAND</h1>
+            <h1>MINECRAFT ARMOR STAND</h1>
             <center>
                 <a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank"><img src="images/github.png" alt="GitHub" title="GitHub" /></a>
                 <a href="https://www.twitter.com/haselcode" target="_blank"><img src="images/twitter.png" alt="Twitter" title="Twitter" /></a>
@@ -264,6 +264,32 @@
 
     </div>
 
+    <div class="right card">
+        <span style="cursor: pointer;" onclick="javascript:$('#saveandload').slideToggle();">
+            + Save and Load
+        </span>	
+        <div id="saveandload">
+            <div class="padding">
+                <div id="save" class="padding underline">
+                    <p>
+                        Save your current armor stand creation
+                    </p>
+                    <input type="text" name="creationname" id="creationname" placeholder="My armor stand"/>
+                    <button style="display:inline-block" id="savecreation" onclick="javascript:saveData();">Save Creation</button><br>
+                </div>
+                <div id="load" class="padding underline">
+                    <p id="loadmessage">
+                        Load your saved creations
+                    </p>
+                    <div id="loadlistopts">
+                        <select id="loadlist"></select>
+                        <button id="loadcreation" style="display:inline-block;" onclick="javascript:loadData($(`#loadlist`).val());">Load Creation</button>
+                        <button id="deletesave" style="display:inline-block;" onclick="javascript:deleteSave($(`#loadlist`).val());">Delete Creation</button><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="right card">
         <span style="cursor: pointer;" onclick="javascript:$('#getcommandblock').slideToggle();">
@@ -279,7 +305,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="right card">
         <span class="" style="cursor: pointer;" onclick="javascript:$('#troubleshooting').slideToggle();">

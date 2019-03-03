@@ -30,6 +30,27 @@ a{
 	color: #000000;
 }
 
+button {
+	border: 1px solid #aaa;
+	background-color: rgb(230, 230, 230);
+	border-radius: 3px;
+	padding: 0.5em;
+}
+
+button:hover {
+	cursor: pointer;
+	background-color: rgb(220, 220, 220);
+}
+
+button:active {
+	background-color: rgb(200, 200, 200);
+}
+
+button:focus {
+	
+	outline:0;
+}
+
 input[type="text"], select{
 	border: 1px solid #aaa;
 	border-radius: 3px;
