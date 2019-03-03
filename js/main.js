@@ -969,7 +969,7 @@ function saveData() {
 };
 
 function loadData(data) {
-	console.log(`loading data!`);
+	//console.log(`loading data!`);
 	data = localStorage.getItem(data);
 	if (!data) return alert(`An error occurred while loading the creation.`);
 	
@@ -1067,13 +1067,13 @@ function loadData(data) {
 		$(`#pW`).prop(`checked`, data.lock_slot_interaction.place.weapons);
 		
 		handleInput();
-		console.log(`done loading!`)
+		//console.log(`done loading!`)
 	} catch (err) {
 		console.error(err);
 		alert(`An error occurred while loading the creation.`);
 	};
 	
-	loadScreen();
+	//loadScreen();
 };
 
 function deleteSave(data) {
