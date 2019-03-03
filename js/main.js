@@ -117,10 +117,11 @@ $(document).ready(function(){
 	setup();
 	updateUI();
 	render();
-	
+	loadScreen();
+
 	// Confirm exit
 	window.onbeforeunload = function(){
-		return "Changes will NOT be saved. Exit anyways?";
+		return "Unsaved changes will NOT be saved. Exit anyways?";
 	};
 
 	// Copy code on click
@@ -156,6 +157,7 @@ $(document).ready(function(){
 
 	//Hide elements
 	$("#getcommandblock").hide();
+	$("#saveandload").hide();
 	$("#troubleshooting").hide();
 	$("#inputarms").hide();
 	$("#customequipment").hide();
@@ -179,6 +181,21 @@ $(document).ready(function(){
     });
 
 });
+
+function loadScreen() {
+	$(`#creationname`).attr(`placeholder`, `My Armor Stand #${localStorage.length + 1}`);
+	if (!localStorage.length) {
+		$(`#loadlistopts`).hide();
+		$(`#loadmessage`).text(`You do not have any creations to load!`);
+	} else {
+		$(`#loadlistopts`).show();
+		$(`#loadmessage`).text(`Load your saved creations`);
+		$(`#loadlist`).empty();
+		for (let i = 0; i < localStorage.length; i++) {
+			$(`#loadlist`).append(`<option value="${localStorage.key(i)}">${localStorage.key(i)}</option>`);
+		};
+	};
+};
 
 function setup(){
 	width = $("#gl").width();
@@ -321,7 +338,7 @@ function handleInput(){
 	showArms = getCheckBoxInput("showarms");
 	small = getCheckBoxInput("small");
 	marker = getCheckBoxInput("marker");
-	centercorrected = getCheckBoxInput("center-corrected")
+	centercorrected = getCheckBoxInput("center-corrected");
 
 	useEquipment = getCheckBoxInput("useequipment");
 	equipHandRight = getInput("equipHandRight");
@@ -358,16 +375,19 @@ function handleInput(){
 	rotation = getRangeInput("rotation");
 
 	updateUI();
-}
-function getCheckBoxInput(name){
+};
+
+function getCheckBoxInput(name) {
 	return $("input[name="+name+"]").prop("checked");
-}
-function getRangeInput(name){
+};
+
+function getRangeInput(name) {
 	return $("input[name="+name+"]").val();
-}
-function getInput(name){
+};
+
+function getInput(name) {
 	return $("input[name="+name+"]").val();
-}
+};
 
 /** Changes stuff according to our input values */
 function updateUI(){
@@ -851,3 +871,213 @@ function rotateAroundWorldAxis(object, axis, radians, reset) {
     object.matrix = rotWorldMatrix;
     object.rotation.setFromRotationMatrix(object.matrix);
 }
+
+function saveData() {
+	// Handles saving of armor stand data
+	const SAVE_DATA = {
+		name: $(`#creationname`).val() === `` ? `My Armor Stand #${localStorage.length + 1}` : $(`#creationname`).val(),
+		version: $(`#mcversion`).val(),
+		
+		options: {
+			invisible: getCheckBoxInput("invisible"),
+			invulnerable: getCheckBoxInput("invulnerable"),
+			presistence_required: getCheckBoxInput("persistencerequired"),
+			no_base_plate: getCheckBoxInput("nobaseplate"),
+			no_gravity: getCheckBoxInput("nogravity"),
+			show_arms: getCheckBoxInput("showarms"),
+			small: getCheckBoxInput("small"),
+			marker: getCheckBoxInput("marker"),
+			center_corrected: getCheckBoxInput("center-corrected")
+		},
+	
+		rotation: {
+			main: getRangeInput("rotation"),
+			head: [getRangeInput("headX"), getRangeInput("headY"), getRangeInput("headZ")],
+			body: [getRangeInput("bodyX"), getRangeInput("bodyY"), getRangeInput("bodyZ")],
+			legs: {
+				left: [getRangeInput("leftLegX"), getRangeInput("leftLegY"), getRangeInput("leftLegX")],
+				right: [getRangeInput("rightLegX"), getRangeInput("rightLegY"), getRangeInput("rightLegZ")],
+			},
+			arms: {
+				left: [getRangeInput("leftArmX"), getRangeInput("leftArmY"), getRangeInput("leftArmX")],
+				right: [getRangeInput("rightArmX"), getRangeInput("rightArmY"), getRangeInput("rightArmX")]
+			}
+		},
+	
+		equipment: {
+			enabled: getCheckBoxInput("useequipment"),
+			hands: {				
+				right: getInput("equipHandRight"),
+				left: getInput("equipHandLeft")
+			},
+			boots: getInput("equipShoes"),
+			leggings: getInput("equipLeggings"),
+			chestplate: getInput("equipChestplate"),
+			helmet: getInput("equipHelmet"),
+			helmet_specifies: $("#equipCustomHeadMode").val(),
+
+			leather_colours: {
+				helmet: $(`#helmetcolor`).css(`background-color`),
+				chestplate: $(`#chestplatecolor`).css(`background-color`),
+				leggings: $(`#leggingscolor`).css(`background-color`),
+				boots: $(`#shoecolor`).css(`background-color`)
+			}
+		},
+	
+		custom_name: {
+			name: $(`#customname`).val(),
+			show_custom_name: getCheckBoxInput("showcustomname"),
+			name_color: getInput("namecolor"),
+			options: {
+				bold: getCheckBoxInput("namebold"),
+				italic: getCheckBoxInput("nameitalic"),
+				obfuscated: getCheckBoxInput("nameobfuscated"),
+				strikethrough: getCheckBoxInput("namestrikethrough")
+			}
+		},
+	
+		lock_slot_interaction: {
+			enabled: $("input[name=usedisabledslots]").is(":checked"),
+			remove: {
+				helmet: $("#dH").is(":checked"),
+				chestplate: $("#dC").is(":checked"),
+				leggings: $("#dL").is(":checked"),
+				boots: $("#dB").is(":checked"),
+				weapons: $("#dW").is(":checked")
+			},
+			replace: {
+				helmet: $("#rH").is(":checked"),
+				chestplate: $("#rC").is(":checked"),
+				leggings: $("#rL").is(":checked"),
+				boots: $("#rB").is(":checked"),
+				weapons: $("#rW").is(":checked")
+			},
+			place: {
+				helmet: $("#pH").is(":checked"),
+				chestplate: $("#pC").is(":checked"),
+				leggings: $("#pL").is(":checked"),
+				boots: $("#pB").is(":checked"),
+				weapons: $("#pW").is(":checked")
+			}
+		}
+	};
+
+	localStorage.setItem(SAVE_DATA.name, JSON.stringify(SAVE_DATA));
+	loadScreen();
+	$(`#creationname`).val(``);
+	alert(`Awesome! Your creation has been saved as ${SAVE_DATA.name}.`);
+};
+
+function loadData(data) {
+	console.log(`loading data!`);
+	data = localStorage.getItem(data);
+	if (!data) return alert(`An error occurred while loading the creation.`);
+	
+	try {
+		data = JSON.parse(data);
+
+		// version
+		$(`#mcversion`).val(data.version);
+		
+		// options
+		$("input[name=invisible]").prop(`checked`, data.options.invisible);
+		$("input[name=invulnerable]").prop(`checked`, data.options.invulnerable);
+		$("input[name=persistencerequired]").prop(`checked`, data.options.presistence_required);
+		$("input[name=nobaseplate]").prop(`checked`, data.options.no_base_plate);
+		$("input[name=nogravity]").prop(`checked`, data.options.no_gravity);
+		$("input[name=showarms]").prop(`checked`, data.options.show_arms);
+		$("input[name=small]").prop(`checked`, data.options.small);
+		$("input[name=marker]").prop(`checked`, data.options.marker);
+		$("input[name=center-corrected]").prop(`checked`, data.options.center_corrected);
+		
+		// rotation
+		$("input[name=rotation]").val(data.rotation.main);
+		$("input[name=headX]").val(data.rotation.head[0]);
+		$("input[name=headY]").val(data.rotation.head[1]);
+		$("input[name=headZ]").val(data.rotation.head[2]);
+		
+		$("input[name=bodyX]").val(data.rotation.body[0]);
+		$("input[name=bodyY]").val(data.rotation.body[1]);
+		$("input[name=bodyZ]").val(data.rotation.body[2]);
+		
+		$("input[name=leftLegX]").val(data.rotation.legs.left[0]);
+		$("input[name=leftLegY]").val(data.rotation.legs.left[1]);
+		$("input[name=leftLegZ]").val(data.rotation.legs.left[2]);
+		
+		$("input[name=rightLegX]").val(data.rotation.legs.right[0]);
+		$("input[name=rightLegY]").val(data.rotation.legs.right[1]);
+		$("input[name=rightLegZ]").val(data.rotation.legs.right[2]);
+		
+		$("input[name=leftArmX]").val(data.rotation.arms.left[0]);
+		$("input[name=leftArmY]").val(data.rotation.arms.left[1]);
+		$("input[name=leftArmZ]").val(data.rotation.arms.left[2]);
+		
+		$("input[name=rightArmX]").val(data.rotation.arms.right[0]);
+		$("input[name=rightArmY]").val(data.rotation.arms.right[1]);
+		$("input[name=rightArmZ]").val(data.rotation.arms.right[2]);
+		
+		//equipment
+		$("input[name=useequipment]").prop(`checked`, data.equipment.enabled);
+		$(`input[name=equipShoes]`).val(data.equipment.boots);
+		$(`input[name=equipLeggings]`).val(data.equipment.leggings);
+		$(`input[name=equipChestplate]`).val(data.equipment.chestplate);
+		$(`input[name=equipHelmet]`).val(data.equipment.helmet);
+		$(`input[name=equipHandRight]`).val(data.equipment.hands.right);
+		$(`input[name=equipHandLeft]`).val(data.equipment.hands.left);
+		$(`#equipCustomHeadMode`).val(data.equipment.helmet_specifies);
+		
+		$(`#helmetcolor`).css(`background-color`, data.equipment.leather_colours.helmet);
+		$(`#chestplatecolor`).css(`background-color`, data.equipment.leather_colours.chestplate);
+		$(`#leggingscolor`).css(`background-color`, data.equipment.leather_colours.leggings);
+		$(`#shoecolor`).css(`background-color`, data.equipment.leather_colours.boots);
+		
+		getLeatherColorString($("#helmetcolor"))
+		getLeatherColorString($("#chestplatecolor"))
+		getLeatherColorString($("#leggingscolor"))
+		getLeatherColorString($("#shoecolor"))
+		
+		//custom name
+		$(`#customname`).val(data.custom_name.name);
+		$(`input[name=showcustomname]`).prop(`checked`, data.custom_name.show_custom_name);
+		$(`input[name=namecolor]`).val(data.custom_name.name_color);
+		$("input[name=namebold]").prop(`checked`, data.custom_name.options.bold);
+		$("input[name=nameitalic]").prop(`checked`, data.custom_name.options.italic);
+		$("input[name=nameobfuscated]").prop(`checked`, data.custom_name.options.obfuscated);
+		$("input[name=namestrikethrough]").prop(`checked`, data.custom_name.options.strikethrough);
+		
+		//lock slot interaction
+		$("input[name=usedisabledslots]").prop(`checked`, data.lock_slot_interaction.enabled);
+		
+		$(`#dH`).prop(`checked`, data.lock_slot_interaction.remove.helmet);
+		$(`#dC`).prop(`checked`, data.lock_slot_interaction.remove.chestplate);
+		$(`#dL`).prop(`checked`, data.lock_slot_interaction.remove.leggings);
+		$(`#dB`).prop(`checked`, data.lock_slot_interaction.remove.boots);
+		$(`#dW`).prop(`checked`, data.lock_slot_interaction.remove.weapons);
+
+		$(`#rH`).prop(`checked`, data.lock_slot_interaction.replace.helmet);
+		$(`#rC`).prop(`checked`, data.lock_slot_interaction.replace.chestplate);
+		$(`#rL`).prop(`checked`, data.lock_slot_interaction.replace.leggings);
+		$(`#rB`).prop(`checked`, data.lock_slot_interaction.replace.boots);
+		$(`#rW`).prop(`checked`, data.lock_slot_interaction.replace.weapons);
+
+		$(`#pH`).prop(`checked`, data.lock_slot_interaction.place.helmet);
+		$(`#pC`).prop(`checked`, data.lock_slot_interaction.place.chestplate);
+		$(`#pL`).prop(`checked`, data.lock_slot_interaction.place.leggings);
+		$(`#pB`).prop(`checked`, data.lock_slot_interaction.place.boots);
+		$(`#pW`).prop(`checked`, data.lock_slot_interaction.place.weapons);
+		
+		handleInput();
+		console.log(`done loading!`)
+	} catch (err) {
+		console.error(err);
+		alert(`An error occurred while loading the creation.`);
+	};
+	
+	loadScreen();
+};
+
+function deleteSave(data) {
+	localStorage.removeItem(data);
+	loadScreen();
+	alert(`${data} has been deleted!`);
+};
