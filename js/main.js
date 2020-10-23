@@ -54,6 +54,10 @@ var equipColorShoes;
 var equipColorLeggings;
 var equipColorChestplate;
 var equipColorHelmet;
+var helmetList;
+var chestplateList;
+var leggingsList;
+var bootsList;
 
 var customName;
 var showCustomName;
@@ -178,7 +182,12 @@ $(document).ready(function(){
             $(el).colpickHide();
             handleInput();
         }
-    });
+	});
+	
+	helmetList = $("#list-helmet").find("option");
+	chestplateList = $("#list-chestplate").find("option");
+	leggingsList = $("#list-leggings").find("option");
+	bootsList = $("#list-shoes").find("option");
 
 });
 
@@ -439,18 +448,45 @@ function updateUI(){
 	}
 
 	// Show disabled slots
-	if(useDisabledSlots)
+	if(useDisabledSlots) {
+		// Hide offhand disabled slot buttons for versions below 1.13
+		switch (mcVersion) {
+			case "1.13":
+			case "1.11":
+			case "1.9":
+			case "1.8":
+				$(".sprite.offhand").hide();
+				$("#dO").hide();
+				$("#rO").hide();
+				$("#pO").hide();
+				break;
+			
+			default:
+				$(".sprite.offhand").show();
+				$("#dO").show();
+				$("#rO").show();
+				$("#pO").show();
+				break;
+				
+		}
 		$("#disabledslots").slideDown();
+	}
 	else
 		$("#disabledslots").slideUp();
 	
 	//Hide 1.13 features for 1.12 and lower.
-	if (mcVersion == "1.13") {
-		$("#namecustomization").show()
-		$("#centercorrected").show()
-	} else {
-		$("#namecustomization").hide()
-		$("#centercorrected").hide()
+	switch (mcVersion) {
+		case "1.11":
+		case "1.9":
+		case "1.8":
+			$("#namecustomization").hide();
+			$("#centercorrected").hide();
+			break;
+		
+		default:
+			$("#namecustomization").show();
+			$("#centercorrected").show();
+			break;
 	}
 	
 	// Generate code
@@ -554,6 +590,31 @@ function generateCode(){
 			hands.push(getHandLeftItem());
 
 			tags.push("HandItems:["+hands.join(",")+"]");
+		}
+
+		// Hide netherite armour for lower versions
+		switch (mcVersion) {
+			case "1.14":
+			case "1.13":
+				$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]"));
+				$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]"));
+				$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]"));
+				$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]"));
+				break;
+			case "1.11":
+			case "1.9":
+			case "1.8":
+				$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]").filter("[value!=turtle_helmet]"));
+				$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]").filter("[value!=turtle_chestplate]"));
+				$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]").filter("[value!=turtle_leggings]"));
+				$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]").filter("[value!=turtle_boots]"));
+				break;
+			default:
+				$("#list-helmet").empty().append(helmetList);
+				$("#list-chestplate").empty().append(chestplateList);
+				$("#list-leggings").empty().append(leggingsList);
+				$("#list-shoes").empty().append(bootsList);
+				break;
 		}
 	}
 
@@ -750,26 +811,29 @@ function getNameObfuscated() {
 }
 
 function calculateDisabledSlotsFlag() {
+    var dO = $("#dO").is(":checked") ? 1 << (5) : 0;
     var dH = $("#dH").is(":checked") ? 1 << (4) : 0;
     var dC = $("#dC").is(":checked") ? 1 << (3) : 0;
     var dL = $("#dL").is(":checked") ? 1 << (2) : 0;
     var dB = $("#dB").is(":checked") ? 1 << (1) : 0;
     var dW = $("#dW").is(":checked") ? 1 << (0) : 0;
-    var dR = dH + dC + dL + dB + dW;
+    var dR = dO + dH + dC + dL + dB + dW;
 
+    var rO = $("#rO").is(":checked") ? 1 << (5 + 8) : 0;
     var rH = $("#rH").is(":checked") ? 1 << (4 + 8) : 0;
     var rC = $("#rC").is(":checked") ? 1 << (3 + 8) : 0;
     var rL = $("#rL").is(":checked") ? 1 << (2 + 8) : 0;
     var rB = $("#rB").is(":checked") ? 1 << (1 + 8) : 0;
     var rW = $("#rW").is(":checked") ? 1 << (0 + 8) : 0;
-    var rR = rH + rC + rL + rB + rW;
+    var rR = rO + rH + rC + rL + rB + rW;
 
+    var pO = $("#pO").is(":checked") ? 1 << (5 + 16) : 0;
     var pH = $("#pH").is(":checked") ? 1 << (4 + 16) : 0;
     var pC = $("#pC").is(":checked") ? 1 << (3 + 16) : 0;
     var pL = $("#pL").is(":checked") ? 1 << (2 + 16) : 0;
     var pB = $("#pB").is(":checked") ? 1 << (1 + 16) : 0;
     var pW = $("#pW").is(":checked") ? 1 << (0 + 16) : 0;
-    var pR = pH + pC + pL + pB + pW;
+    var pR = pO + pH + pC + pL + pB + pW;
 
     var result = dR + rR + pR;
     return result;
@@ -943,21 +1007,24 @@ function saveData() {
 				chestplate: $("#dC").is(":checked"),
 				leggings: $("#dL").is(":checked"),
 				boots: $("#dB").is(":checked"),
-				weapons: $("#dW").is(":checked")
+				weapons: $("#dW").is(":checked"),
+				offhand: $("#dO").is(":checked")
 			},
 			replace: {
 				helmet: $("#rH").is(":checked"),
 				chestplate: $("#rC").is(":checked"),
 				leggings: $("#rL").is(":checked"),
 				boots: $("#rB").is(":checked"),
-				weapons: $("#rW").is(":checked")
+				weapons: $("#rW").is(":checked"),
+				offhand: $("#rO").is(":checked")
 			},
 			place: {
 				helmet: $("#pH").is(":checked"),
 				chestplate: $("#pC").is(":checked"),
 				leggings: $("#pL").is(":checked"),
 				boots: $("#pB").is(":checked"),
-				weapons: $("#pW").is(":checked")
+				weapons: $("#pW").is(":checked"),
+				offhand: $("#pO").is(":checked")
 			}
 		}
 	};
@@ -1048,18 +1115,21 @@ function loadData(data) {
 		//lock slot interaction
 		$("input[name=usedisabledslots]").prop(`checked`, data.lock_slot_interaction.enabled);
 		
+		$(`#dO`).prop(`checked`, data.lock_slot_interaction.remove.offhand);
 		$(`#dH`).prop(`checked`, data.lock_slot_interaction.remove.helmet);
 		$(`#dC`).prop(`checked`, data.lock_slot_interaction.remove.chestplate);
 		$(`#dL`).prop(`checked`, data.lock_slot_interaction.remove.leggings);
 		$(`#dB`).prop(`checked`, data.lock_slot_interaction.remove.boots);
 		$(`#dW`).prop(`checked`, data.lock_slot_interaction.remove.weapons);
 
+		$(`#rO`).prop(`checked`, data.lock_slot_interaction.replace.offhand);
 		$(`#rH`).prop(`checked`, data.lock_slot_interaction.replace.helmet);
 		$(`#rC`).prop(`checked`, data.lock_slot_interaction.replace.chestplate);
 		$(`#rL`).prop(`checked`, data.lock_slot_interaction.replace.leggings);
 		$(`#rB`).prop(`checked`, data.lock_slot_interaction.replace.boots);
 		$(`#rW`).prop(`checked`, data.lock_slot_interaction.replace.weapons);
 
+		$(`#pO`).prop(`checked`, data.lock_slot_interaction.place.offhand);
 		$(`#pH`).prop(`checked`, data.lock_slot_interaction.place.helmet);
 		$(`#pC`).prop(`checked`, data.lock_slot_interaction.place.chestplate);
 		$(`#pL`).prop(`checked`, data.lock_slot_interaction.place.leggings);
