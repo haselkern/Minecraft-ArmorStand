@@ -718,7 +718,7 @@ function getHeadItem(){
 	else if(equipCustomHeadMode == "player"){
 		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
 			return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
-		} else if (mcVersion == "1.13") {
+		} else {
 			return "{id:\"player_head\",Count:1b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
 		}
 	}
@@ -731,7 +731,7 @@ function getHeadItem(){
 		
 		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
 			return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
-		} else if (mcVersion == "1.13") {
+		} else {
 			return '{id:"player_head",Count:1b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
 		}
 	}
