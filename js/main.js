@@ -760,7 +760,7 @@ function getHeadItem(){
 			
 			if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
 				return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
-			} else if (mcVersion == "1.13") {
+			} else {
 				return '{id:"player_head",Count:1b,tag:{'+parsed+'}}';
 			}
 		}
@@ -771,7 +771,7 @@ function getHeadItem(){
 			skullOwnerRaw = skullOwnerRaw.substring(0, skullOwnerRaw.indexOf("}"));
 			if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
 				return '{id:"skull",Count:1b,Damage:3b,tag:{'+skullOwnerRaw+'}}';
-			} else if (mcVersion == "1.13") {
+			} else {
 				return '{id:"player_head",Count:1b,tag:{'+skullOwnerRaw+'}}';
 			}
 		}
