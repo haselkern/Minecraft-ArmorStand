@@ -531,7 +531,7 @@ function generateCode(){
 		code = "/summon ArmorStand ~ ~ ~ {";
 	} else if (mcVersion == "1.11") {
 		code = "/summon armor_stand ~ ~ ~ {";
-	} else if (mcVersion == "1.13") {
+	} else {
 		centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
 	}
 
@@ -619,26 +619,38 @@ function generateCode(){
 	}
 
 	// Custom name
-	if(customName != "" && customName != null)
-		//New 1.13 format
-		if (mcVersion == "1.13") {
-			var name = [];
-			
-			name.push(getName());
-			name.push(getNameColor());
-			name.push(getNameBold());
-			name.push(getNameItalic());
-			name.push(getNameObfuscated());
-			name.push(getNameStrikethrough());
-			
-			//tags.push(`CustomName:\"${customName}\"`)
-			tags.push(`CustomName:"{${name.join("")}}"`)
-			//Old format
-		} else {
-			tags.push(`CustomName:\"${customName}\"`)
+	if(customName) {
+		let name = [];
+		switch (mcVersion) {
+			case "1.8":
+			case "1.9":
+			case "1.11":
+				tags.push(`CustomName:"${customName}"`);
+				break;
+			case "1.13":
+				name.push(getName());
+				name.push(getNameColor());
+				name.push(getNameBold());
+				name.push(getNameItalic());
+				name.push(getNameObfuscated());
+				name.push(getNameStrikethrough());
+				
+				tags.push(`CustomName:"{${name.join("")}}"`);
+				break;
+			default:
+				// CustomNames from 1.14+ can now use single quotes to contain json
+				// Replace escaped double quotes with single quotes to make it look pretty				
+				name.push(getName().replaceAll("\\", ""));
+				name.push(getNameColor().replaceAll("\\", ""));
+				name.push(getNameBold().replaceAll("\\", ""));
+				name.push(getNameItalic().replaceAll("\\", ""));
+				name.push(getNameObfuscated().replaceAll("\\", ""));
+				name.push(getNameStrikethrough().replaceAll("\\", ""));
+				tags.push(`CustomName:'{${name.join("")}}'`);
+				break;
 		}
+	}
 		
-		//mcVersion == "1.13" ? tags.push(`CustomName:"\\"${customName}\\""`) : tags.push("CustomName:\""+customName+"\"")
 	if(showCustomName)
 		tags.push("CustomNameVisible:1b");
 
