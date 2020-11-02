@@ -738,13 +738,18 @@ function getHeadItem(){
 	// Use input as url
 	// Best reference: http://redd.it/24quwx
 	else if(equipCustomHeadMode == "url"){
-		var uuid = generateUUID();
-		var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
+		var base64Value = btoa('{"textures":{"SKIN":{"url":"'+equipHelmet+'"}}}');
 		
-		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
-			return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
-		} else {
-			return '{id:"player_head",Count:1b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
+		switch (mcVersion) {
+			case "1.8":
+			case "1.9":
+			case "1.11":
+				return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
+			case "1.13":
+			case "1.14":
+				return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
+			default:
+				return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:'+generateIntArray()+',Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
 		}
 	}
 
@@ -898,6 +903,23 @@ function generateUUID(){
         return (c=='x' ? r : (r&0x3|0x8)).toString(16);
     });
     return uuid;
+}
+
+function generateIntArray() {
+	const buffer = new Uint32Array(4);
+	const UUID = new DataView(buffer.buffer);
+	const paddings = [8, 4, 4, 4, 12];
+	
+	let hexUUID = generateUUID().split("-").map((val, i) => val.padStart(paddings[i], "0")).join("");
+	let ints = [];
+
+	for (let i = 0; i < 4; i++) { 
+		num = Number("0x" + hexUUID.substring(i*8, (i+1)*8));
+		UUID.setInt32(i*4, num);
+		ints.push(UUID.getInt32(i*4));
+	}
+
+	return '[I;' + ints.join(",") + ']';
 }
 
 function getDecimalRGB(rgb){
