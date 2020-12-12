@@ -8,10 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.1",
     "autoprefixer": "^9.8.6",
     "core-js": "^3.6.5",
     "postcss": "^7.0.35",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.1",
+    "three": "^0.123.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
