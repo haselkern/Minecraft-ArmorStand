@@ -33,4 +33,4 @@ npm run lint
 ```
 
 ## TODO
-Currently Vue 3 does not support Postcss 8, so we use a compatibility build of it. Some time in the future, [this should be upgraded](https://tailwindcss.com/docs/installation#post-css-7-compatibility-build).
+Currently Vue does not support Postcss 8, so we use a compatibility build of it. Some time in the future, [this should be upgraded](https://tailwindcss.com/docs/installation#post-css-7-compatibility-build).
