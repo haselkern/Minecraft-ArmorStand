@@ -1,15 +1,14 @@
-<template>
+    <template>
     <div class="grid grid-cols-5 min-h-screen bg-gray-700">
         <div ref="rendererwrapper" class="col-span-3">
             <renderer :obj="renderer" :size="{w: 400, h: 400}">
                 <scene>
-                    <camera :obj="camera" :position="{ z: 5 }"></camera>
-                    <light :hex="0xEEEEEE" :position="{x: 10, y: 10, z: 10}"></light>
-                    <light :obj="ambientLight"></light>
-                    <mesh :rotation="rotationInRad">
-                        <geometry type="Box" :args="[1, 1, 1]"></geometry>
-                        <material type="MeshLambert" :obj="testMaterial"></material>
-                    </mesh>
+                    <orbit-controls :position="{z: 3}"
+                        :rotation="{x: 2, y: 0, z: 3}">
+                        <camera :obj="camera"></camera>
+                        <light :hex="0xFFFFFF" :position="{x: 100, y: 200, z: 300}"></light>
+                    </orbit-controls>
+                    <armorstand></armorstand>
                 </scene>
             </renderer>
         </div>
@@ -50,15 +49,15 @@
 
 <script>
 import Card from "./components/Card";
+import Armorstand from "./components/Armorstand";
 import * as THREE from "three";
 
 export default {
-    components: {Card},
+    components: {Card, Armorstand},
     data() {
         return {
             renderer: new THREE.WebGLRenderer({alpha: true, antialias: true}),
             camera: new THREE.PerspectiveCamera(70, 400 / 400, 0.1, 100),
-            testMaterial: new THREE.MeshLambertMaterial({color: 0x826841}),
             ambientLight: new THREE.AmbientLight(0x333333),
             rotation: {x: 30, y: 40, z: 0},
         };
