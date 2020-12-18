@@ -63,7 +63,7 @@
             </mesh>
         </object3d>
         <!-- Head -->
-        <object3d :position="{x: 0, y: 22/16, z: 0}">
+        <object3d :position="{x: 0, y: 22/16, z: 0}" :rotation="head">
             <!-- Neck -->
             <mesh :position="{x: 0, y: 3.5/16, z: 0}">
                 <material type="MeshPhong" :color="colorWood"></material>
@@ -80,12 +80,22 @@
 
 <script>
 export default {
+    props: ["pose"],
     data() {
-        // TODO This should be a prop "pose" to allow external modification
         return {
             colorWood: 0xCC933D,
             colorStone: 0x888888,
         };
+    },
+    computed: {
+        head() {
+            // TODO Translate rotation Minecraft -> ThreeJS
+            return {
+                x: this.pose.head.x * Math.PI/180,
+                y: this.pose.head.y * Math.PI/180,
+                z: this.pose.head.z * Math.PI/180,
+            };
+        },
     },
 }
 </script>
