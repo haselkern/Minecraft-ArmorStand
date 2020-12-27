@@ -41,6 +41,7 @@ var showArms = false;
 var small = false;
 var marker = false;
 var centercorrected = false;
+var give = false;
 
 var useEquipment;
 var equipHandRight;
@@ -526,13 +527,21 @@ function updateUI(){
 function generateCode(){
 	var code = "/summon armor_stand ~ ~ ~ {" //in 1.13, positions are no longer center-corrected. Adding .5 makes it centered. However for players it is already center-corrected
 	
-	// Old entity name
-	if(mcVersion == "1.8" || mcVersion == "1.9"){
-		code = "/summon ArmorStand ~ ~ ~ {";
-	} else if (mcVersion == "1.11") {
-		code = "/summon armor_stand ~ ~ ~ {";
+	if (!give) {
+		// Old entity name
+		if(mcVersion == "1.8" || mcVersion == "1.9"){
+			code = "/summon ArmorStand ~ ~ ~ {";
+		} else if (mcVersion == "1.11") {
+			code = "/summon armor_stand ~ ~ ~ {";
+		} else {
+			centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
+		}
 	} else {
-		centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
+		if(mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11"){
+			code = "/give @p minecraft:armor_stand 1 0 {EntityTag:{";
+		} else {
+			code = "/give @p armor_stand{EntityTag:{"
+		}
 	}
 
 	var tags = [];
@@ -682,6 +691,12 @@ function generateCode(){
 
 	code += tags.join(",");
 	code += "}";
+	if (give) {
+		code += "}";
+		if (mcVersion != "1.8" && mcVersion != "1.9" && mcVersion != "1.11") {
+			code += " 1"
+		}
+	}
 	return code;
 }
 
