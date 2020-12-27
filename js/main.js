@@ -373,7 +373,7 @@ function handleInput(){
 	nameStrikethrough = getCheckBoxInput("namestrikethrough");
 
 	useDisabledSlots = getCheckBoxInput("usedisabledslots");
-
+	give = getCheckBoxInput("slashgive");
 
 	body.set(getRangeInput("bodyX"), getRangeInput("bodyY"), getRangeInput("bodyZ"));
 	head.set(getRangeInput("headX"), getRangeInput("headY"), getRangeInput("headZ"));
