@@ -1,0 +1,6 @@
+/*
+ * Do not define your own styles, instead use https://tailwindcss.com/ classes on your elements.
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -1,83 +1,24 @@
-    <template>
-    <div class="grid grid-cols-5 min-h-screen bg-gray-700">
-        <div ref="rendererwrapper" class="col-span-3">
-            <renderer :obj="renderer" :size="{w: 400, h: 400}">
-                <scene>
-                    <orbit-controls :position="{z: 3}"
-                        :rotation="{x: 2, y: 0, z: 3}">
-                        <camera :obj="camera"></camera>
-                        <light :hex="0xFFFFFF" :position="{x: 100, y: 200, z: 300}"></light>
-                    </orbit-controls>
-                    <armorstand :pose="pose"></armorstand>
-                </scene>
-            </renderer>
+<template>
+    <div class="flex">
+        <div class="flex-1 h-screen">
+            <Scene :rot="roty" />
         </div>
-        <div class="col-span-2">
-            <card class="text-center">
-                <h1 class="text-2xl font-bold">Minecraft Armorstand</h1>
-                <a
-                    title="Source Code"
-                    href="https://github.com/haselkern/Minecraft-ArmorStand"
-                    class="inline-flex items-center justify-center w-8 h-8 m-2 text-white bg-gray-700 rounded-lg">
-                    <i class="fas fa-code"></i>
-                </a>
-                <a
-                    title="Help"
-                    href="https://haselkern.com/armorstand/"
-                    class="inline-flex items-center justify-center w-8 h-8 m-2 text-white bg-gray-700 rounded-lg">
-                    <i class="fas fa-question"></i>
-                </a>
-            </card>
-            <card>
-                <h1 class="text-xl">Pose</h1>
-                <!-- TODO modularize sliders -->
-                <table class="w-full">
-                    <tr>
-                        <td>Rotation</td>
-                        <td colspan="3"><input class="w-full" type="range" min="0" max="360"></td>
-                    </tr>
-                    <tr>
-                        <td>Head</td>
-                        <td><input v-model="pose.head.x" class="w-full" type="range" min="0" max="360"></td>
-                        <td><input v-model="pose.head.y" class="w-full" type="range" min="0" max="360"></td>
-                        <td><input v-model="pose.head.z" class="w-full" type="range" min="0" max="360"></td>
-                    </tr>
-                </table>
-            </card>
+        <div class="flex-none w-60">
+            <h1>{{ roty }}</h1>
+            <input type="range" min="0" max="100" v-model="roty" />
         </div>
     </div>
 </template>
 
 <script>
-import Card from "./components/Card";
-import Armorstand from "./components/Armorstand";
-import * as THREE from "three";
+import Scene from "./Scene.vue"
 
 export default {
-    components: {Card, Armorstand},
     data() {
         return {
-            renderer: new THREE.WebGLRenderer({alpha: true, antialias: true}),
-            camera: new THREE.PerspectiveCamera(70, 400 / 400, 0.1, 100),
-            ambientLight: new THREE.AmbientLight(0x333333),
-            pose: {
-                head: {x: 0, y: 0, z: 0},
-            },
-        };
+            roty: 0,
+        }
     },
-    mounted() {
-        this.resize();
-        window.resize = this.resize;
-    },
-    methods: {
-        resize() {
-            let el = this.$refs.rendererwrapper;
-            let w = el.clientWidth;
-            let h = el.clientHeight;
-            this.camera.aspect = w/h;
-            this.camera.updateProjectionMatrix();
-            this.renderer.setSize(w, h);
-        },
-    },
+    components: {Scene},
 }
 </script>

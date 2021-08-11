@@ -1,11 +1,5 @@
-import Vue from "vue";
-import App from "./App.vue";
-import * as VueThreejs from "vue-threejs";
-import "./assets/tailwind.css";
-import "../node_modules/@fortawesome/fontawesome-free/css/all.css";
+import { createApp } from 'troisjs'
+import App from './App.vue'
+import "./main.css"
 
-Vue.use(VueThreejs);
-
-new Vue({
-  render: h => h(App),
-}).$mount('#app');
+createApp(App).mount('#app')
