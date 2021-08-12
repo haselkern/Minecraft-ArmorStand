@@ -4,6 +4,10 @@
             <Scene :armorstand="armorstand" />
         </div>
         <div class="w-2/5 float-right">
+            <label><input v-model="armorstand.showArms" type="checkbox">Show Arms</label>
+            <label><input v-model="armorstand.small" type="checkbox">Small</label>
+            <label><input v-model="armorstand.noBasePlate" type="checkbox">No Base Plate</label>
+            <hr>
             <table>
                 <tr>
                     <td>Rotation</td>
@@ -12,6 +16,11 @@
                     </td>
                 </tr>
                 <RotationSliderRow label="Head" :rotation="armorstand.head" />
+                <RotationSliderRow label="Body" :rotation="armorstand.body" />
+                <RotationSliderRow label="Left Leg" :rotation="armorstand.legLeft" />
+                <RotationSliderRow label="Right Leg" :rotation="armorstand.legRight" />
+                <RotationSliderRow v-if="armorstand.showArms" label="Left Arm" :rotation="armorstand.armLeft" />
+                <RotationSliderRow v-if="armorstand.showArms" label="Right Arm" :rotation="armorstand.armRight" />
             </table>
         </div>
     </div>
@@ -45,6 +54,13 @@ class Armorstand {
         this.centerCorrected = false
 
         // TODO Lots more to come
+    }
+    getScale() {
+        if (this.small) {
+            return { x: 0.6, y: 0.6, z: 0.6 }
+        } else {
+            return { x: 1, y: 1, z: 1 }
+        }
     }
 }
 
