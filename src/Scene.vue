@@ -1,12 +1,12 @@
 <template>
-    <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: false }" resize="true">
+    <Renderer ref="renderer" antialias resize alpha :orbit-ctrl="{ enableDamping: false, enablePan: false }">
         <Camera :position="{ z: 10 }" />
         <Scene>
             <AmbientLight :intensity="0.3" />
             <DirectionalLight :intensity="1" :position="{ x: 10, y: 9 }" />
 
             <!-- This group contains armorstand + base plate -->
-            <Group :position="{ y: -8 / 16 }">
+            <Group :position="{ y: -1 }">
                 <!--Baseplate-->
                 <Group :position="{ y: -0.5 / 16 }">
                     <Box :visible="!armorstand.noBasePlate" :scale="{ x: 12 / 16, y: 1 / 16, z: 12 / 16 }">
@@ -17,7 +17,7 @@
                     </Box>
                 </Group>
                 <!--Armorstand-->
-                <Group :scale="armorstand.getScale()">
+                <Group :scale="armorstand.getScale()" :rotation="{ y: armorstand.rotation / 180 * Math.PI }">
                     <!--Left Leg-->
                     <Group
                         :rotation="convertRotation(armorstand.legLeft)"
