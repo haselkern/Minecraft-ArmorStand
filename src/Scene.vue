@@ -108,7 +108,8 @@
   
 <script>
 
-import { Box, Camera, LambertMaterial, AmbientLight, Renderer, Scene, Object3D } from "troisjs";
+import { Box, Camera, LambertMaterial, AmbientLight, Renderer, Scene, Object3D } from "troisjs"
+import {Vector3, Matrix4, Euler} from "three"
 
 export default {
     props: ["armorstand"],
@@ -120,13 +121,17 @@ export default {
         // })
     },
     methods: {
-        convertRotation: function (rot) {
-            // TODO Convert Minecraft to ThreeJS rotation here
-            return {
-                x: rot.x / 180 * Math.PI,
-                y: rot.y / 180 * Math.PI,
-                z: rot.z / 180 * Math.PI,
-            }
+        // Convert the given rotation in Minecraft-space to ThreeJS-space
+        convertRotation(mcRotation) {
+            const DEG2RAD = Math.PI / 180
+
+            let matX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), mcRotation.x * DEG2RAD)
+            let matY = new Matrix4().makeRotationAxis(new Vector3(0, 1, 0), -mcRotation.y * DEG2RAD)
+            matY.multiply(matX)
+            let matZ = new Matrix4().makeRotationAxis(new Vector3(0, 0, 1), -mcRotation.z * DEG2RAD)
+            matZ.multiply(matY)
+
+            return new Euler().setFromRotationMatrix(matZ).toVector3()
         }
     },
     components: { Box, Camera, LambertMaterial, Renderer, Scene, Object3D },

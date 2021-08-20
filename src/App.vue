@@ -108,6 +108,7 @@ import RotationSliderRow from "./RotationSliderRow.vue"
 import {generateIntArray, generateUUID, isXYZZero, xyzToTextArray} from "./util.js"
 
 // The Armorstand will hold all attributes for an armor stand.
+// TODO Move this to a different file
 class Armorstand {
     constructor() {
         // Rotation values for the body parts
@@ -231,7 +232,7 @@ class Armorstand {
                 armor.push(this.getShoesItem())
                 armor.push(this.getLeggingsItem())
                 armor.push(this.getChestplateItem())
-                armor.push(this.getHeadItem())
+                armor.push(this.getHeadItem(mcVersion))
 
                 tags.push("Equipment:["+armor.join(",")+"]")
             } else {
@@ -241,7 +242,7 @@ class Armorstand {
                 armor.push(this.getShoesItem())
                 armor.push(this.getLeggingsItem())
                 armor.push(this.getChestplateItem())
-                armor.push(this.getHeadItem());
+                armor.push(this.getHeadItem(mcVersion))
 
                 tags.push("ArmorItems:["+armor.join(",")+"]")
 
@@ -362,7 +363,7 @@ class Armorstand {
                     +"}"
     }
 
-    getHeadItem() {
+    getHeadItem(mcVersion) {
         if (this.equipHelmet == "") return "{}"
 
         // Use input as item
@@ -373,7 +374,7 @@ class Armorstand {
         }
 
         // Use input as player name
-        else if (this.helmetMode == "player") {
+        else if (this.helmetMode == "name") {
             if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
                 return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+this.equipHelmet+"\"}}"
             } else {
