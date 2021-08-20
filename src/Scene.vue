@@ -125,13 +125,12 @@ export default {
         convertRotation(mcRotation) {
             const DEG2RAD = Math.PI / 180
 
-            let matX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), mcRotation.x * DEG2RAD)
-            let matY = new Matrix4().makeRotationAxis(new Vector3(0, 1, 0), -mcRotation.y * DEG2RAD)
-            matY.multiply(matX)
-            let matZ = new Matrix4().makeRotationAxis(new Vector3(0, 0, 1), -mcRotation.z * DEG2RAD)
-            matZ.multiply(matY)
+            let rotationMatrix = new Matrix4()
+                .multiply(new Matrix4().makeRotationAxis(new Vector3(0, 0, 1), -mcRotation.z * DEG2RAD))
+                .multiply(new Matrix4().makeRotationAxis(new Vector3(0, 1, 0), -mcRotation.y * DEG2RAD))
+                .multiply(new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), mcRotation.x * DEG2RAD))
 
-            return new Euler().setFromRotationMatrix(matZ).toVector3()
+            return new Euler().setFromRotationMatrix(rotationMatrix).toVector3()
         }
     },
     components: { Box, Camera, LambertMaterial, Renderer, Scene, Object3D },
