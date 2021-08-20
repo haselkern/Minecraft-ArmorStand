@@ -4,19 +4,19 @@ This project is currently being rewritten. This document should be changed to in
 
 ## TODO
 The following things still have to be done. Possibly in this order.
-- [ ] Equipment
+- [X] Equipment
 - [ ] Equipment locking
   - [ ] Can we scrape the MC wiki for a searchable dropdown list? https://minecraft.fandom.com/api.php ?
     * Only items that are available in a given minecraft version should show up
   - [ ] Colors for leather pieces
-  - [ ] Helmet: player name
+  - [X] Helmet: player name
   - [ ] Helmet: Image URL
   - [ ] Helmet: https://minecraft-heads.com -> but use Minecraft-URL or Player name and skip the give code thing, that was confusing anyways. Have a help popup that explains this functionality with a few screenshots.
-- [ ] Custom name with styling options
-- [ ] Code generation
+- [X] Custom name with styling options
+- [X] Code generation
 - [ ] Hide controls that are not relevant for the chosen minecraft version
-- [ ] **Proper rotation conversion between Minecraft and ThreeJS**
-  - [ ] /summon or /give
+- [X] **Proper rotation conversion between Minecraft and ThreeJS**
+- [ ] /summon or /give
 - [ ] Hint for command block
 - [ ] Design
 - [ ] Save and load

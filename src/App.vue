@@ -292,7 +292,6 @@ class Armorstand {
         // }
 
         // Now the pose
-        // TODO Somewhere a conversion between Minecraft and ThreeJS rotations must take place.
         let pose = []
         if (!isXYZZero(this.body)) {
             pose.push("Body:"+xyzToTextArray(this.body))
@@ -307,12 +306,10 @@ class Armorstand {
             pose.push("RightLeg:"+xyzToTextArray(this.legRight))
         }
         if (this.showArms){
-            if (!isXYZZero(this.armLeft)) {
-                pose.push("LeftArm:"+xyzToTextArray(this.armLeft))
-            }
-            if (!isXYZZero(this.armRight)) {
-                pose.push("RightArm:"+xyzToTextArray(this.armRight))
-            }
+            // Arms will also be added if they are 0, because if we omit them, Minecraft
+            // will give the arms a default rotation that does not match our version.
+            pose.push("LeftArm:"+xyzToTextArray(this.armLeft))
+            pose.push("RightArm:"+xyzToTextArray(this.armRight))
         }
 
 
