@@ -5,6 +5,7 @@
         </div>
         <div class="w-2/5 right-0 ml-60">
             <div class="bg-white m-4 p-4 border border-gray-900">
+
                 <select v-model="mcVersion">
                     <option value="1.16">Minecraft 1.16 and above</option>
                     <option value="1.14">Minecraft 1.14 &amp; 1.15</option>
@@ -25,7 +26,9 @@
                     <label><input v-model="armorstand.marker" type="checkbox">Marker</label>
                     <label><input v-model="armorstand.centerCorrected" type="checkbox">Center Corrected</label>
                 </details>
+
                 <hr>
+
                 <table>
                     <tr>
                         <td>Rotation</td>
@@ -40,6 +43,26 @@
                     <RotationSliderRow v-if="armorstand.showArms" label="Left Arm" :rotation="armorstand.armLeft" />
                     <RotationSliderRow v-if="armorstand.showArms" label="Right Arm" :rotation="armorstand.armRight" />
                 </table>
+
+                <hr>
+
+                <label><input v-model="armorstand.enableEquipment" type="checkbox">Enable Equipment</label>
+                <div v-if="armorstand.enableEquipment">
+                    <input v-model="armorstand.equipHandRight" placeholder="Item in right hand"/>
+                    <input v-model="armorstand.equipHandLeft" placeholder="Item in left hand"/>
+                    <input v-model="armorstand.equipBoots" placeholder="Boots"/>
+                    <input v-model="armorstand.equipLeggings" placeholder="Leggings"/>
+                    <input v-model="armorstand.equipChestplate" placeholder="Chestplate"/>
+                    <input v-model="armorstand.equipHelmet" placeholder="Helmet"/>
+                    <select v-model="armorstand.helmetMode">
+                        <option value="item">Item Name</option>
+                        <option value="name">Player Name</option>
+                        <option value="url">Image URL</option>
+                    </select>
+                </div>
+
+                <hr>
+
             </div>
         </div>
     </div>
@@ -71,8 +94,17 @@ class Armorstand {
         this.small = false
         this.marker = false
         this.centerCorrected = false
+        this.enableEquipment = false
 
-        // TODO Lots more to come
+        // Valid values for this attribute are "item", "name", "url".
+        // TODO More explanation what each value does
+        this.equipHandRight = ""
+        this.equipHandLeft = ""
+        this.equipBoots = ""
+        this.equipLeggings = ""
+        this.equipChestplate = ""
+        this.equipHelmet = ""
+        this.helmetMode = "item"
     }
     getScale() {
         if (this.small) {
