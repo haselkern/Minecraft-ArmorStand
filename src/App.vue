@@ -62,6 +62,36 @@
                 </div>
 
                 <hr>
+                
+                <input v-model="armorstand.customName" placeholder="Custom Name"/>
+                <label><input v-model="armorstand.showCustomName" type="checkbox">Show custom name</label>
+                <div v-if="armorstand.showCustomName">
+                    <select v-model="armorstand.customNameColor">
+                        <option value="">None</option>
+                        <option value="black">Black</option>
+                        <option value="dark_blue">Dark Blue</option>
+                        <option value="dark_green">Dark Green</option>
+                        <option value="dark_aqua">Dark Aqua</option>
+                        <option value="dark_red">Dark Red</option>
+                        <option value="dark_purple">Dark Purple</option>
+                        <option value="gold">Gold</option>
+                        <option value="gray">Gray</option>
+                        <option value="dark_gray">Dark Gray</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="aqua">Aqua</option>
+                        <option value="red">Red</option>
+                        <option value="light_purple">Light Purple</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="white">White</option>
+                    </select>
+                    <label><input v-model="armorstand.customNameBold" type="checkbox">Bold</label>
+                    <label><input v-model="armorstand.customNameItalic" type="checkbox">Italic</label>
+                    <label><input v-model="armorstand.customNameStrikethrough" type="checkbox">Strikethrough</label>
+                    <label><input v-model="armorstand.customNameObfuscated" type="checkbox">Obfuscated</label>
+                </div>
+
+                <hr>
 
             </div>
         </div>
@@ -96,15 +126,26 @@ class Armorstand {
         this.centerCorrected = false
         this.enableEquipment = false
 
-        // Valid values for this attribute are "item", "name", "url".
-        // TODO More explanation what each value does
+        // Equipment attributes
         this.equipHandRight = ""
         this.equipHandLeft = ""
         this.equipBoots = ""
         this.equipLeggings = ""
         this.equipChestplate = ""
         this.equipHelmet = ""
+        // Valid values for this attribute are "item", "name", "url".
+        // TODO More explanation what each value does
         this.helmetMode = "item"
+
+        // CustomName attributes
+        this.customName = ""
+        this.showCustomName = false
+        this.customNameColor = ""
+        this.customNameBold = false
+        this.customNameItalic = false
+        this.customNameObfuscated = false
+        this.customNameStrikethrough = false
+
     }
     getScale() {
         if (this.small) {
