@@ -1,0 +1,60 @@
+# General informaiton
+hero: Minecraft Armor Stand
+
+# Checkboxes
+checkNoBasePlate: No Base Plate
+checkNoGravity: No Gravity
+checkShowArms: Show Arms
+checkSmall: Small
+checkAdvanced: Advanced
+checkInvisible: Invisible
+checkInvulnerable: Invulnerable
+checkPersistenceRequired: Persistence Required
+checkMarker: Marker
+checkCenterCorrected: Center Corrected
+
+# Sliders
+sliderRotation: Rotation
+sliderHead: Head
+sliderBody: Body
+sliderLeftLeg: Left Leg
+sliderRightLeg: Right Leg
+sliderLeftArm: Left Arm
+sliderRightArm: Right Arm
+
+# Equipment
+equipEnable: Enable Equipment
+equipHandRight: Item in right hand
+equipHandLeft: Item in left hand
+equipShoes: Boots
+equipLeggings: Leggings
+equipChestplate: Chestplate
+equipHelmet: Helmet
+equipHelmetModeItem: Item Name
+equipHelmetModePlayer: Player Name
+equipHelmetModeUrl: Image URL
+
+# Custom Name
+customName: Custom Name
+cnShow: Show custom name
+cnBold: Bold
+cnItalic: Italic
+cnStrikethrough: Strikethrough
+cnObfuscated: Obfuscated
+cnColorNone: None
+cnColorBlack: Black
+cnColorDarkBlue: Dark Blue
+cnColorDarkGreen: Dark Green
+cnColorDarkAqua: Dark Aqua
+cnColorDarkRed: Dark Red
+cnColorDarkPurple: Dark Purple
+cnColorGold: Gold
+cnColorGray: Gray
+cnColorDarkGray: Dark Gray
+cnColorBlue: Blue
+cnColorGreen: Green
+cnColorAqua: Aqua
+cnColorRed: Red
+cnColorLightPurple: Light Purple
+cnColorYellow: Yellow
+cnColorWhite: White

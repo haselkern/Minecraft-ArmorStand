@@ -3,7 +3,7 @@
 This project is currently being rewritten. This document should be changed to include help for users and then help for contributors, especially translators.
 
 ## TODO
-The following things still have to be done. Possibly in this order.
+The following things still have to be done.
 - [X] Equipment
 - [ ] Equipment locking
   - [ ] Can we scrape the MC wiki for a searchable dropdown list? https://minecraft.fandom.com/api.php ?
@@ -25,5 +25,11 @@ The following things still have to be done. Possibly in this order.
   - You can save and load
   - How to remove an invulnerable armor stand
 - [ ] Ask before exit
-- [ ] vue i18n
+- [X] vue i18n
 - [ ] vue element transitions
+
+## Development
+For first time setup a `npm install` is required once. After that you can run `npm run dev` to start the hot-reloading development server.
+
+## Translating
+Translations are located in `src/locales`. To add a new translation, copy `en.yaml` to a new file `xy.yaml`, add it as an option in `src/App.vue` and then translate your new file. The file `en.yaml` (the english version) serves as the truth from which other files should be derived.

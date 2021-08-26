@@ -6,89 +6,95 @@
         <div class="w-2/5 right-0 ml-60">
             <div class="bg-white m-4 p-4 border border-gray-900">
 
+                <h1>{{t("hero")}}</h1>
+
+                <select v-model="locale">
+                    <option value="en">🇬🇧 English</option>
+                </select>
+
                 <select v-model="mcVersion">
-                    <option value="1.16">Minecraft 1.16 and above</option>
+                    <option value="1.16">Minecraft 1.16 +</option>
                     <option value="1.14">Minecraft 1.14 &amp; 1.15</option>
                     <option value="1.13">Minecraft 1.13</option>
                     <option value="1.11">Minecraft 1.11 &amp; 1.12</option>
                     <option value="1.9">Minecraft 1.9 &amp; 1.10</option>
                     <option value="1.8">Minecraft 1.8</option>
                 </select>
-                <label><input v-model="armorstand.noBasePlate" type="checkbox">No Base Plate</label>
-                <label><input v-model="armorstand.noGravity" type="checkbox">No Gravity</label>
-                <label><input v-model="armorstand.showArms" type="checkbox">Show Arms</label>
-                <label><input v-model="armorstand.small" type="checkbox">Small</label>
+                <label><input v-model="armorstand.noBasePlate" type="checkbox">{{t("checkNoBasePlate")}}</label>
+                <label><input v-model="armorstand.noGravity" type="checkbox">{{t("checkNoGravity")}}</label>
+                <label><input v-model="armorstand.showArms" type="checkbox">{{t("checkShowArms")}}</label>
+                <label><input v-model="armorstand.small" type="checkbox">{{t("checkSmall")}}</label>
                 <details>
-                    <summary>Advanced</summary>
-                    <label><input v-model="armorstand.invisible" type="checkbox">Invisible</label>
-                    <label><input v-model="armorstand.invulnerable" type="checkbox">Invulnerable</label>
-                    <label><input v-model="armorstand.persistenceRequired" type="checkbox">Persistence Required</label>
-                    <label><input v-model="armorstand.marker" type="checkbox">Marker</label>
-                    <label><input v-model="armorstand.centerCorrected" type="checkbox">Center Corrected</label>
+                    <summary>{{t("checkAdvanced")}}</summary>
+                    <label><input v-model="armorstand.invisible" type="checkbox">{{t("checkInvisible")}}</label>
+                    <label><input v-model="armorstand.invulnerable" type="checkbox">{{t("checkInvulnerable")}}</label>
+                    <label><input v-model="armorstand.persistenceRequired" type="checkbox">{{t("checkPersistenceRequired")}}</label>
+                    <label><input v-model="armorstand.marker" type="checkbox">{{t("checkMarker")}}</label>
+                    <label><input v-model="armorstand.centerCorrected" type="checkbox">{{t("checkCenterCorrected")}}</label>
                 </details>
 
                 <hr>
 
                 <table>
                     <tr>
-                        <td>Rotation</td>
+                        <td>{{t("sliderRotation")}}</td>
                         <td colspan="3">
                             <input @dblclick="() => armorstand.rotation = 0" class="w-full" type="range" min="-180" max="180" v-model="armorstand.rotation" />
                         </td>
                     </tr>
-                    <RotationSliderRow label="Head" :rotation="armorstand.head" />
-                    <RotationSliderRow label="Body" :rotation="armorstand.body" />
-                    <RotationSliderRow label="Left Leg" :rotation="armorstand.legLeft" />
-                    <RotationSliderRow label="Right Leg" :rotation="armorstand.legRight" />
-                    <RotationSliderRow v-if="armorstand.showArms" label="Left Arm" :rotation="armorstand.armLeft" />
-                    <RotationSliderRow v-if="armorstand.showArms" label="Right Arm" :rotation="armorstand.armRight" />
+                    <RotationSliderRow :label="t('sliderHead')" :rotation="armorstand.head" />
+                    <RotationSliderRow :label="t('sliderBody')" :rotation="armorstand.body" />
+                    <RotationSliderRow :label="t('sliderLeftLeg')" :rotation="armorstand.legLeft" />
+                    <RotationSliderRow :label="t('sliderRightLeg')" :rotation="armorstand.legRight" />
+                    <RotationSliderRow v-if="armorstand.showArms" :label="t('sliderLeftArm')" :rotation="armorstand.armLeft" />
+                    <RotationSliderRow v-if="armorstand.showArms" :label="t('sliderRightArm')" :rotation="armorstand.armRight" />
                 </table>
 
                 <hr>
 
-                <label><input v-model="armorstand.enableEquipment" type="checkbox">Enable Equipment</label>
+                <label><input v-model="armorstand.enableEquipment" type="checkbox">{{t("equipEnable")}}</label>
                 <div v-if="armorstand.enableEquipment">
-                    <input v-model="armorstand.equipHandRight" placeholder="Item in right hand"/>
-                    <input v-model="armorstand.equipHandLeft" placeholder="Item in left hand"/>
-                    <input v-model="armorstand.equipShoes" placeholder="Boots"/>
-                    <input v-model="armorstand.equipLeggings" placeholder="Leggings"/>
-                    <input v-model="armorstand.equipChestplate" placeholder="Chestplate"/>
-                    <input v-model="armorstand.equipHelmet" placeholder="Helmet"/>
+                    <input v-model="armorstand.equipHandRight" :placeholder="t('equipHandRight')"/>
+                    <input v-model="armorstand.equipHandLeft" :placeholder="t('equipHandLeft')"/>
+                    <input v-model="armorstand.equipShoes" :placeholder="t('equipShoes')"/>
+                    <input v-model="armorstand.equipLeggings" :placeholder="t('equipLeggings')"/>
+                    <input v-model="armorstand.equipChestplate" :placeholder="t('equipChestplate')"/>
+                    <input v-model="armorstand.equipHelmet" :placeholder="t('equipHelmet')"/>
                     <select v-model="armorstand.helmetMode">
-                        <option value="item">Item Name</option>
-                        <option value="name">Player Name</option>
-                        <option value="url">Image URL</option>
+                        <option value="item">{{t("equipHelmetModeItem")}}</option>
+                        <option value="name">{{t("equipHelmetModePlayer")}}</option>
+                        <option value="url">{{t("equipHelmetModeUrl")}}</option>
                     </select>
                 </div>
 
                 <hr>
                 
-                <input v-model="armorstand.customName" placeholder="Custom Name"/>
-                <label><input v-model="armorstand.showCustomName" type="checkbox">Show custom name</label>
+                <input v-model="armorstand.customName" :placeholder="t('customName')"/>
+                <label><input v-model="armorstand.showCustomName" type="checkbox">{{t("cnShow")}}</label>
                 <div v-if="armorstand.showCustomName">
                     <select v-model="armorstand.customNameColor">
-                        <option value="">None</option>
-                        <option value="black">Black</option>
-                        <option value="dark_blue">Dark Blue</option>
-                        <option value="dark_green">Dark Green</option>
-                        <option value="dark_aqua">Dark Aqua</option>
-                        <option value="dark_red">Dark Red</option>
-                        <option value="dark_purple">Dark Purple</option>
-                        <option value="gold">Gold</option>
-                        <option value="gray">Gray</option>
-                        <option value="dark_gray">Dark Gray</option>
-                        <option value="blue">Blue</option>
-                        <option value="green">Green</option>
-                        <option value="aqua">Aqua</option>
-                        <option value="red">Red</option>
-                        <option value="light_purple">Light Purple</option>
-                        <option value="yellow">Yellow</option>
-                        <option value="white">White</option>
+                        <option value="">{{t("cnColorNone")}}</option>
+                        <option value="black">{{t("cnColorBlack")}}</option>
+                        <option value="dark_blue">{{t("cnColorDarkBlue")}}</option>
+                        <option value="dark_green">{{t("cnColorDarkGreen")}}</option>
+                        <option value="dark_aqua">{{t("cnColorDarkAqua")}}</option>
+                        <option value="dark_red">{{t("cnColorDarkRed")}}</option>
+                        <option value="dark_purple">{{t("cnColorDarkPurple")}}</option>
+                        <option value="gold">{{t("cnColorGold")}}</option>
+                        <option value="gray">{{t("cnColorGray")}}</option>
+                        <option value="dark_gray">{{t("cnColorDarkGray")}}</option>
+                        <option value="blue">{{t("cnColorBlue")}}</option>
+                        <option value="green">{{t("cnColorGreen")}}</option>
+                        <option value="aqua">{{t("cnColorAqua")}}</option>
+                        <option value="red">{{t("cnColorRed")}}</option>
+                        <option value="light_purple">{{t("cnColorLightPurple")}}</option>
+                        <option value="yellow">{{t("cnColorYellow")}}</option>
+                        <option value="white">{{t("cnColorWhite")}}</option>
                     </select>
-                    <label><input v-model="armorstand.customNameBold" type="checkbox">Bold</label>
-                    <label><input v-model="armorstand.customNameItalic" type="checkbox">Italic</label>
-                    <label><input v-model="armorstand.customNameStrikethrough" type="checkbox">Strikethrough</label>
-                    <label><input v-model="armorstand.customNameObfuscated" type="checkbox">Obfuscated</label>
+                    <label><input v-model="armorstand.customNameBold" type="checkbox">{{t("cnBold")}}</label>
+                    <label><input v-model="armorstand.customNameItalic" type="checkbox">{{t("cnItalic")}}</label>
+                    <label><input v-model="armorstand.customNameStrikethrough" type="checkbox">{{t("cnStrikethrough")}}</label>
+                    <label><input v-model="armorstand.customNameObfuscated" type="checkbox">{{t("cnObfuscated")}}</label>
                 </div>
 
                 <hr>
@@ -103,6 +109,7 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
 import Scene from "./Scene.vue"
 import RotationSliderRow from "./RotationSliderRow.vue"
 import {generateIntArray, generateUUID, isXYZZero, xyzToTextArray} from "./util.js"
@@ -427,6 +434,14 @@ class Armorstand {
 }
 
 export default {
+    setup() {
+        const { locale, t } = useI18n({
+            inheritLocale: true,
+            useScope: "global"
+        })
+
+        return { locale, t }
+    },
     data() {
         return {
             armorstand: new Armorstand(),
