@@ -13,12 +13,12 @@
                 </select>
 
                 <select v-model="mcVersion">
-                    <option value="1.16">Minecraft 1.16 +</option>
-                    <option value="1.14">Minecraft 1.14 &amp; 1.15</option>
-                    <option value="1.13">Minecraft 1.13</option>
-                    <option value="1.11">Minecraft 1.11 &amp; 1.12</option>
-                    <option value="1.9">Minecraft 1.9 &amp; 1.10</option>
-                    <option value="1.8">Minecraft 1.8</option>
+                    <option :value="Constants.MC_1_16">Minecraft 1.16 +</option>
+                    <option :value="Constants.MC_1_14">Minecraft 1.14 &amp; 1.15</option>
+                    <option :value="Constants.MC_1_13">Minecraft 1.13</option>
+                    <option :value="Constants.MC_1_11">Minecraft 1.11 &amp; 1.12</option>
+                    <option :value="Constants.MC_1_9">Minecraft 1.9 &amp; 1.10</option>
+                    <option :value="Constants.MC_1_8">Minecraft 1.8</option>
                 </select>
                 <label><input v-model="armorstand.noBasePlate" type="checkbox">{{t("checkNoBasePlate")}}</label>
                 <label><input v-model="armorstand.noGravity" type="checkbox">{{t("checkNoGravity")}}</label>
@@ -56,10 +56,22 @@
                 <div v-if="armorstand.enableEquipment">
                     <input v-model="armorstand.equipHandRight" :placeholder="t('equipHandRight')"/>
                     <input v-model="armorstand.equipHandLeft" :placeholder="t('equipHandLeft')"/>
-                    <input v-model="armorstand.equipShoes" :placeholder="t('equipShoes')"/>
-                    <input v-model="armorstand.equipLeggings" :placeholder="t('equipLeggings')"/>
-                    <input v-model="armorstand.equipChestplate" :placeholder="t('equipChestplate')"/>
-                    <input v-model="armorstand.equipHelmet" :placeholder="t('equipHelmet')"/>
+                    <input v-model="armorstand.equipShoes" list="list-shoes" :placeholder="t('equipShoes')"/>
+                    <datalist id="list-shoes">
+                        <option v-for="shoe in shoeList" :value="shoe"></option>
+                    </datalist>
+                    <input v-model="armorstand.equipLeggings" list="list-leggings" :placeholder="t('equipLeggings')"/>
+                    <datalist id="list-leggings">
+                        <option v-for="leggings in leggingsList" :value="leggings"></option>
+                    </datalist>
+                    <input v-model="armorstand.equipChestplate" list="list-chestplate" :placeholder="t('equipChestplate')"/>
+                    <datalist id="list-chestplate">
+                        <option v-for="chestplate in chestplateList" :value="chestplate"></option>
+                    </datalist>
+                    <input v-model="armorstand.equipHelmet" list="list-helmet" :placeholder="t('equipHelmet')"/>
+                    <datalist id="list-helmet">
+                        <option v-for="helmet in helmetList" :value="helmet"></option>
+                    </datalist>
                     <select v-model="armorstand.helmetMode">
                         <option value="item">{{t("equipHelmetModeItem")}}</option>
                         <option value="name">{{t("equipHelmetModePlayer")}}</option>
@@ -152,10 +164,11 @@
 
 <script>
 import { useI18n } from "vue-i18n"
-import Scene from "./Scene.vue"
+import Scene from "./components/Scene.vue"
 import RotationSliderRow from "./components/RotationSliderRow.vue"
 import LockSlotCheckBox from "./components/LockSlotCheckBox.vue"
-import { Armorstand } from "./armorstand.js"
+import { Armorstand } from "./Armorstand.js"
+import Constants from "./Constants.js"
 
 export default {
     setup() {
@@ -169,14 +182,80 @@ export default {
     data() {
         return {
             armorstand: new Armorstand(),
-            mcVersion: "1.16",
-            dings: "10",
+            mcVersion: Constants.MC_1_16,
+            Constants,
         }
     },
     computed: {
         // Code for the current armor stand
         currentCode() {
             return this.armorstand.getCode(this.mcVersion)
+        },
+        // shoeList (and the other methods like it) return a list of 
+        // appropriate items for the selected Minecraft version.
+        shoeList() {
+            let shoes = [
+                "chainmail_boots",
+                "diamond_boots",
+                "golden_boots",
+                "iron_boots",
+                "leather_boots"
+            ]
+
+            if (this.mcVersion >= Constants.MC_1_16) {
+                shoes.push("netherite_boots")
+            }
+
+            return shoes
+        },
+        chestplateList() {
+            let chestplates = [
+                "chainmail_chestplate",
+                "diamond_chestplate",
+                "golden_chestplate",
+                "iron_chestplate",
+                "leather_chestplate"
+            ]
+
+            if (this.mcVersion >= Constants.MC_1_16) {
+                chestplates.push("netherite_chestplate")
+            }
+
+            return chestplates
+        },
+        leggingsList() {
+            let leggings = [
+                "chainmail_leggings",
+                "diamond_leggings",
+                "golden_leggings",
+                "iron_leggings",
+                "leather_leggings"
+            ]
+
+            if (this.mcVersion >= Constants.MC_1_16) {
+                leggings.push("netherite_leggings")
+            }
+
+            return leggings
+        },
+        helmetList() {
+            let helmets = [
+                "chainmail_helmet",
+                "diamond_helmet",
+                "golden_helmet",
+                "iron_helmet",
+                "leather_helmet"
+            ]
+
+            if (this.mcVersion >= Constants.MC_1_16) {
+                helmets.push("netherite_helmet")
+            }
+
+            if (this.mcVersion >= Constants.MC_1_13) {
+                helmets.push("turtle_helmet")
+            }
+
+            return helmets
         },
     },
     components: { Scene, RotationSliderRow, LockSlotCheckBox },

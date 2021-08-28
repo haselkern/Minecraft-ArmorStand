@@ -1,4 +1,5 @@
 import {generateIntArray, generateUUID, isXYZZero, xyzToTextArray} from "./util.js"
+import Constants from "./Constants.js"
 
 // The Armorstand will hold all attributes for an armor stand.
 export class Armorstand {
@@ -65,9 +66,9 @@ export class Armorstand {
         // if (!give) { // TODO
         if (true) {
             // Old entity name
-            if (mcVersion == "1.8" || mcVersion == "1.9"){
+            if (mcVersion <= Constants.MC_1_9) {
                 code = "/summon ArmorStand ~ ~ ~ {"
-            } else if (mcVersion == "1.11") {
+            } else if (mcVersion == Constants.MC_1_11) {
                 code = "/summon armor_stand ~ ~ ~ {"
             } else {
                 if (this.centerCorrected) {
@@ -77,7 +78,7 @@ export class Armorstand {
                 }
             }
         } else {
-            if(mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11"){
+            if (mcVersion <= Constants.MC_1_11){
                 code = "/give @p minecraft:armor_stand 1 0 {EntityTag:{"
             } else {
                 code = "/give @p armor_stand{EntityTag:{"
@@ -119,7 +120,7 @@ export class Armorstand {
 
         // Equipment
         if (this.enableEquipment) {
-            if (mcVersion == "1.8") {
+            if (mcVersion == Constants.MC_1_8) {
                 // Old 1.8 Equipment format
                 let armor = []
 
@@ -153,9 +154,9 @@ export class Armorstand {
         // Custom name
         if (this.customName) {
             let name = []
-            if (mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11") {
+            if (mcVersion <= Constants.MC_1_11) {
                 tags.push(`CustomName:"${this.customName}"`)
-            } else if (mcVersion == "1.13") {
+            } else if (mcVersion == Constants.MC_1_13) {
                 name.push(this.getName())
                 name.push(this.getNameColor())
                 name.push(this.getNameBold())
@@ -216,7 +217,7 @@ export class Armorstand {
         code += "}"
         // if (give) { // TODO
         //     code += "}"
-        //     if (mcVersion != "1.8" && mcVersion != "1.9" && mcVersion != "1.11") {
+        //     if (mcVersion > Constants.MC_1_11) {
         //         code += " 1"
         //     }
         // }
@@ -267,7 +268,7 @@ export class Armorstand {
 
         // Use input as player name
         else if (this.helmetMode == "name") {
-            if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+            if (mcVersion <= Constants.MC_1_11) {
                 return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+this.equipHelmet+"\"}}"
             } else {
                 return "{id:\"player_head\",Count:1b,tag:{SkullOwner:\""+this.equipHelmet+"\"}}"
@@ -277,11 +278,12 @@ export class Armorstand {
         // Use input as url
         // Best reference: http://redd.it/24quwx
         else if (this.helmetMode == "url") {
+            // TODO btoa seems to be deprecated
             let base64Value = btoa('{"textures":{"SKIN":{"url":"'+this.equipHelmet+'"}}}')
             
-            if (mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11"){
+            if (mcVersion <= Constants.MC_1_11){
                 return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}'
-            } else if (mcVersion == "1.14") {
+            } else if (mcVersion == Constants.MC_1_14) {
                 return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}'
             } else {
                 return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:'+generateIntArray()+',Properties:{textures:[{Value:"'+base64Value+'"}]}}}}'
