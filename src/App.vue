@@ -68,7 +68,49 @@
                 </div>
 
                 <hr>
-                
+
+                <label><input v-model="armorstand.lockSlots" type="checkbox">Lock Slot Interaction</label>
+                <table v-if="armorstand.lockSlots">
+                    <tr>
+                        <td></td>
+                        <td><img src="slot_helmet.png" alt="Helmet" /></td>
+                        <td><img src="slot_chestplate.png" alt="Chestplate" /></td>
+                        <td><img src="slot_leggings.png" alt="Leggings" /></td>
+                        <td><img src="slot_shoes.png" alt="Shoes" /></td>
+                        <td><img src="slot_sword.png" alt="Right Hand" /></td>
+                        <td><img src="slot_shield.png" alt="Left Hand" /></td>
+                    </tr>
+                    <tr>
+                        <td>Remove</td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << 4"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << 3"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << 2"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << 1"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << 0"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << 5"/></td>
+                    </tr>
+                    <tr>
+                        <td>Replace</td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (4 + 8)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (3 + 8)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (2 + 8)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (1 + 8)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (0 + 8)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (5 + 8)"/></td>
+                    </tr>
+                    <tr>
+                        <td>Place</td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (4 + 16)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (3 + 16)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (2 + 16)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (1 + 16)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (0 + 16)"/></td>
+                        <td><LockSlotCheckBox :armorstand="armorstand" :value="1 << (5 + 16)"/></td>
+                    </tr>
+                </table>
+
+                <hr>
+
                 <input v-model="armorstand.customName" :placeholder="t('customName')"/>
                 <label><input v-model="armorstand.showCustomName" type="checkbox">{{t("cnShow")}}</label>
                 <div v-if="armorstand.showCustomName">
@@ -111,7 +153,8 @@
 <script>
 import { useI18n } from "vue-i18n"
 import Scene from "./Scene.vue"
-import RotationSliderRow from "./RotationSliderRow.vue"
+import RotationSliderRow from "./components/RotationSliderRow.vue"
+import LockSlotCheckBox from "./components/LockSlotCheckBox.vue"
 import { Armorstand } from "./armorstand.js"
 
 export default {
@@ -127,6 +170,7 @@ export default {
         return {
             armorstand: new Armorstand(),
             mcVersion: "1.16",
+            dings: "10",
         }
     },
     computed: {
@@ -135,6 +179,6 @@ export default {
             return this.armorstand.getCode(this.mcVersion)
         },
     },
-    components: { Scene, RotationSliderRow },
+    components: { Scene, RotationSliderRow, LockSlotCheckBox },
 }
 </script>

@@ -5,7 +5,7 @@ This project is currently being rewritten. This document should be changed to in
 ## TODO
 The following things still have to be done.
 - [X] Equipment
-- [ ] Equipment locking
+- [X] Equipment locking
   - [ ] Can we scrape the MC wiki for a searchable dropdown list? https://minecraft.fandom.com/api.php ?
     * Only items that are available in a given minecraft version should show up
   - [ ] Colors for leather pieces

@@ -1,7 +1,6 @@
 import {generateIntArray, generateUUID, isXYZZero, xyzToTextArray} from "./util.js"
 
 // The Armorstand will hold all attributes for an armor stand.
-// TODO Move this to a different file
 export class Armorstand {
     constructor() {
         // Rotation values for the body parts
@@ -45,6 +44,9 @@ export class Armorstand {
         this.customNameObfuscated = false
         this.customNameStrikethrough = false
 
+        // Slot interaction
+        this.lockSlots = false
+        this.lockFlags = 0
     }
 
     getScale() {
@@ -179,10 +181,10 @@ export class Armorstand {
             tags.push("CustomNameVisible:1b")
         }
 
-        // DisabledSlots // TODO
-        // if(useDisabledSlots){
-        //     tags.push("DisabledSlots:"+calculateDisabledSlotsFlag())
-        // }
+        // DisabledSlots
+        if(this.lockSlots){
+            tags.push("DisabledSlots:"+this.lockFlags)
+        }
 
         // Now the pose
         let pose = []
