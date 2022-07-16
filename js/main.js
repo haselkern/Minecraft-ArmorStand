@@ -70,6 +70,9 @@ var nameStrikethrough;
 
 var useDisabledSlots;
 
+var scoreboardTags;
+
+
 //The rotation values are all in degrees.
 var head = new THREE.Vector3(0,0,0);
 var body = new THREE.Vector3(0,0,0);
@@ -383,6 +386,8 @@ function handleInput(){
 	nameObfuscated = getCheckBoxInput("nameobfuscated");
 	nameStrikethrough = getCheckBoxInput("namestrikethrough");
 
+	scoreboardTags = getInput("scoreboardtags");
+
 	useDisabledSlots = getCheckBoxInput("usedisabledslots");
 	give = getCheckBoxInput("slashgive");
 
@@ -502,15 +507,15 @@ function updateUI(){
 	}
 	
 	// Generate code
-	$("#code").text(generateCode());
+	const generatedCode = generateCode();
+	$("#code").text(generatedCode);
+
 	// Show hint, when command is too long
-	let characterLimit = (mcVersion == "1.8" || mcVersion == "1.9") ? 100 : 256;
-	if(generateCode().length > characterLimit){
+	const characterLimit = (mcVersion == "1.8" || mcVersion == "1.9") ? 100 : 256;
+	if (generatedCode.length > characterLimit)
 		$("#codeinfo").slideDown();
-	}
-	else{
+	else
 		$("#codeinfo").slideUp();
-	}
 
 
 	// Rotate 3D Stuff
@@ -673,6 +678,19 @@ function generateCode(){
 		
 	if(showCustomName)
 		tags.push("CustomNameVisible:1b");
+
+
+	//Scoreboard tags
+	if (scoreboardTags) {
+		const tagsList = scoreboardTags.split(',');
+		if (!tagsList[tagsList.length - 1].trim())
+			tagsList.pop();
+
+		for (let i = 0; i < tagsList.length; i++)
+			tagsList[i] = `"${tagsList[i].trim()}"`;
+		
+		tags.push(`Tags:[${tagsList.join(",")}]`);
+	}
 
 	//DisabledSlots
 	if(useDisabledSlots){
@@ -1059,6 +1077,8 @@ function saveData() {
 				strikethrough: getCheckBoxInput("namestrikethrough")
 			}
 		},
+
+		scoreboard_tags: getInput("scoreboardtags"),
 	
 		lock_slot_interaction: {
 			enabled: $("input[name=usedisabledslots]").is(":checked"),
@@ -1171,6 +1191,8 @@ function loadData(data) {
 		$("input[name=nameitalic]").prop(`checked`, data.custom_name.options.italic);
 		$("input[name=nameobfuscated]").prop(`checked`, data.custom_name.options.obfuscated);
 		$("input[name=namestrikethrough]").prop(`checked`, data.custom_name.options.strikethrough);
+
+		$("input[name=scoreboardtags]").val(data.scoreboard_tags);
 		
 		//lock slot interaction
 		$("input[name=usedisabledslots]").prop(`checked`, data.lock_slot_interaction.enabled);
