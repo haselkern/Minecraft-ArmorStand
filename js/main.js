@@ -333,6 +333,17 @@ function setup(){
 	pointLight.position.set(0, 300, 200);
 
 	scene.add(pointLight);
+
+	// Resize view
+	window.addEventListener("resize", () => {
+		width = $("#gl").width();
+		height = $("#gl").height();
+		
+		camera.aspect = width / height;
+		camera.updateProjectionMatrix();
+
+		renderer.setSize(width, height);
+	});
 }
 
 // Write stuff from input into variables
