@@ -349,10 +349,24 @@ function setup(){
 	});
 }
 
+const MC_VERSION = Object.freeze({
+	v1_8: 0,
+	v1_9: 1,
+	v1_11: 2,
+	v1_13: 3,
+	v1_14: 4,
+	v1_16: 5
+});
+
+function getMcVersion() {
+	let tag = document.getElementById("mcversion");
+	return tag.options.length - tag.selectedIndex - 1;
+}
+
 // Write stuff from input into variables
 function handleInput(){
 
-	mcVersion = $("#mcversion").val();
+	mcVersion = getMcVersion();
 
 	invisible = getCheckBoxInput("invisible");
 	invulnerable = getCheckBoxInput("invulnerable");
@@ -467,43 +481,30 @@ function updateUI(){
 	// Show disabled slots
 	if(useDisabledSlots) {
 		// Hide offhand disabled slot buttons for versions below 1.13
-		switch (mcVersion) {
-			case "1.13":
-			case "1.11":
-			case "1.9":
-			case "1.8":
-				$(".sprite.offhand").hide();
-				$("#dO").hide();
-				$("#rO").hide();
-				$("#pO").hide();
-				break;
-			
-			default:
-				$(".sprite.offhand").show();
-				$("#dO").show();
-				$("#rO").show();
-				$("#pO").show();
-				break;
-				
+		if (mcVersion > MC_VERSION.v1_13) {
+			$(".sprite.offhand").show();
+			$("#dO").show();
+			$("#rO").show();
+			$("#pO").show();
+		} else {
+			$(".sprite.offhand").hide();
+			$("#dO").hide();
+			$("#rO").hide();
+			$("#pO").hide();
 		}
+
 		$("#disabledslots").slideDown();
-	}
-	else
+	} else {
 		$("#disabledslots").slideUp();
-	
+	}
+
 	//Hide 1.13 features for 1.12 and lower.
-	switch (mcVersion) {
-		case "1.11":
-		case "1.9":
-		case "1.8":
-			$("#namecustomization").hide();
-			$("#centercorrected").hide();
-			break;
-		
-		default:
-			$("#namecustomization").show();
-			$("#centercorrected").show();
-			break;
+	if (mcVersion < MC_VERSION.v1_13) {
+		$("#namecustomization").hide();
+		$("#centercorrected").hide();
+	} else {
+		$("#namecustomization").show();
+		$("#centercorrected").show();
 	}
 	
 	// Generate code
@@ -511,7 +512,7 @@ function updateUI(){
 	$("#code").text(generatedCode);
 
 	// Show hint, when command is too long
-	const characterLimit = (mcVersion == "1.8" || mcVersion == "1.9") ? 100 : 256;
+	const characterLimit = (mcVersion <= MC_VERSION.v1_9) ? 100 : 256;
 	if (generatedCode.length > characterLimit)
 		$("#codeinfo").slideDown();
 	else
@@ -545,15 +546,15 @@ function generateCode(){
 	
 	if (!give) {
 		// Old entity name
-		if(mcVersion == "1.8" || mcVersion == "1.9"){
+		if (mcVersion <= MC_VERSION.v1_9) {
 			code = "/summon ArmorStand ~ ~ ~ {";
-		} else if (mcVersion == "1.11") {
+		} else if (mcVersion == MC_VERSION.v1_11) {
 			code = "/summon armor_stand ~ ~ ~ {";
 		} else {
 			centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
 		}
 	} else {
-		if(mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11"){
+		if(mcVersion <= MC_VERSION.v1_11){
 			code = "/give @p minecraft:armor_stand 1 0 {EntityTag:{";
 		} else {
 			code = "/give @p armor_stand{EntityTag:{"
@@ -587,7 +588,7 @@ function generateCode(){
 	// Equipment
 	if(useEquipment){
 		// Old 1.8 Equipment format
-		if(mcVersion == "1.8"){
+		if (mcVersion == MC_VERSION.v1_8) {
 			var armor = [];
 
 			armor.push(getHandRightItem());
@@ -618,67 +619,57 @@ function generateCode(){
 		}
 
 		// Hide netherite armour for lower versions
-		switch (mcVersion) {
-			case "1.14":
-			case "1.13":
-				$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]"));
-				$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]"));
-				$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]"));
-				$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]"));
-				break;
-			case "1.11":
-			case "1.9":
-			case "1.8":
-				$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]").filter("[value!=turtle_helmet]"));
-				$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]").filter("[value!=turtle_chestplate]"));
-				$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]").filter("[value!=turtle_leggings]"));
-				$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]").filter("[value!=turtle_boots]"));
-				break;
-			default:
-				$("#list-helmet").empty().append(helmetList);
-				$("#list-chestplate").empty().append(chestplateList);
-				$("#list-leggings").empty().append(leggingsList);
-				$("#list-shoes").empty().append(bootsList);
-				break;
+		if (mcVersion <= MC_VERSION.v1_11) {
+			$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]").filter("[value!=turtle_helmet]"));
+			$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]").filter("[value!=turtle_chestplate]"));
+			$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]").filter("[value!=turtle_leggings]"));
+			$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]").filter("[value!=turtle_boots]"));
+
+		} else if (mcVersion <= MC_VERSION.v1_14) {
+			$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]"));
+			$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]"));
+			$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]"));
+			$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]"));
+
+		} else {
+			$("#list-helmet").empty().append(helmetList);
+			$("#list-chestplate").empty().append(chestplateList);
+			$("#list-leggings").empty().append(leggingsList);
+			$("#list-shoes").empty().append(bootsList);
 		}
 	}
 
 	// Custom name
 	if(customName) {
 		let name = [];
-		switch (mcVersion) {
-			case "1.8":
-			case "1.9":
-			case "1.11":
-				tags.push(`CustomName:"${customName}"`);
-				break;
-			case "1.13":
-				name.push(getName());
-				name.push(getNameColor());
-				name.push(getNameBold());
-				name.push(getNameItalic());
-				name.push(getNameObfuscated());
-				name.push(getNameStrikethrough());
-				
-				tags.push(`CustomName:"{${name.join("")}}"`);
-				break;
-			default:
-				// CustomNames from 1.14+ can now use single quotes to contain json
-				// Replace escaped double quotes with single quotes to make it look pretty				
-				name.push(getName().replaceAll("\\", ""));
-				name.push(getNameColor().replaceAll("\\", ""));
-				name.push(getNameBold().replaceAll("\\", ""));
-				name.push(getNameItalic().replaceAll("\\", ""));
-				name.push(getNameObfuscated().replaceAll("\\", ""));
-				name.push(getNameStrikethrough().replaceAll("\\", ""));
-				tags.push(`CustomName:'{${name.join("")}}'`);
-				break;
+		if (mcVersion <= MC_VERSION.v1_11) {
+			tags.push(`CustomName:"${customName}"`);
+
+		} else if (mcVersion == MC_VERSION.v1_13) {
+			name.push(getName());
+			name.push(getNameColor());
+			name.push(getNameBold());
+			name.push(getNameItalic());
+			name.push(getNameObfuscated());
+			name.push(getNameStrikethrough());
+			
+			tags.push(`CustomName:"{${name.join("")}}"`);
+
+		} else {
+			// CustomNames from 1.14+ can now use single quotes to contain json
+			// Replace escaped double quotes with single quotes to make it look pretty				
+			name.push(getName().replaceAll("\\", ""));
+			name.push(getNameColor().replaceAll("\\", ""));
+			name.push(getNameBold().replaceAll("\\", ""));
+			name.push(getNameItalic().replaceAll("\\", ""));
+			name.push(getNameObfuscated().replaceAll("\\", ""));
+			name.push(getNameStrikethrough().replaceAll("\\", ""));
+			tags.push(`CustomName:'{${name.join("")}}'`);
 		}
 	}
 		
 	if(showCustomName)
 		tags.push("CustomNameVisible:1b");
-
 
 	//Scoreboard tags
 	if (scoreboardTags) {
@@ -722,7 +713,7 @@ function generateCode(){
 	code += "}";
 	if (give) {
 		code += "}";
-		if (mcVersion != "1.8" && mcVersion != "1.9" && mcVersion != "1.11") {
+		if (mcVersion > MC_VERSION.v_11) {
 			code += " 1"
 		}
 	}
@@ -772,7 +763,7 @@ function getHeadItem(){
 
 	// Use input as player name
 	else if(equipCustomHeadMode == "player"){
-		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+		if (mcVersion <= MC_VERSION.v1_11) {
 			return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
 		} else {
 			return "{id:\"player_head\",Count:1b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
@@ -784,16 +775,12 @@ function getHeadItem(){
 	else if(equipCustomHeadMode == "url"){
 		var base64Value = btoa('{"textures":{"SKIN":{"url":"'+equipHelmet+'"}}}');
 		
-		switch (mcVersion) {
-			case "1.8":
-			case "1.9":
-			case "1.11":
-				return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
-			case "1.13":
-			case "1.14":
-				return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
-			default:
-				return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:'+generateIntArray()+',Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
+		if (mcVersion <= MC_VERSION.v1_11) {
+			return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
+		} else if (mcVersion <= MC_VERSION.v1_14) {
+			return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
+		} else {
+			return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:'+generateIntArray()+',Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
 		}
 	}
 
@@ -819,7 +806,7 @@ function getHeadItem(){
 				if(c == ":") bracketsStarted = true;
 			}
 			
-			if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+			if (mcVersion <= MC_VERSION.v1_11) {
 				return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
 			} else {
 				return '{id:"player_head",Count:1b,tag:{'+parsed+'}}';
@@ -830,7 +817,7 @@ function getHeadItem(){
 		else{
 			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner:"));
 			skullOwnerRaw = skullOwnerRaw.substring(0, skullOwnerRaw.indexOf("}"));
-			if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
+			if (mcVersion <= MC_VERSION.v1_11) {
 				return '{id:"skull",Count:1b,Damage:3b,tag:{'+skullOwnerRaw+'}}';
 			} else {
 				return '{id:"player_head",Count:1b,tag:{'+skullOwnerRaw+'}}';
@@ -1125,7 +1112,7 @@ function loadData(data) {
 
 		// version
 		$(`#mcversion`).val(data.version);
-		
+
 		// options
 		$("input[name=invisible]").prop(`checked`, data.options.invisible);
 		$("input[name=invulnerable]").prop(`checked`, data.options.invulnerable);
