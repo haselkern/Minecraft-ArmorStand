@@ -355,7 +355,9 @@ const MC_VERSION = Object.freeze({
 	v1_11: 2,
 	v1_13: 3,
 	v1_14: 4,
-	v1_16: 5
+	v1_16: 5,
+	v1_20_5: 6,
+	v1_21: 7
 });
 
 function getMcVersion() {
@@ -387,10 +389,10 @@ function handleInput(){
 	equipHelmet = getInput("equipHelmet");
 	equipCustomHeadMode = $("#equipCustomHeadMode").val();
 
-    equipColorShoes = $("#shoecolor").css("background-color");
-    equipColorLeggings = $("#leggingscolor").css("background-color");
-    equipColorChestplate = $("#chestplatecolor").css("background-color");
-    equipColorHelmet = $("#helmetcolor").css("background-color");
+    equipColorShoes = $("#boots_color").css("background-color");
+    equipColorLeggings = $("#leggings_color").css("background-color");
+    equipColorChestplate = $("#chestplate_color").css("background-color");
+    equipColorHelmet = $("#helmet_color").css("background-color");
 
 	customName = getInput("customname");
 	showCustomName = getCheckBoxInput("showcustomname");
@@ -441,34 +443,63 @@ function updateUI(){
 
 	if(useEquipment){
 		$("#customequipment").slideDown();
+
 		// Hide left hand item input for minecraft 1.8
-		if(mcVersion == "1.8"){
+		if(mcVersion < MC_VERSION.v1_9) {
 			$("#equipHandLeft").hide();
-		}
-		else{
+		} else {
 			$("#equipHandLeft").show();
 		}
+
+		let chestplate = chestplateList;
+		let helmet = helmetList;
+		let boots = bootsList;
+		let leggings = leggingsList;
+
+		// Hide elytra for versions <1.9
+		if (mcVersion < MC_VERSION.v1_9) {
+			chestplate = chestplate.filter("[value!=elytra]");
+		}
+
+		// Hide turtle_helmet for versions <1.13
+		if (mcVersion < MC_VERSION.v1_13) {
+			helmet = helmet.filter("[value!=turtle_helmet]");
+		}
+		
+		// Hide netherite armor for versions < 1.16
+		if (mcVersion < MC_VERSION.v1_16) {
+			helmet = helmet.filter("[value!=netherite_helmet]");
+			chestplate = chestplate.filter("[value!=netherite_chestplate]");
+			leggings = leggings.filter("[value!=netherite_leggings]");
+			boots = boots.filter("[value!=netherite_boots]");
+		} 
+			
+		$("#list-helmet").empty().append(helmet);
+		$("#list-chestplate").empty().append(chestplate);
+		$("#list-leggings").empty().append(leggings);
+		$("#list-shoes").empty().append(boots);
+		
 	}
 	else
 		$("#customequipment").slideUp();
 
     //Different colorinputs for armorparts
     if(isLeatherArmor(equipShoes))
-        $("#shoecolor").slideDown();
+        $("#boots_color").slideDown();
     else
-        $("#shoecolor").slideUp();
+        $("#boots_color").slideUp();
     if(isLeatherArmor(equipLeggings))
-        $("#leggingscolor").slideDown();
+        $("#leggings_color").slideDown();
     else
-        $("#leggingscolor").slideUp();
+        $("#leggings_color").slideUp();
     if(isLeatherArmor(equipChestplate))
-        $("#chestplatecolor").slideDown();
+        $("#chestplate_color").slideDown();
     else
-        $("#chestplatecolor").slideUp();
+        $("#chestplate_color").slideUp();
     if(isLeatherArmor(equipHelmet))
-        $("#helmetcolor").slideDown();
+        $("#helmet_color").slideDown();
     else
-        $("#helmetcolor").slideUp();
+        $("#helmet_color").slideUp();
 
 	// Link to minecraft-heads.com
 	if(equipCustomHeadMode == "givecode"){
@@ -541,321 +572,345 @@ function updateUI(){
 	mSkull.visible = equipHelmet != "";
 }
 
-function generateCode(){
-	var code = "/summon armor_stand ~ ~ ~ {" //in 1.13, positions are no longer center-corrected. Adding .5 makes it centered. However for players it is already center-corrected
-	
-	if (!give) {
-		// Old entity name
-		if (mcVersion <= MC_VERSION.v1_9) {
-			code = "/summon ArmorStand ~ ~ ~ {";
-		} else if (mcVersion == MC_VERSION.v1_11) {
-			code = "/summon armor_stand ~ ~ ~ {";
-		} else {
-			centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
-		}
-	} else {
-		if(mcVersion <= MC_VERSION.v1_11){
-			code = "/give @p minecraft:armor_stand 1 0 {EntityTag:{";
-		} else {
-			code = "/give @p armor_stand{EntityTag:{"
-		}
-	}
+function generateCode() {
+	const tags = {
+		Invisible: invisible || null,
+		Invulnerable: invulnerable || null,
+		PersistenceRequired: persistencerequired || null,
+		NoBasePlate: noBasePlate || null,
+		NoGravity: noGravity || null,
+		ShowArms: showArms || null,
+		Small: small || null,
+		Marker: marker || null,
 
-	var tags = [];
+		Rotation: (rotation != 0) ? [ new NBTFloat(rotation) ] : null,
 
-	//CheckBoxes
-	if(invisible)
-		tags.push("Invisible:1b");
-	if(invulnerable)
-		tags.push("Invulnerable:1b");
-    if(persistencerequired)
-        tags.push("PersistenceRequired:1b");
-	if(noBasePlate)
-		tags.push("NoBasePlate:1b");
-	if(noGravity)
-		tags.push("NoGravity:1b");
-	if(showArms)
-		tags.push("ShowArms:1b");
-	if(small)
-		tags.push("Small:1b");
-	if(marker)
-		tags.push("Marker:1b");
+		CustomNameVisible: showCustomName || null,
+		CustomName: (customName) ? generateCustomName() : null,
 
-	//Sliders
-	if(rotation != 0)
-		tags.push("Rotation:["+rotation+"f]");
+		DisabledSlots: (useDisabledSlots) ? calculateDisabledSlotsFlag() : null,
+		Pose: generatePose(),
+	};
 
 	// Equipment
-	if(useEquipment){
-		// Old 1.8 Equipment format
+	if (useEquipment) {
 		if (mcVersion == MC_VERSION.v1_8) {
-			var armor = [];
-
-			armor.push(getHandRightItem());
-			armor.push(getShoesItem());
-			armor.push(getLeggingsItem());
-			armor.push(getChestplateItem());
-			armor.push(getHeadItem());
-
-			tags.push("Equipment:["+armor.join(",")+"]");
-		}
-		// New 1.9+ Equipment format
-		else{
-			var armor = [];
-
-			armor.push(getShoesItem());
-			armor.push(getLeggingsItem());
-			armor.push(getChestplateItem());
-			armor.push(getHeadItem());
-
-			tags.push("ArmorItems:["+armor.join(",")+"]");
-
-			var hands = [];
-
-			hands.push(getHandRightItem());
-			hands.push(getHandLeftItem());
-
-			tags.push("HandItems:["+hands.join(",")+"]");
-		}
-
-		// Hide netherite armour for lower versions
-		if (mcVersion <= MC_VERSION.v1_11) {
-			$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]").filter("[value!=turtle_helmet]"));
-			$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]").filter("[value!=turtle_chestplate]"));
-			$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]").filter("[value!=turtle_leggings]"));
-			$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]").filter("[value!=turtle_boots]"));
-
-		} else if (mcVersion <= MC_VERSION.v1_14) {
-			$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]"));
-			$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]"));
-			$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]"));
-			$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]"));
+			// Old 1.8 Equipment format
+			// Equipment: [ RightHand, Boots, Leggings, Chestplate, Helmet ]
+			const armorItems = generateArmorItems();
+			const handItems = generateHandItems();
+			tags.Equipment = armorItems.splice(0, 0, handItems[0]);
 
 		} else {
-			$("#list-helmet").empty().append(helmetList);
-			$("#list-chestplate").empty().append(chestplateList);
-			$("#list-leggings").empty().append(leggingsList);
-			$("#list-shoes").empty().append(bootsList);
+			// New 1.9+ Equipment format
+			if (equipShoes != "" || equipLeggings != "" || equipChestplate != "" || equipHelmet != "") {
+				tags.ArmorItems = generateArmorItems();
+			}
+
+			if (equipHandRight != "" || equipHandLeft != "") {
+				tags.HandItems = generateHandItems();
+			}
 		}
 	}
 
-	// Custom name
-	if(customName) {
-		let name = [];
-		if (mcVersion <= MC_VERSION.v1_11) {
-			tags.push(`CustomName:"${customName}"`);
-
-		} else if (mcVersion == MC_VERSION.v1_13) {
-			name.push(getName());
-			name.push(getNameColor());
-			name.push(getNameBold());
-			name.push(getNameItalic());
-			name.push(getNameObfuscated());
-			name.push(getNameStrikethrough());
-			
-			tags.push(`CustomName:"{${name.join("")}}"`);
-
-		} else {
-			// CustomNames from 1.14+ can now use single quotes to contain json
-			// Replace escaped double quotes with single quotes to make it look pretty				
-			name.push(getName().replaceAll("\\", ""));
-			name.push(getNameColor().replaceAll("\\", ""));
-			name.push(getNameBold().replaceAll("\\", ""));
-			name.push(getNameItalic().replaceAll("\\", ""));
-			name.push(getNameObfuscated().replaceAll("\\", ""));
-			name.push(getNameStrikethrough().replaceAll("\\", ""));
-			tags.push(`CustomName:'{${name.join("")}}'`);
-		}
-	}
-		
-	if(showCustomName)
-		tags.push("CustomNameVisible:1b");
-
-	//Scoreboard tags
+	// Scoreboard tags
 	if (scoreboardTags) {
 		const tagsList = scoreboardTags.split(',');
-		if (!tagsList[tagsList.length - 1].trim())
+		if (!tagsList[tagsList.length - 1].trim()) {
 			tagsList.pop();
-
-		for (let i = 0; i < tagsList.length; i++)
-			tagsList[i] = `"${tagsList[i].trim()}"`;
+		}
 		
-		tags.push(`Tags:[${tagsList.join(",")}]`);
+		tags.Tags = tagsList.map(value => value.trim());
 	}
 
-	//DisabledSlots
-	if(useDisabledSlots){
-		tags.push("DisabledSlots:"+calculateDisabledSlotsFlag());
+	// Generate the final command
+	if (give && mcVersion > MC_VERSION.v1_16) {
+		tags.id = "minecraft:armor_stand";
 	}
 
-	//Now the pose
-	var pose = [];
-	if(!isZero(body))
-		pose.push("Body:"+getJSONArray(body));
-	if(!isZero(head))
-		pose.push("Head:"+getJSONArray(head));
-	if(!isZero(leftLeg))
-		pose.push("LeftLeg:"+getJSONArray(leftLeg));
-	if(!isZero(rightLeg))
-		pose.push("RightLeg:"+getJSONArray(rightLeg));
-	if(showArms){
-		if(!isZero(leftArm))
-			pose.push("LeftArm:"+getJSONArray(leftArm));
-		if(!isZero(rightArm))
-			pose.push("RightArm:"+getJSONArray(rightArm));
-	}
+	const parsedTags = NBT.stringify(tags);
 
-
-	if(pose.length > 0)
-		tags.push("Pose:{"+pose.join(",")+"}");
-
-	code += tags.join(",");
-	code += "}";
 	if (give) {
-		code += "}";
-		if (mcVersion > MC_VERSION.v_11) {
-			code += " 1"
-		}
-	}
-	return code;
-}
-
-function getHandRightItem(){
-	if(equipHandRight == "") return "{}";
-	return "{id:\""+equipHandRight+"\",Count:1b}";
-}
-
-function getHandLeftItem(){
-	if(equipHandLeft == "") return "{}";
-	return "{id:\""+equipHandLeft+"\",Count:1b}";
-}
-
-function getShoesItem(){
-	if(equipShoes == "") return "{}";
-	return "{id:\""+equipShoes+"\",Count:1b"
-					+getLeatherColorString($("#shoecolor"), isLeatherArmor(equipShoes))
-					+"}";
-}
-
-function getLeggingsItem(){
-	if(equipLeggings == "") return "{}";
-	return "{id:\""+equipLeggings+"\",Count:1b"
-					+getLeatherColorString($("#leggingscolor"), isLeatherArmor(equipLeggings))
-					+"}";
-}
-
-function getChestplateItem(){
-	if(equipChestplate == "") return "{}";
-	return "{id:\""+equipChestplate+"\",Count:1b"
-				+getLeatherColorString($("#chestplatecolor"), isLeatherArmor(equipChestplate))
-				+"}";
-}
-
-function getHeadItem(){
-	if(equipHelmet == "") return "{}";
-
-	// Use input as item
-	if(equipCustomHeadMode == "item"){
-		return "{id:\""+equipHelmet+"\",Count:1b"
-		+getLeatherColorString($("#helmetcolor"), isLeatherArmor(equipHelmet))
-		+"}";
-	}
-
-	// Use input as player name
-	else if(equipCustomHeadMode == "player"){
+		let command = "/give @p ";
 		if (mcVersion <= MC_VERSION.v1_11) {
-			return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
+			return command + "minecraft:armor_stand 1 0 {EntityTag:" + parsedTags + "}";
+
+		} else if (mcVersion <= MC_VERSION.v1_16) {
+			return command + "minecraft:armor_stand{EntityTag:" + parsedTags + "} 1"
+
 		} else {
-			return "{id:\"player_head\",Count:1b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
+			let code = "minecraft:armor_stand[minecraft:entity_data=" + parsedTags;
+			if (customName && mcVersion >= MC_VERSION.v1_21) {
+				code += `,minecraft:custom_name=${generateCustomName()}`
+			}
+			return command + code + "] 1";
+		}
+	} else {
+		if (mcVersion <= MC_VERSION.v1_9) {
+			// Old entity name
+			return "/summon ArmorStand ~ ~ ~ " + parsedTags;
+
+		} else if (mcVersion < MC_VERSION.v1_13) {
+			return "/summon minecraft:armor_stand ~ ~ ~ " + parsedTags;
+
+		} else {
+			// In 1.13, positions are no longer center-corrected. 
+			// Adding .5 makes it centered. However for players it is already center-corrected
+			let position = centercorrected ? "~ ~-0.5 ~" : "~ ~ ~";
+			return "/summon minecraft:armor_stand " + position + " " + parsedTags;
 		}
 	}
+}
 
-	// Use input as url
-	// Best reference: http://redd.it/24quwx
-	else if(equipCustomHeadMode == "url"){
-		var base64Value = btoa('{"textures":{"SKIN":{"url":"'+equipHelmet+'"}}}');
-		
-		if (mcVersion <= MC_VERSION.v1_11) {
-			return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
-		} else if (mcVersion <= MC_VERSION.v1_14) {
-			return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
-		} else {
-			return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:'+generateIntArray()+',Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
-		}
+function generateCustomName() {
+	if (mcVersion <= MC_VERSION.v1_11) {
+		// Versions less than 1.12 did not support styles
+		return customName;
 	}
 
-	// Parse give code
-	else if(equipCustomHeadMode == "givecode"){
-		
-		// Give Code in this format: /give @p skull 1 3 {display:{Name:"Some Name"},SkullOwner:{Id:"a74719ce...
-		// Give code in 1.13 has changed to this format: /give @p player_head{display:{Name:"Some Name"},SkullOwner:{Id:"a74719ce...
-		if(equipHelmet.indexOf("SkullOwner:{") >= 0){
-			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner"));
-			var parsed = "";
-			var bracketCounter = 0;
-			var bracketsStarted = false;
+	let props = {};
 
-			for(var i = 0; i < skullOwnerRaw.length; i++){
-				var c = skullOwnerRaw[i];
+	if (customName) {
+		props.text = customName;
+	}
 
-				if(c == "{") bracketCounter++;
-				if(c == "}") bracketCounter--;
+	if (nameColor) {
+		props.color = nameColor;
+	}
 
-				parsed += c;
-				if(bracketCounter == 0 && bracketsStarted) break;
-				if(c == ":") bracketsStarted = true;
+	if (nameBold) {
+		props.bold = nameBold;
+	}
+
+	if (nameItalic) {
+		props.italic = nameItalic;
+	}
+
+	if (nameStrikethrough) {
+		props.strikethrough = nameStrikethrough;
+	}
+
+	if (nameObfuscated) {
+		props.obfuscated = nameObfuscated;
+	}
+
+	let stringified = JSON.stringify(props);
+	if (mcVersion < MC_VERSION.v1_14) {
+		// Stringify again to escape double quotes, as versions below 1.14
+		// did not have the ability to use single quotes as strings
+		return new NBTRaw(JSON.stringify(stringified));
+	}
+
+	return new NBTRaw("'" + stringified + "'");
+}
+
+function generateArmorItems() {
+	function generateArmorItem(armorID) {
+		if (armorID === "") {
+			return {};
+		}
+	
+		let data = {
+			id: armorID,
+			Count: 1,
+		}
+	
+		// If the armor is leather, then apply its color
+		if (isLeatherArmor(armorID)) {
+			const element = $(`#${armorID.substring(8) + "_color"}`);
+			const color = getDecimalRGB(element.css("background-color"));
+	
+			if (mcVersion >= MC_VERSION.v1_20_5) {
+				data.components = {
+					dyed_color: { rgb: color }
+				};
+			} else {
+				data.tag = {
+					display: {
+						color: color
+					}
+				};
+			}
+		}
+	
+		return data;
+	}
+
+	// Equipments (aka ArmorItems) are order-sensitive 
+	// and must follow the order: feet, legs, chest, head
+	let items = [
+		generateArmorItem(equipShoes),
+		generateArmorItem(equipLeggings),
+		generateArmorItem(equipChestplate),
+	];
+
+	// Handle different items in the head slot
+	if (equipHelmet == "") {
+		items.push({});
+		return items;
+	}
+
+	switch (equipCustomHeadMode) {
+		case "item":
+			items.push(generateArmorItem(equipHelmet));
+			break;
+
+		// Head is a player head with the given name
+		case "player": {
+			let data = {
+				id: (mcVersion <= MC_VERSION.v1_11) ? "skull" : "player_head",
+				Count: 1,
+			};
+
+			if (mcVersion <= MC_VERSION.v1_11) {
+				data.Damage = 3;
 			}
 			
-			if (mcVersion <= MC_VERSION.v1_11) {
-				return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
+			if (mcVersion <= MC_VERSION.v1_16) {
+				data.tag = { SkullOwner: equipHelmet };
 			} else {
-				return '{id:"player_head",Count:1b,tag:{'+parsed+'}}';
+				data.components = {
+					profile: { name: equipHelmet }
+				};
 			}
-		}
-		// Give Code in this format: /give @p skull 1 3 {SkullOwner:"playername"} (quotes optional)
-		// Give code in 1.13 has changed to this format: /give @p player_head{display:{Name:"Some Name"},SkullOwner:{Id"a74719ce...
-		else{
-			var skullOwnerRaw = equipHelmet.substring(equipHelmet.indexOf("SkullOwner:"));
-			skullOwnerRaw = skullOwnerRaw.substring(0, skullOwnerRaw.indexOf("}"));
-			if (mcVersion <= MC_VERSION.v1_11) {
-				return '{id:"skull",Count:1b,Damage:3b,tag:{'+skullOwnerRaw+'}}';
-			} else {
-				return '{id:"player_head",Count:1b,tag:{'+skullOwnerRaw+'}}';
-			}
+
+			items.push(data);
+			break;
 		}
 
+		case "url": {
+			// Best reference: http://redd.it/24quwx
+			const base64Value = btoa(JSON.stringify({
+				textures: {
+					SKIN: { url: equipHelmet }
+				}
+			}));
+
+			const innerNBT = {
+				Id: (mcVersion >= MC_VERSION.v1_16) ? generateIntArray() : generateUUID(),
+				Properties: {
+					textures: [{ Value: base64Value }]
+				}
+			};
+
+			const data = {
+				id: "minecraft:player_head",
+				Count: 1
+			};
+
+			if (mcVersion >= MC_VERSION.v1_20_5) {
+				data.components = {
+					profile: innerNBT
+				};
+
+			} else {
+				data.tag = {
+					SkullOwner: innerNBT
+				};
+
+				if (mcVersion < MC_VERSION.v1_13) {
+					data.id = "skull";
+					data.Damage = 3;
+				}
+			}
+
+			items.push(data);
+			break;
+		}
+
+		case "givecode": {
+			// For now, assume the give code is from minecraft-heads
+			// TODO Parser to read any valid give codes
+			const data = {
+				id: "minecraft:player_head",
+				Count: 1
+			};
+
+			if (mcVersion < MC_VERSION.v1_13) {
+				data.id = "skull";
+				data.Damage = 3;
+				data.tag = new NBTRaw(equipHelmet.trim().slice(29));
+
+			} else if (mcVersion < MC_VERSION.v1_20_5) {
+				data.tag = new NBTRaw(equipHelmet.trim().slice(30, -2));
+			
+			} else {
+				// Extracting the entity data for versions greater than 1.20.5 requires more work.
+				// Format of the give code that is generated from minecraft-heads:
+				// /give @p minecraft:player_head[minecraft:custom_name='...', minecraft:lore=[...], profile={...}] 1
+
+				const nameIndex = equipHelmet.indexOf("minecraft:custom_name=");
+				const loreIndex = equipHelmet.indexOf("minecraft:lore=");
+				const profileIndex = equipHelmet.indexOf("profile=");
+
+				const customName = equipHelmet.slice(nameIndex + 22, loreIndex - 1);
+				const lore = equipHelmet.slice(loreIndex + 15, profileIndex - 1);
+				const profile = equipHelmet.slice(profileIndex + 8, -3);
+
+				data.components = {
+					custom_name: new NBTRaw(customName),
+					lore: new NBTRaw(lore),
+					profile: new NBTRaw(profile),
+				};
+			}
+
+			items.push(data);
+			break;
+		}
 	}
 
+	return items;
 }
 
-function getName() {
-	if (!customName) return ""
-	return `\\"text\\":\\"${customName}\\"`
+function generateHandItems() {
+	function generateHandItem(item) {
+		if (item == "") {
+			return {};
+		}
+
+		return {
+			id: item,
+			Count: 1
+		};
+	}
+
+	// HandItems must follow the order: Main hand (right hand), Off hand (left hand)
+	return [
+		generateHandItem(equipHandRight),
+		generateHandItem(equipHandLeft),
+	];
 }
 
-function getNameColor() {
-	if (nameColor == "") return ""
-	return `,\\"color\\":\\"${nameColor}\\"`
-}
+function generatePose() {
+	const pose = {};
 
-function getNameBold() {
-	if (!nameBold) return ""
-	return `,\\"bold\\":\\"true\\"`
-}
+	if (!isZero(body)) {
+		pose.Body = toNBTFloatArray(body);
+	}
 
-function getNameItalic() {
-	if (!nameItalic) return ""
-	return `,\\"italic\\":\\"true\\"`
-}
+	if (!isZero(head)) {
+		pose.Head = toNBTFloatArray(head);
+	}
 
-function getNameStrikethrough() {
-	if (!nameStrikethrough) return ""
-	return `,\\"strikethrough\\":\\"true\\"`
-}
+	if (!isZero(leftLeg)) {
+		pose.LeftLeg = toNBTFloatArray(leftLeg);
+	}
 
-function getNameObfuscated() {
-	if (!nameObfuscated) return ""
-	return `,\\"obfuscated\\":\\"true\\"`
+	if (!isZero(rightLeg)) {
+		pose.RightLeft = toNBTFloatArray(rightLeg);
+	}
+	
+	if (showArms) {
+		if (!isZero(leftArm)) {
+			pose.LeftArm = toNBTFloatArray(leftArm);
+		}
+		
+		if (!isZero(rightArm)) {
+			pose.RightArm = toNBTFloatArray(rightArm);
+		}
+	}
+
+	return (Object.keys(pose).length > 0) ? pose : null;
 }
 
 function calculateDisabledSlotsFlag() {
@@ -887,11 +942,12 @@ function calculateDisabledSlotsFlag() {
     return result;
 }
 
-function isZero(vector){
+function isZero(vector) {
 	return vector.x == 0 && vector.y == 0 && vector.z == 0;
 }
-function getJSONArray(vector){
-	return "["+vector.x+"f,"+vector.y+"f,"+vector.z+"f]";
+
+function toNBTFloatArray(vector) {
+	return [ new NBTFloat(vector.x), new NBTFloat(vector.y), new NBTFloat(vector.z) ];
 }
 
 function getMouseDeltaX(){
@@ -912,27 +968,23 @@ function getMouseDeltaY(){
 function render(){
 	renderer.render(scene, camera);
 
-	var deltaTime = clock.getDelta();
-
 	armorstandWrapper.rotation.y = rotY + getMouseDeltaX();
 	armorstandWrapper.rotation.x = rotX + getMouseDeltaY();
 
 	requestAnimationFrame(render);
 }
 
-
-
-
 // ---- Additional functions
 
-// From here: http://stackoverflow.com/a/8809472/1456971
-function generateUUID(){
+function generateUUID() {
+	// From here: http://stackoverflow.com/a/8809472/1456971
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = (d + Math.random()*16)%16 | 0;
         d = Math.floor(d/16);
         return (c=='x' ? r : (r&0x3|0x8)).toString(16);
     });
+
     return uuid;
 }
 
@@ -950,7 +1002,7 @@ function generateIntArray() {
 		ints.push(UUID.getInt32(i*4));
 	}
 
-	return '[I;' + ints.join(",") + ']';
+	return new NBTArrayInt(ints);
 }
 
 function getDecimalRGB(rgb){
@@ -967,19 +1019,8 @@ function getDecimalRGB(rgb){
     return (r << 16) | (g << 8) | b;
 }
 
-function isLeatherArmor(item){
-    if(item == null)
-        return false;
-    return item.indexOf("leather") == 0;
-}
-
-// Pass the colorpicker element as element. If condition is true, it will return a proper datatag for use in items, otherwise it will return an empty string.
-function getLeatherColorString(element, condition){
-    if(condition){
-        var rgb = getDecimalRGB(element.css("background-color"));
-        return ",tag:{display:{color:"+rgb+"}}";
-    }
-    return "";
+function isLeatherArmor(item) {
+    return item ? item.startsWith("leather_") : false;
 }
 
 // Rotate three.js mesh to fit the minecraft rotation
@@ -1046,10 +1087,10 @@ function saveData() {
 			helmet_specifies: $("#equipCustomHeadMode").val(),
 
 			leather_colours: {
-				helmet: $(`#helmetcolor`).css(`background-color`),
-				chestplate: $(`#chestplatecolor`).css(`background-color`),
-				leggings: $(`#leggingscolor`).css(`background-color`),
-				boots: $(`#shoecolor`).css(`background-color`)
+				helmet: $(`#helmet_color`).css(`background-color`),
+				chestplate: $(`#chestplate_color`).css(`background-color`),
+				leggings: $(`#leggings_color`).css(`background-color`),
+				boots: $(`#boots_color`).css(`background-color`)
 			}
 		},
 	
@@ -1160,15 +1201,10 @@ function loadData(data) {
 		$(`input[name=equipHandLeft]`).val(data.equipment.hands.left);
 		$(`#equipCustomHeadMode`).val(data.equipment.helmet_specifies);
 		
-		$(`#helmetcolor`).css(`background-color`, data.equipment.leather_colours.helmet);
-		$(`#chestplatecolor`).css(`background-color`, data.equipment.leather_colours.chestplate);
-		$(`#leggingscolor`).css(`background-color`, data.equipment.leather_colours.leggings);
-		$(`#shoecolor`).css(`background-color`, data.equipment.leather_colours.boots);
-		
-		getLeatherColorString($("#helmetcolor"))
-		getLeatherColorString($("#chestplatecolor"))
-		getLeatherColorString($("#leggingscolor"))
-		getLeatherColorString($("#shoecolor"))
+		$(`#helmet_color`).css(`background-color`, data.equipment.leather_colours.helmet);
+		$(`#chestplate_color`).css(`background-color`, data.equipment.leather_colours.chestplate);
+		$(`#leggings_color`).css(`background-color`, data.equipment.leather_colours.leggings);
+		$(`#boots_color`).css(`background-color`, data.equipment.leather_colours.boots);
 		
 		//custom name
 		$(`#customname`).val(data.custom_name.name);
@@ -1206,7 +1242,6 @@ function loadData(data) {
 		$(`#pW`).prop(`checked`, data.lock_slot_interaction.place.weapons);
 		
 		handleInput();
-		//console.log(`done loading!`)
 	} catch (err) {
 		console.error(err);
 		alert(`An error occurred while loading the creation.`);
@@ -1220,3 +1255,76 @@ function deleteSave(data) {
 	loadScreen();
 	alert(`${data} has been deleted!`);
 };
+
+// Define NBT classes for properly stringifying JS objects to NBT
+class NBTObject {};
+
+class NBTRaw extends NBTObject {
+	constructor(raw) {
+		super();
+		this.raw = raw;
+	}
+
+	toString() {
+		return this.raw;
+	}
+}
+
+class NBTFloat extends NBTObject {
+	constructor(n) {
+		super();
+		this.n = n;
+	}
+
+	toString() {
+		return this.n + "f";
+	}
+}
+
+class NBTArrayInt extends NBTObject {
+	constructor(arr) {
+		super();
+		this.arr = arr;
+	}
+
+	toString() {
+		return "[I;" + this.arr.join(",") + "]";
+	}
+};
+
+class NBT {
+	static stringify(object) {
+		const type = typeof object;
+		switch (type) {
+			case "string":
+				return '"' + object + '"';
+
+			case "number":
+			case "boolean":
+				return new String(object);
+
+			case "object": {
+				if (Array.isArray(object)) {
+					return "[" +
+						object
+							.filter(value => value != null)
+							.map(value => NBT.stringify(value))
+							.join(",") 
+						+ "]";
+				}
+				
+				if (object instanceof NBTObject) {
+					return object.toString();
+				}
+
+				// Fallback (javascript object)
+				return "{" + 
+					Object.entries(object)
+						.filter(([key, value]) => value != null)
+						.map(([key, value]) => key + ":" + NBT.stringify(value))
+						.join(",")
+					+ "}";
+			}
+		}
+	}
+}
