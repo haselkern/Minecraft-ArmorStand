@@ -897,7 +897,7 @@ function generatePose() {
 	}
 
 	if (!isZero(rightLeg)) {
-		pose.RightLeft = toNBTFloatArray(rightLeg);
+		pose.RightLeg = toNBTFloatArray(rightLeg);
 	}
 	
 	if (showArms) {
