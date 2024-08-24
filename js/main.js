@@ -597,10 +597,8 @@ function generateCode() {
 		if (mcVersion == MC_VERSION.v1_8) {
 			// Old 1.8 Equipment format
 			// Equipment: [ RightHand, Boots, Leggings, Chestplate, Helmet ]
-			const armorItems = generateArmorItems();
-			const handItems = generateHandItems();
-			tags.Equipment = armorItems.splice(0, 0, handItems[0]);
-
+			const rightHandItem = generateHandItems()[0];
+			tags.Equipment = [rightHandItem, ...generateArmorItems()];
 		} else {
 			// New 1.9+ Equipment format
 			if (equipShoes != "" || equipLeggings != "" || equipChestplate != "" || equipHelmet != "") {
