@@ -596,7 +596,7 @@ function generateCode() {
 		Small: small || null,
 		Marker: marker || null,
 
-		Rotation: (rotation != 0) ? [ new NBTFloat(rotation) ] : null,
+		Rotation: (rotation != 0) ? [ new NBTFloat(rotation), new NBTFloat(0)  ] : null,
 
 		CustomNameVisible: showCustomName || null,
 		CustomName: (customName) ? generateCustomName() : null,
