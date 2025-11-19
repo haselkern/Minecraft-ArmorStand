@@ -723,6 +723,12 @@ function generateCustomName() {
 	if (nameObfuscated) {
 		props.obfuscated = nameObfuscated;
 	}
+	
+	if (mcVersion >= MC_VERSION.v1_21_5) {
+		// Since 1.21.5+, text components are no longer stored as JSON wrapped by a string.
+		// So just return the props object instead
+		return props
+	}
 
 	let stringified = JSON.stringify(props);
 	if (mcVersion < MC_VERSION.v1_14) {
