@@ -357,7 +357,8 @@ const MC_VERSION = Object.freeze({
 	v1_14: 4,
 	v1_16: 5,
 	v1_20_5: 6,
-	v1_21: 7
+	v1_21: 7,
+	v1_21_5: 8,
 });
 
 function getMcVersion() {
@@ -572,6 +573,18 @@ function updateUI(){
 	mSkull.visible = equipHelmet != "";
 }
 
+function pruneEmpty(obj) {
+	for (const key in obj) {
+		const value = obj[key];
+
+		if (Object.keys(value).length === 0) {
+			delete obj[key];
+		}
+	}
+
+	return obj;
+}
+
 function generateCode() {
 	const tags = {
 		Invisible: invisible || null,
@@ -599,7 +612,7 @@ function generateCode() {
 			// Equipment: [ RightHand, Boots, Leggings, Chestplate, Helmet ]
 			const rightHandItem = generateHandItems()[0];
 			tags.Equipment = [rightHandItem, ...generateArmorItems()];
-		} else {
+		} else if (mcVersion >= MC_VERSION.v1_9 && mcVersion < MC_VERSION.v1_21_5) {
 			// New 1.9+ Equipment format
 			if (equipShoes != "" || equipLeggings != "" || equipChestplate != "" || equipHelmet != "") {
 				tags.ArmorItems = generateArmorItems();
@@ -607,6 +620,25 @@ function generateCode() {
 
 			if (equipHandRight != "" || equipHandLeft != "") {
 				tags.HandItems = generateHandItems();
+			}
+		} else {
+			// Since 1.21.5, The ArmorItems and HandItems fields have been merged into an equipment field.
+			// Reference: https://minecraft.wiki/w/Java_Edition_1.21.5
+
+			let [feetArmor, legsArmor, chestArmor, headArmor] = generateArmorItems();
+			let [mainHand, offHand] = generateHandItems();
+
+			let equipments = pruneEmpty({
+				mainhand: mainHand,
+				offhand: offHand,
+				head: headArmor,
+				chest: chestArmor,
+				legs: legsArmor,
+				feet: feetArmor,
+			});
+
+			if (Object.keys(equipments).length > 0) {
+				tags.equipment = equipments;
 			}
 		}
 	}
