@@ -755,8 +755,15 @@ function generateArmorItems() {
 		if (isLeatherArmor(armorID)) {
 			const element = $(`#${armorID.substring(8) + "_color"}`);
 			const color = getDecimalRGB(element.css("background-color"));
-	
-			if (mcVersion >= MC_VERSION.v1_20_5) {
+			
+			if (mcVersion >= MC_VERSION.v1_21_5) {
+				// In 1.21.5+, the format has now changed
+				// dyed_color={rgb:12345}] -> dyed_color=12345
+				// It can also be in the RGB array format: dyed_color=[0.5, 1.0, 0.2]
+				data.components = {
+					dyed_color: color
+				};
+			} else if (mcVersion >= MC_VERSION.v1_20_5) {
 				data.components = {
 					dyed_color: { rgb: color }
 				};
