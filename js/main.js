@@ -671,7 +671,7 @@ function generateCode() {
 		} else {
 			let code = "minecraft:armor_stand[minecraft:entity_data=" + parsedTags;
 			if (customName && mcVersion >= MC_VERSION.v1_21) {
-				code += `,minecraft:custom_name=${generateCustomName()}`
+				code += `,minecraft:custom_name=${NBT.stringify(generateCustomName())}`
 			}
 			return command + code + "] 1";
 		}
